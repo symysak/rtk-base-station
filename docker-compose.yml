@@ -1,16 +1,19 @@
 version: '3'
 services:
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower:latest
+    platform: linux/arm64
     container_name: watchtower
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 20 --cleanup
   str2str:
-    image: ghcr.io/symysak/str2str
+    image: ghcr.io/symysak/str2str:latest
+    platform: linux/arm64
     container_name: str2str
     restart: unless-stopped
-    device:
+    devices:
       - /dev/ttyACM0:/dev/ttyACM0
+    network_mode: "host"
     
