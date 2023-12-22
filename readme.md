@@ -19,3 +19,7 @@ sudo systemctl enable --now sync-docker-compose.timer
 
 
 ```
+## Usage
+マウントポイント: main
+ユーザ名: なし
+パスワード: なし
