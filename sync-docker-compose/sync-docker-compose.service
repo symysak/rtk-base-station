@@ -3,7 +3,8 @@ Description=For syncing docker-compose.yml
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /home/raspberrypi/rtk-base-station/sync-docker-compose/sync.py
+ExecStart=/usr/bin/python3 sync-docker-compose/sync.py
+WorkingDirectory=/home/raspberrypi/rtk-base-station
 
 [Install]
 WantedBy=multi-user.target
