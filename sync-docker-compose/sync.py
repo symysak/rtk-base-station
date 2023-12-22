@@ -25,4 +25,4 @@ if new_docker_compose != old_docker_compose:
         f.close()
     if debug:
         print("docker-compose.yml updated")
-    subprocess.run("docker-compose up -d", shell=True)
+    subprocess.run("docker compose up -d", shell=True)
