@@ -7,3 +7,10 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --interval 20 --cleanup
+  str2str:
+    image: ghcr.io/symysak/str2str
+    container_name: str2str
+    restart: unless-stopped
+    device:
+      - /dev/ttyACM0:/dev/ttyACM0
+    
