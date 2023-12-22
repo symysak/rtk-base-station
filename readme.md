@@ -12,7 +12,7 @@ git clone https://github.com/symysak/rtk-base-station.git
 
 # install sync-docker-compose
 cd rtk-base-station/sync-docker-compose
-cp sync-docker-compose /etc/cron.d/sync-docker-compose
+cp sync-docker-compose /var/spool/cron/raspberrypi/
 
 
 ```

@@ -1,0 +1,9 @@
+[Unit]
+Description=timer sync.py
+
+[Timer]
+OnUnitActiveSec=1m
+
+[Install]
+WantedBy=timers.target
+```
