@@ -22,6 +22,6 @@ COPY --from=builder /build/RTKLIB/app/consapp/str2str/gcc/str2str .
 RUN apt update --fix-missing \
     && apt clean
 
-EXPOSE 2101
+EXPOSE 2102
 
-CMD ["/app/str2str", "-in", "serial://ttyACM0:115200", "-out", "tcpsvr://:2101", "-b", "1"]
+CMD ["/app/str2str", "-in", "serial://ttyACM0:115200", "-out", "tcpsvr://:2102", "-b", "1"]

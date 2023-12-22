@@ -26,4 +26,4 @@ RUN apt update --fix-missing \
 
 EXPOSE 2101
 
-CMD ["/app/str2str", "-in", "ntripc_s://localhost:2101", "-out", "ntripc_c://:$2102", "-ft", "./source-table.txt"]
+CMD ["/app/str2str", "-in", "ntripc_s://localhost:2101", "-out", "ntripc_c://:2101", "-ft", "./source-table.txt"]
