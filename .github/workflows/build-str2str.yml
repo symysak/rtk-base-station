@@ -22,7 +22,7 @@ jobs:
             password: ${{ secrets.GITHUB_TOKEN }}
         - name: Build Docker Image
           run: |
-            docker buildx build --platform linux/arm64 \
+            docker buildx build --platform linux/arm64/v8 \
             --tag ghcr.io/$GITHUB_ACTOR/str2str:latest \
             --tag ghcr.io/$GITHUB_ACTOR/str2str:$(echo $GITHUB_SHA | head -c7) \
             ./str2str
