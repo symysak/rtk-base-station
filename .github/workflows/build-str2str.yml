@@ -20,7 +20,7 @@ jobs:
           run: |
             docker build --tag ghcr.io/$GITHUB_ACTOR/str2str:latest \
             --tag ghcr.io/$GITHUB_ACTOR/str2str:$(echo $GITHUB_SHA | head -c7) \
-            .
+            ./str2str/Dockerfile
         - name: Push Docker Image
           run: |
             docker push ghcr.io/$GITHUB_ACTOR/str2str:latest
