@@ -18,12 +18,10 @@ FROM ubuntu:latest
 WORKDIR /app
 
 COPY --from=builder /build/RTKLIB/app/consapp/str2str/gcc/str2str .
-COPY source-table.txt .
-
 
 RUN apt update --fix-missing \
     && apt clean
 
 EXPOSE 2101
 
-CMD ["/app/str2str", "-in", "ntripc_s://localhost:2101", "-out", "ntripc_c://:2101", "-ft", "./source-table.txt"]
+CMD ["/app/str2str", "-in", "tcpcli://localhost:2102", "-out", "ntripc://:2101/main"]
