@@ -8,6 +8,9 @@
 
 ## Installations
 ```
+cp 99-zed-f9p.rules /etc/udev/rules.d/
+stty -F /dev/ttyACM0 230400
+
 apt update
 
 # install cockpit
