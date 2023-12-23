@@ -14,7 +14,7 @@ services:
     container_name: str2str
     restart: unless-stopped
     devices:
-      - /dev/ttyACM0:/dev/ttyACM0
+      - /dev/ttyACM0:/dev/ttyACM0  # ZED-F9P
     network_mode: "host"
   ntrip-caster:
     image: ghcr.io/symysak/ntrip-caster:latest
