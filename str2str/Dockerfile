@@ -24,4 +24,4 @@ RUN apt update --fix-missing \
 
 EXPOSE 2102
 
-CMD ["/app/str2str", "-in", "serial://ttyACM0:115200", "-out", "tcpsvr://:2102", "-b", "1"]
+CMD ["/app/str2str", "-in", "serial://ttyACM0:230400", "-out", "tcpsvr://:2102", "-b", "1"]
