@@ -23,5 +23,3 @@ RUN apt update --fix-missing \
     && apt clean
 
 EXPOSE 2101
-
-CMD ["/app/str2str", "-in", "tcpcli://localhost:2102#rtcm3", "-out", "ntripc://:2101/main#rtcm3"]
