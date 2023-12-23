@@ -24,4 +24,4 @@ RUN apt update --fix-missing \
 
 EXPOSE 2101
 
-CMD ["/app/str2str", "-in", "tcpcli://localhost:2102", "-out", "ntripc://:2101/main", "-ft", "source-table.txt"]
+CMD ["/app/str2str", "-in", "tcpcli://localhost:2102", "-out", "ntripc://:2101/main"]
