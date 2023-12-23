@@ -1,0 +1,10 @@
+{
+    "version": 0,
+
+    "tools": {
+        "rtk": {
+            "label": "RTK base station",
+            "path": "index.html"
+        }
+    }
+}
