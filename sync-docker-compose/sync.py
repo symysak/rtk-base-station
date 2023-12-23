@@ -1,3 +1,4 @@
+import time
 import urllib.request
 import subprocess
 import os
@@ -30,6 +31,7 @@ if new_docker_compose != old_docker_compose:
     if debug:
         print("docker-compose.yml was updated")
     subprocess.run("docker compose down", shell=True)
+    time.sleep(20)
     subprocess.run("docker compose up -d", shell=True)
 else:
     if debug:
