@@ -8,16 +8,17 @@
 
 ## Installations
 ```
-cp 99-zed-f9p.rules /etc/udev/rules.d/
-stty -F /dev/ttyACM0 230400
-
-apt update
+sudo apt update
+sudo apt upgrade -y
 
 # install cockpit
-apt install -y git ${VERSION_CODENAME}-backports cockpit cockpit-pcp
+sudo apt install -y git ${VERSION_CODENAME}-backports cockpit cockpit-pcp
 
 # git clone
 git clone https://github.com/symysak/rtk-base-station.git
+
+sudo cp rtk-base-station/99-zed-f9p.rules /etc/udev/rules.d/
+sudo stty -F /dev/ttyACM0 230400
 
 # install sync-docker-compose
 cd rtk-base-station/sync-docker-compose
