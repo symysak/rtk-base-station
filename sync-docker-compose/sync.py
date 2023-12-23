@@ -3,6 +3,8 @@ import subprocess
 import os
 
 debug =  os.environ.get("DEBUG", False)
+if debug:
+    print("DEBUG is enabled")
 
 if os.environ.get("BRANCH") == None:
     if debug:
