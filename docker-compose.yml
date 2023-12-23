@@ -22,4 +22,6 @@ services:
     container_name: ntrip-caster
     restart: unless-stopped
     network_mode: "host"
+    volumes:
+      - ./ntrip-caster/source-table.txt:/app/source-table.txt
     
