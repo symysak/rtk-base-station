@@ -25,4 +25,4 @@ RUN apt update --fix-missing \
 
 EXPOSE 2101
 
-ENTRYPOINT [ "entrypoint.sh" ]
+#ENTRYPOINT [ "entrypoint.sh" ]

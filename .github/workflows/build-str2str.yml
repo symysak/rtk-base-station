@@ -25,6 +25,7 @@ jobs:
             docker buildx build --platform linux/arm64 \
             --tag ghcr.io/$GITHUB_ACTOR/str2str:latest \
             --tag ghcr.io/$GITHUB_ACTOR/str2str:$(echo $GITHUB_SHA | head -c7) \
+            --cache-to type=gha,mode=max --cache-from type=gha \
             ./str2str
         - name: Push Docker Image
           run: |
