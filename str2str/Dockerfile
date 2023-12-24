@@ -23,7 +23,7 @@ RUN chmod +x healthcheck.sh
 
 RUN apt update --fix-missing \
     && apt clean \
-    && apt install -y timeout netcat
+    && apt install -y coreutils netcat
 
 EXPOSE 2102
 
