@@ -59,31 +59,40 @@ podman generate systemd -f --new --restart-policy always --name str2str
 podman generate systemd -f --new --restart-policy always --name ntrip-caster
 mv container-str2str.service ~/.config/systemd/user/
 mv container-ntrip-caster.service ~/.config/systemd/user/
-systemctl --user daemon-reload
-systemctl --user enable container-str2str.service
-systemctl --user enable container-ntrip-caster.service
-systemctl --user enable --now podman-auto-update.service
-systemctl --user enable --now podman-auto-update.timer
-systemctl --user start container-str2str.service
-systemctl --user start container-ntrip-caster.service
 
 vi ~/.config/systemd/user/container-str2str.service
 
+[Unit]
 # 以下追記
-[Manager]
+StartLimitInterval=10s
+StartLimitBurst=20
+# 追記終わり
+
+[Service]
+# 以下追記
 RestartSec=1s
-DefaultStartLimitInterval=10s
-DefaultStartLimitBurst=20
 # 追記終わり
 
 vi ~/.config/systemd/user/container-ntrip-caster.service
 
+[Unit]
 # 以下追記
-[Manager]
-RestartSec=1s
-DefaultStartLimitInterval=10s
-DefaultStartLimitBurst=20
+StartLimitInterval=10s
+StartLimitBurst=20
 # 追記終わり
+
+[Service]
+# 以下追記
+RestartSec=1s
+# 追記終わり
+
+:wq
+
+systemctl --user daemon-reload
+systemctl --user enable container-str2str.service
+systemctl --user enable container-ntrip-caster.service
+systemctl --user start container-str2str.service
+systemctl --user start container-ntrip-caster.service
 
 sudo vi ~/.config/systemd/user/timers.target.wants/podman-auto-update.timer
 
@@ -94,12 +103,15 @@ OnUnitActiveSec=1m
 ## 変更終わり
 
 systemctl --user daemon-reload
+systemctl --user enable --now podman-auto-update.service
+systemctl --user enable --now podman-auto-update.timer
 systemctl --user restart podman-auto-update.service
 systemctl --user restart podman-auto-update.timer
 
 # optional
 sudo apt install -y raspi-config
 sudo raspi-config
+# fanの設定などをする
 
 sudo reboot
 
