@@ -2,7 +2,7 @@ on:
   schedule:
     - cron: "42 17 * * 0" # Run weekly at 5:42 PM on Sunday
 
-name: str2str Docker Build and Push
+name: WEEKLY str2str Docker Build and Push
 
 jobs:
     publish_docker_image:
