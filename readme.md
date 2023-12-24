@@ -76,6 +76,7 @@ systemctl --user enable container-str2str.service
 systemctl --user enable container-ntrip-caster.service
 sudo loginctl enable-linger
 systemctl --user enable --now podman-auto-update.service
+systemctl --user enable --now podman-auto-update.timer
 sudo vi ~/.config/systemd/user/timers.target.wants/podman-auto-update.timer
 
 # 以下のように変更
@@ -85,7 +86,8 @@ OnUnitActiveSec=1m
 ## 変更終わり
 
 systemctl --user daemon-reload
-systemctl --user enable --now podman-auto-update.timer
+systemctl --user restart podman-auto-update.service
+systemctl --user restart podman-auto-update.timer
 
 ```
 ## Usage
