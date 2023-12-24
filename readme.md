@@ -7,6 +7,7 @@
 ```
 
 ## Installations
+### For Raspberry Pi 4b+ (Ubuntu Server 22.04 LTS 64bit)
 ```
 sudo apt update
 sudo apt upgrade -y
