@@ -101,3 +101,13 @@ Windowsにインストールしたu-centerからリモートで設定の変更�
 ### ntrip-caster
 RTKLIBのstr2strをdocker化したものです。
 str2strをNTRIP Casterとして動作させています。
+
+## メモ
+### git pull後の諸々の反映
+```
+git pull
+bash rm_containers.sh
+その後上記instllationの## run containersか
+systemctl --user enable --now podman-auto-update.timerまで
+実行
+```
