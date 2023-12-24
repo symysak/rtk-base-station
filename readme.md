@@ -2,7 +2,7 @@
 ```.
 ├── str2str         # RTKLIB str2str docker image
 ├── ntrip-caster    # ntrip caster docker image
-├── sync-docker-compose # to sync docker-compose with github
+├── sync-run-containers-script # to sync docker-compose with github
 └── README.md
 ```
 
@@ -43,28 +43,14 @@ systemctl --user enable --now podman.socket
 # install cockpit-podman
 sudo apt install -y cockpit-podman
 
-# install podman-compose
-sudo apt install -y python3-pip
-sudo pip3 install podman-compose
-
-
 # git clone
 git clone https://github.com/symysak/rtk-base-station.git
 
 sudo cp rtk-base-station/99-zed-f9p.rules /etc/udev/rules.d/
 sudo stty -F /dev/ttyACM0 230400
 
-# install sync-docker-compose
-cd rtk-base-station/sync-docker-compose
-sudo cp sync-docker-compose.service ~/.config/systemd/user/
-sudo cp sync-docker-compose.timer ~/.config/systemd/user/
-systemctl --user daemon-reload
-systemctl --user enable --now sync-docker-compose.service
-systemctl --user enable --now sync-docker-compose.timer
-cd ..
-
-# run docker-compose
-podman-compose up -d
+## run containers
+cd rtk-base-station
 
 # enable podman auto-update
 podman generate systemd -f --new --name str2str
@@ -97,7 +83,7 @@ systemctl --user restart podman-auto-update.timer
 
 ## 説明
 GitHubに何かしらの変更があると、自動でコンテナのビルドを行います。
-コンテナのビルドが終わると、基地局側のwatchtowerによって基地局側のコンテナも最新になります。
+コンテナのビルドが終わると、podmanのauto-updateによって基地局側のコンテナも最新になります。
 ```
 2101/tcp: ntrip caster
 2102/tcp: str2str(後述)
@@ -108,6 +94,3 @@ Windowsにインストールしたu-centerからリモートで設定の変更�
 ### ntrip-caster
 RTKLIBのstr2strをdocker化したものです。
 str2strをNTRIP Casterとして動作させています。
-### sync-docker-compose
-docker-compose.ymlをgithubから同期するためのものです。
-これでGitHubのdocker-compose.ymlを変更すると、自動的に同期されます。
