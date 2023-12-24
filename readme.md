@@ -64,6 +64,27 @@ systemctl --user enable container-str2str.service
 systemctl --user enable container-ntrip-caster.service
 systemctl --user enable --now podman-auto-update.service
 systemctl --user enable --now podman-auto-update.timer
+systemctl --user start container-str2str.service
+systemctl --user start container-ntrip-caster.service
+
+vi ~/.config/systemd/user/container-str2str.service
+
+# 以下追記
+[Manager]
+RestartSec=1s
+DefaultStartLimitInterval=10s
+DefaultStartLimitBurst=20
+# 追記終わり
+
+vi ~/.config/systemd/user/container-ntrip-caster.service
+
+# 以下追記
+[Manager]
+RestartSec=1s
+DefaultStartLimitInterval=10s
+DefaultStartLimitBurst=20
+# 追記終わり
+
 sudo vi ~/.config/systemd/user/timers.target.wants/podman-auto-update.timer
 
 # 以下のように変更
