@@ -21,7 +21,8 @@ COPY --from=builder /build/RTKLIB/app/consapp/str2str/gcc/str2str .
 COPY entrypoint.sh .
 
 RUN apt update --fix-missing \
-    && apt clean
+    && apt clean \
+    && apt install -y curl
 
 EXPOSE 2101
 
