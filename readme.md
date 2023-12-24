@@ -15,6 +15,7 @@ sudo apt upgrade -y
 sudo apt -y install language-pack-ja-base language-pack-ja
 sudo localectl set-locale LANG=ja_JP.UTF-8 LANGUAGE="ja_JP:ja"
 sudo source /etc/default/locale
+sudo loginctl enable-linger raspberrypi
 
 # install cockpit
 sudo apt install -y git cockpit cockpit-pcp
@@ -61,7 +62,6 @@ mv container-ntrip-caster.service ~/.config/systemd/user/
 systemctl --user daemon-reload
 systemctl --user enable container-str2str.service
 systemctl --user enable container-ntrip-caster.service
-sudo loginctl enable-linger raspberrypi
 systemctl --user enable --now podman-auto-update.service
 systemctl --user enable --now podman-auto-update.timer
 sudo vi ~/.config/systemd/user/timers.target.wants/podman-auto-update.timer
