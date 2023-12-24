@@ -26,4 +26,4 @@ RUN apt update --fix-missing \
 EXPOSE 2101
 
 RUN chmod +x entrypoint.sh
-ENTRYPOINT [ "entrypoint.sh" ]
+ENTRYPOINT ["./entrypoint.sh"]
