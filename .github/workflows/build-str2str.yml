@@ -9,25 +9,28 @@ jobs:
     publish_docker_image:
       runs-on: ubuntu-latest
       steps:
+        - name: Checkout
+          uses: actions/checkout@v4
         - name: Set up QEMU
-          uses: docker/setup-qemu-action@v2
+          uses: docker/setup-qemu-action@v3.0.0
           with:
             platforms: linux/arm64
-        - uses: actions/checkout@v3
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
         - name: Login to GitHub Container Registry
-          uses: docker/login-action@v2
+          uses: docker/login-action@v3
           with:
             registry: ghcr.io
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
-        - name: Build Docker Image
-          run: |
-            docker buildx build --platform linux/arm64 \
-            --tag ghcr.io/$GITHUB_ACTOR/str2str:latest \
-            --tag ghcr.io/$GITHUB_ACTOR/str2str:$(echo $GITHUB_SHA | head -c7) \
-            --cache-to type=gha,mode=max --cache-from type=gha \
-            ./str2str
-        - name: Push Docker Image
-          run: |
-            docker push ghcr.io/$GITHUB_ACTOR/str2str:latest
-            docker push ghcr.io/$GITHUB_ACTOR/str2str:$(echo $GITHUB_SHA | head -c7)
+        - name: Build and Push
+          uses: docker/build-push-action@v5
+          with:
+            context: ./str2str
+            cache-from: type=gha
+            cache-to: type=gha, mode=max
+            platforms: linux/arm64
+            push: true
+            tags: |
+              ghcr.io/symysak/str2str:latest
+              ghcr.io/symysak/str2str:$(echo $GITHUB_SHA | head -c7)
