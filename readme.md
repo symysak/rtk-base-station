@@ -60,7 +60,7 @@ systemctl --user enable --now sync-docker-compose.timer
 cd ..
 
 # run docker-compose
-sudo docker-compose up -d
+podman-compose up -d
 
 # enable podman auto-update
 podman generate systemd -f --new --name str2str
