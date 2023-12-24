@@ -33,4 +33,3 @@ jobs:
             push: true
             tags: |
               ghcr.io/symysak/str2str:latest
-              ghcr.io/symysak/str2str:$(echo $GITHUB_SHA | head -c7)

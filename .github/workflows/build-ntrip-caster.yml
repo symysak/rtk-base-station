@@ -33,4 +33,3 @@ jobs:
             push: true
             tags: |
               ghcr.io/symysak/ntrip-caster:latest
-              ghcr.io/symysak/ntrip-caster:$(echo $GITHUB_SHA | head -c7)
