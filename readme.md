@@ -54,14 +54,14 @@ cd rtk-base-station
 bash run_containers.sh
 
 # enable podman auto-update
-podman generate systemd -f --new --name str2str
-podman generate systemd -f --new --name ntrip-caster
+podman generate systemd -f --new --restart-policy always --name str2str
+podman generate systemd -f --new --restart-policy always --name ntrip-caster
 mv container-str2str.service ~/.config/systemd/user/
 mv container-ntrip-caster.service ~/.config/systemd/user/
 systemctl --user daemon-reload
 systemctl --user enable container-str2str.service
 systemctl --user enable container-ntrip-caster.service
-sudo loginctl enable-linger
+sudo loginctl enable-linger raspberrypi
 systemctl --user enable --now podman-auto-update.service
 systemctl --user enable --now podman-auto-update.timer
 sudo vi ~/.config/systemd/user/timers.target.wants/podman-auto-update.timer
