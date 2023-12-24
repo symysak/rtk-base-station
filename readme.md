@@ -76,6 +76,12 @@ systemctl --user daemon-reload
 systemctl --user restart podman-auto-update.service
 systemctl --user restart podman-auto-update.timer
 
+# optional
+sudo apt install -y raspi-config
+sudo raspi-config
+
+sudo reboot
+
 ```
 ## Usage
 マウントポイント: main
