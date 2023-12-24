@@ -51,6 +51,7 @@ sudo stty -F /dev/ttyACM0 230400
 
 ## run containers
 cd rtk-base-station
+bash rin_containers.sh
 
 # enable podman auto-update
 podman generate systemd -f --new --name str2str
