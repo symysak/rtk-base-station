@@ -18,9 +18,12 @@ FROM ubuntu:latest
 WORKDIR /app
 
 COPY --from=builder /build/RTKLIB/app/consapp/str2str/gcc/str2str .
+COPY healthcheck.sh .
+RUN chmod +x healthcheck.sh
 
 RUN apt update --fix-missing \
-    && apt clean
+    && apt clean \
+    && apt install -y timeout netcat
 
 EXPOSE 2102
 
