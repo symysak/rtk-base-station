@@ -108,6 +108,13 @@ systemctl --user enable --now podman-auto-update.timer
 systemctl --user restart podman-auto-update.service
 systemctl --user restart podman-auto-update.timer
 
+# optional ufwをfirewalldにする(好み)
+sudo systemctl disable ufw
+sudo systemctl stop ufw
+sudo apt install firewalld
+sudo systemctl enable --now firewalld
+
+
 # optional
 sudo apt install -y raspi-config
 sudo raspi-config
