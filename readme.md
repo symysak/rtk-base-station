@@ -144,3 +144,40 @@ bash rm_containers.sh
 systemctl --user enable --now podman-auto-update.timerまで
 実行
 ```
+### firewalld
+```
+sudo vi /etc/firewalld/services/str2str.xml
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>str2str</short>
+  <description>2102/tcp</description>
+  <port protocol="tcp" port="2102"/>
+</service>
+:wq
+sudo vi /etc/firewalld/services/ntrip-caster.xml
+<?xml version="1.0" encoding="utf-8"?>
+<service>
+  <short>ntrip-caster</short>
+  <description>2101/tcp</description>
+  <port protocol="tcp" port="2101"/>
+</service>
+:wq
+sudo firewall-cmd --reload
+sudo firewall-cmd  --get-services
+
+sudo firewall-cmd --new-zone mgmt --permanent
+sudo firewall-cmd --reload
+
+sudo firewall-cmd --change-interface wlan0 --zone=mgmt --permanent
+sudo firewall-cmd --change-interface eth0 --zone=mgmt --permanent
+sudo firewall-cmd --add-service={cockpit,ssh,str2str,ntrip-caster} --zone=mgmt --permanent
+sudo firewall-cmd --reload
+
+sudo firewall-cmd --change-interface wg0 --zone=external --permanent
+sudo firewall-cmd --remove-service=ssh --zone=external --permanent
+sudo firewall-cmd --add-service=ntrip-caster --zone=external --permanent
+sudo firewall-cmd --reload
+
+sudo firewall-cmd --remove-service={cockpit,ssh,dhcpv6-client} --permanent
+sudo firewall-cmd --reload
+```
