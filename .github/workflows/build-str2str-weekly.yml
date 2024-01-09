@@ -26,8 +26,6 @@ jobs:
           uses: docker/build-push-action@v5
           with:
             context: ./str2str
-            cache-from: type=gha
-            cache-to: type=gha, mode=max
             platforms: linux/arm64
             push: true
             tags: |
