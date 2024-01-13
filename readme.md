@@ -108,7 +108,13 @@ systemctl --user enable --now podman-auto-update.timer
 systemctl --user restart podman-auto-update.service
 systemctl --user restart podman-auto-update.timer
 
-# optional ufwをfirewalldにする(好み)
+# mgmt-cliのビルド
+cd mgmt-cli
+go build main.go
+cd ..
+
+
+# optional ufwをfirewalldにする
 sudo systemctl disable ufw
 sudo systemctl stop ufw
 sudo apt install firewalld
@@ -154,6 +160,7 @@ systemctl --user enable --now podman-auto-update.timerまで
 ### firewalld
 ```
 sudo vi /etc/firewalld/services/str2str.xml
+
 <?xml version="1.0" encoding="utf-8"?>
 <service>
   <short>str2str</short>
@@ -161,7 +168,9 @@ sudo vi /etc/firewalld/services/str2str.xml
   <port protocol="tcp" port="2102"/>
 </service>
 :wq
+
 sudo vi /etc/firewalld/services/ntrip-caster.xml
+
 <?xml version="1.0" encoding="utf-8"?>
 <service>
   <short>ntrip-caster</short>
@@ -169,6 +178,7 @@ sudo vi /etc/firewalld/services/ntrip-caster.xml
   <port protocol="tcp" port="2101"/>
 </service>
 :wq
+
 sudo firewall-cmd --reload
 sudo firewall-cmd  --get-services
 
@@ -177,6 +187,7 @@ sudo firewall-cmd --reload
 
 sudo firewall-cmd --change-interface wlan0 --zone=mgmt --permanent
 sudo firewall-cmd --change-interface eth0 --zone=mgmt --permanent
+sudo firewall-cmd --change-interface tailscale0 --zone=mgmt --permanent
 sudo firewall-cmd --add-service={cockpit,ssh,str2str,ntrip-caster} --zone=mgmt --permanent
 sudo firewall-cmd --reload
 
