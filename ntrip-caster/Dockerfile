@@ -25,5 +25,6 @@ RUN apt update --fix-missing \
 
 EXPOSE 2101
 
-RUN chmod +x /config/entrypoint.sh
+WORKDIR /config
+
 ENTRYPOINT ["/config/entrypoint.sh"]
