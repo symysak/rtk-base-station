@@ -110,9 +110,12 @@ systemctl --user restart podman-auto-update.timer
 
 # mgmt-cliのビルド
 cd mgmt-cli
-go build main.go
+go build main.go -o mgmt-cli
+sudo chmod +x mgmt-cli
 cd ..
 
+# ntrip casterの設定
+sudo chmod +x ntrip-caster/entrypoint.sh
 
 # optional ufwをfirewalldにする
 sudo systemctl disable ufw
