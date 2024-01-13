@@ -12,7 +12,7 @@ type Ntripcaster struct {
 	Sourcetable Sourcetable `json:"sourcetable"`
 	Latitude    float64     `json:"latitude"`
 	Longitude   float64     `json:"longitude"`
-	Hight       float64     `json:"hight"`
+	Height      float64     `json:"height"`
 	AntennaInfo string      `json:"antenna_info"`
 }
 
@@ -33,7 +33,7 @@ type Sourcetable struct {
 	ComprEncryp    string        `json:"compr_encryp"`    // 圧縮・暗号化の種類
 	Authentication string        `json:"authentication"`  // 認証の種類 N: None, B: Basic, D: Digest
 	Fee            string        `json:"fee"`             // 料金 N: No/Free, Y: Yes/Pay
-	Bitrate        int           `json:"bitrate"`         // ビットレート
+	Bitrate        string        `json:"bitrate"`         // ビットレート
 	Misc           string        `json:"misc"`            // その他
 }
 

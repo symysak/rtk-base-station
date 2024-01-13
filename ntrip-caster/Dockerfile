@@ -18,7 +18,6 @@ FROM ubuntu:latest
 WORKDIR /app
 
 COPY --from=builder /build/RTKLIB/app/consapp/str2str/gcc/str2str .
-COPY entrypoint.sh .
 
 RUN apt update --fix-missing \
     && apt clean \
@@ -26,5 +25,5 @@ RUN apt update --fix-missing \
 
 EXPOSE 2101
 
-RUN chmod +x entrypoint.sh
-ENTRYPOINT ["./entrypoint.sh"]
+RUN chmod +x /config/entrypoint.sh
+ENTRYPOINT ["/config/entrypoint.sh"]
