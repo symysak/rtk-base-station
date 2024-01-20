@@ -38,7 +38,7 @@ type Sourcetable struct {
 }
 
 type FormatDetails struct {
-	Msg1005 int `json:"msg_1005" validate:"min=0"` // 座標 のinterval
+	Msg1005 int `json:"msg_1005" validate:"min=1"` // 座標 のinterval
 	Msg1008 int `json:"msg_1008" validate:"min=0"` // アンテナ記述子とシリアル番号 のinterval
 	Msg1077 int `json:"msg_1077" validate:"min=0"` // GPS MSM7 のinterval
 	Msg1087 int `json:"msg_1087" validate:"min=0"` // GLONASS MSM7 のinterval
