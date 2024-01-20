@@ -131,17 +131,44 @@ out="`
 		text += new_config.Ntripcaster.Sourcetable.Identifier + ";"
 		text += new_config.Ntripcaster.Sourcetable.Format + ";"
 
-		var tmp string
-		tmp += "1005(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1005) + "),"
-		tmp += "1008(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1008) + "),"
-		tmp += "1077(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1077) + "),"
-		tmp += "1087(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1087) + "),"
-		tmp += "1097(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1097) + "),"
-		tmp += "1107(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1107) + "),"
-		tmp += "1117(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1117) + "),"
-		tmp += "1127(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1127) + "),"
-		tmp += "1230(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1230) + ")"
-		text += tmp
+		var tmp []string
+		// 0の場合は何もしない
+		tmp = append(tmp, "1005("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1005)+")")
+
+		if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1008 != 0 {
+			tmp = append(tmp, "1008("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1008)+")")
+		}
+		if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1077 != 0 {
+			tmp = append(tmp, "1077("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1077)+")")
+		}
+		if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1087 != 0 {
+			tmp = append(tmp, "1087("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1087)+")")
+		}
+		if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1097 != 0 {
+			tmp = append(tmp, "1097("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1097)+")")
+		}
+		if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1107 != 0 {
+			tmp = append(tmp, "1107("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1107)+")")
+		}
+		if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1117 != 0 {
+			tmp = append(tmp, "1117("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1117)+")")
+		}
+		if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1127 != 0 {
+			tmp = append(tmp, "1127("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1127)+")")
+		}
+		if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1230 != 0 {
+			tmp = append(tmp, "1230("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1230)+")")
+		}
+		var msg string
+		for i := 0; i < len(tmp); i++ {
+			if i == len(tmp)-1 {
+				msg += tmp[i]
+			} else {
+				msg += tmp[i]
+				msg += ","
+			}
+		}
+		text += msg
 
 		text += ";"
 
@@ -170,7 +197,7 @@ out="`
 		text += strconv.FormatFloat(new_config.Ntripcaster.Height, 'f', 4, 64) + " "
 
 		text += `-msg "`
-		text += tmp
+		text += msg
 		text += `" -opt -TADJ=1`
 
 		f, err := os.Create("ntrip-caster/entrypoint.sh")
