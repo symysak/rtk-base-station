@@ -11,4 +11,4 @@ updates:
       interval: "weekly"
       day: "sunday"
       time: "00:00"
-      timezose: "Asia/Tokyo"
+      timezone: "Asia/Tokyo"
