@@ -34,12 +34,10 @@ var getCmd = &cobra.Command{
 		v := reflect.ValueOf(running_config)
 		for _, name := range strings.Split(args[0], ".") {
 			v = reflect.Indirect(v).FieldByName(name)
-		}
-
-		// 見つからない場合はエラー
-		if v.Kind() == reflect.Invalid {
-			fmt.Println("Key not found")
-			os.Exit(1)
+			if v.Kind() == reflect.Invalid {
+				fmt.Println("Key not found")
+				os.Exit(1)
+			}
 		}
 
 		fmt.Println(v)

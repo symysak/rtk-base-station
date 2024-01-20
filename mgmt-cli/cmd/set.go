@@ -35,6 +35,10 @@ var setCmd = &cobra.Command{
 		v := reflect.ValueOf(&new_config).Elem() // Obtain the addressable value.
 		for _, name := range strings.Split(args[0], ".") {
 			v = v.FieldByName(name)
+			if v.Kind() == reflect.Invalid {
+				fmt.Println("Key not found")
+				os.Exit(1)
+			}
 		}
 
 		switch v.Kind() {
@@ -48,12 +52,8 @@ var setCmd = &cobra.Command{
 			v.SetFloat(float64(n))
 		}
 
-		// 見つからない場合はエラー
-		if v.Kind() == reflect.Invalid {
-			fmt.Println("Key not found")
-		} else {
-			fmt.Println(args[0], "=", v)
-		}
+		// 設定した内容を表示
+		fmt.Println(args[0], "=", v)
 
 		new_new_config, err := os.Create("mgmt-cli/new-config.json")
 		if err != nil {

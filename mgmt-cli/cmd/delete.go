@@ -36,12 +36,10 @@ var deleteCmd = &cobra.Command{
 		v := reflect.ValueOf(&new_config).Elem() // Obtain the addressable value.
 		for _, name := range strings.Split(args[0], ".") {
 			v = v.FieldByName(name)
-		}
-
-		// 見つからない場合はエラー
-		if v.Kind() == reflect.Invalid {
-			fmt.Println("Key not found")
-			os.Exit(1)
+			if v.Kind() == reflect.Invalid {
+				fmt.Println("Key not found")
+				os.Exit(1)
+			}
 		}
 
 		switch v.Kind() {
