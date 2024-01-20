@@ -7,10 +7,13 @@ import (
 	"os/exec"
 	"strconv"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/google/go-cmp/cmp"
 	"github.com/spf13/cobra"
 	"github.com/symysak/rtk-base-station/mgmt-cli/models"
 )
+
+var validate *validator.Validate
 
 // commitCmd represents the commit command
 var commitCmd = &cobra.Command{
@@ -36,15 +39,24 @@ var commitCmd = &cobra.Command{
 		//
 		fmt.Println("Checking...")
 
-		if string(raw_running_config) == string(raw_new_config) {
-			fmt.Println("No changes to commit")
-			os.Exit(0)
-		}
-
 		var running_config models.Config
 		json.Unmarshal(raw_running_config, &running_config)
 		var new_config models.Config
 		json.Unmarshal(raw_new_config, &new_config)
+
+		// 差分チェック
+		if running_config == new_config {
+			fmt.Println("No changes to commit")
+			os.Exit(0)
+		}
+
+		// バリデーションチェック
+		validate = validator.New(validator.WithRequiredStructEnabled())
+		err = validate.Struct(new_config)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 
 		if running_config.Ntripcaster.Mountpoint != new_config.Ntripcaster.Mountpoint {
 
