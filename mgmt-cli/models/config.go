@@ -38,13 +38,13 @@ type Sourcetable struct {
 }
 
 type FormatDetails struct {
-	Msg1005 int `json:"msg_1005" validate:"min=-1"` // 座標 のinterval
-	Msg1008 int `json:"msg_1008" validate:"min=-1"` // アンテナ記述子とシリアル番号 のinterval
-	Msg1077 int `json:"msg_1077" validate:"min=-1"` // GPS MSM7 のinterval
-	Msg1087 int `json:"msg_1087" validate:"min=-1"` // GLONASS MSM7 のinterval
-	Msg1097 int `json:"msg_1097" validate:"min=-1"` // Galileo MSM7 のinterval
-	Msg1107 int `json:"msg_1107" validate:"min=-1"` // SBAS MSM7 のinterval
-	Msg1117 int `json:"msg_1117" validate:"min=-1"` // QZSS MSM7 のinterval
-	Msg1127 int `json:"msg_1127" validate:"min=-1"` // BeiDou MSM7 のinterval
-	Msg1230 int `json:"msg_1230" validate:"min=-1"` // GLONASS L1/L2 のinterval
+	Msg1005 int `json:"msg_1005" validate:"min=0"` // 座標 のinterval
+	Msg1008 int `json:"msg_1008" validate:"min=0"` // アンテナ記述子とシリアル番号 のinterval
+	Msg1077 int `json:"msg_1077" validate:"min=0"` // GPS MSM7 のinterval
+	Msg1087 int `json:"msg_1087" validate:"min=0"` // GLONASS MSM7 のinterval
+	Msg1097 int `json:"msg_1097" validate:"min=0"` // Galileo MSM7 のinterval
+	Msg1107 int `json:"msg_1107" validate:"min=0"` // SBAS MSM7 のinterval
+	Msg1117 int `json:"msg_1117" validate:"min=0"` // QZSS MSM7 のinterval
+	Msg1127 int `json:"msg_1127" validate:"min=0"` // BeiDou MSM7 のinterval
+	Msg1230 int `json:"msg_1230" validate:"min=0"` // GLONASS L1/L2 のinterval
 }
