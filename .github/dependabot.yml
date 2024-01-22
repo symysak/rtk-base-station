@@ -8,7 +8,6 @@ updates:
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/mgmt-dashboard-frontend" # Location of package manifests
     schedule:
-      interval: "weekly"
-      day: "sunday"
+      interval: "daily"
       time: "00:00"
       timezone: "Asia/Tokyo"
