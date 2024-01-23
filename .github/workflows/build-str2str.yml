@@ -2,6 +2,16 @@ on:
   push:
     branches:
       - main
+      - develop
+    paths:
+      - str2str/**
+
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - str2str/**
 
 name: str2str Docker Build and Push
 
