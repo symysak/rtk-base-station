@@ -3,11 +3,15 @@ on:
     branches:
       - main
       - develop
+    paths:
+      - ntrip-caster/**
 
   pull_request:
     branches:
       - main
       - develop
+    paths:
+      - ntrip-caster/**
 
 name: ntrip-caster Docker Build and Push
 
