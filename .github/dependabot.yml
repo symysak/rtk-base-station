@@ -12,3 +12,12 @@ updates:
       time: "00:00"
       timezone: "Asia/Tokyo"
     target-branch: "develop"
+
+  - package-ecosystem: "gomod" # See documentation for possible values
+    directory: "/mgmt-cli" # Location of package manifests
+    schedule:
+      interval: "daily"
+      time: "00:00"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
+
