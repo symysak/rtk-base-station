@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/google/go-cmp/cmp"
@@ -73,7 +74,7 @@ var commitCmd = &cobra.Command{
 		if new_config.Ntripcaster.Username == "" && new_config.Ntripcaster.Password == "" {
 			new_config.Ntripcaster.Sourcetable.Authentication = "N"
 		} else {
-			new_config.Ntripcaster.Sourcetable.Authentication = "Y"
+			new_config.Ntripcaster.Sourcetable.Authentication = "B"
 		}
 
 		fmt.Println("Check Completed")
@@ -91,7 +92,7 @@ var commitCmd = &cobra.Command{
 			os.Exit(0)
 		}
 
-		// 差分のチェック後にmgmt-cli/new-config.jsonを書き換える
+		// 差分のチェックが終わったのでmgmt-cli/new-config.jsonを書き換える
 		new_new_config, err := os.Create("mgmt-cli/new-config.json")
 		if err != nil {
 			fmt.Println(err)
@@ -216,7 +217,7 @@ out="`
 		// コミット処理おわり
 		//
 
-		// コミット後にmgmt-cli/running-config.jsonを書き換える
+		// コミットが終わったのでmgmt-cli/running-config.jsonを書き換える
 		new_running_config, err := os.Create("mgmt-cli/running-config.json")
 		if err != nil {
 			fmt.Println(err)
@@ -225,6 +226,21 @@ out="`
 		defer new_running_config.Close()
 		encoder2 := json.NewEncoder(new_running_config)
 		if err := encoder2.Encode(new_config); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+		// もともとのrunning-configを念のため保存しておく
+		var date string = strconv.Itoa(time.Now().Year()) + "-" + strconv.Itoa(int(time.Now().Month())) + "-" + strconv.Itoa(time.Now().Day()) + "-" + strconv.Itoa(time.Now().Hour()) + "-" + strconv.Itoa(time.Now().Minute()) + "-" + strconv.Itoa(time.Now().Second())
+		fmt.Print(date)
+		running_config_bak, err := os.Create("mgmt-cli/running-config." + date + ".json")
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		defer running_config_bak.Close()
+		encoder3 := json.NewEncoder(running_config_bak)
+		if err := encoder3.Encode(running_config); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
