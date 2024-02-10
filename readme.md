@@ -216,6 +216,20 @@ systemctl --user enable --now podman-auto-update.timerまで
 実行
 ```
 
+### wireguard config
+```
+[Interface]
+PrivateKey = 
+Address = 
+MTU = 
+
+[Peer]
+PublicKey = 
+AllowedIPs = 0.0.0.0/0
+Endpoint = 
+PersistentKeepalive = 1
+```
+
 ## Lisence
 ### RTKLIB
 --------------------------------------------------------------------------------
