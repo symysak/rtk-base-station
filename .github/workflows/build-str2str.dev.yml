@@ -1,9 +1,19 @@
 on:
   push:
     branches:
-      - main
+      - develop
+    paths:
+      - str2str/**
+      - .github/workflows/**
 
-name: ntrip-caster Docker Build and Push
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - str2str/**
+      - .github/workflows/**
+
+name: str2str Docker Build and Push
 
 jobs:
     publish_docker_image:
@@ -12,7 +22,7 @@ jobs:
         - name: Checkout
           uses: actions/checkout@v4
         - name: Set up QEMU
-          uses: docker/setup-qemu-action@v3.0.0
+          uses: docker/setup-qemu-action@v3
           with:
             platforms: linux/arm64
         - name: Set up Docker Buildx
@@ -26,10 +36,10 @@ jobs:
         - name: Build and Push
           uses: docker/build-push-action@v5
           with:
-            context: ./ntrip-caster
+            context: ./str2str
             cache-from: type=gha
             cache-to: type=gha, mode=max
             platforms: linux/arm64
             push: true
             tags: |
-              ghcr.io/symysak/ntrip-caster:latest
+              ghcr.io/symysak/str2str:latest
