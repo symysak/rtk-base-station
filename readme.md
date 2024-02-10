@@ -117,7 +117,7 @@ cd ..
 # ntrip casterの設定
 sudo chmod +x ntrip-caster/entrypoint.sh
 
-# optional ufwをfirewalldにする
+# ufwをfirewalldにする
 sudo systemctl disable ufw
 sudo systemctl stop ufw
 sudo apt install firewalld
@@ -129,39 +129,21 @@ sudo apt install -y raspi-config
 sudo raspi-config
 # fanの設定などをする
 
-sudo reboot
 
-```
-## Usage
-マウントポイント: main
-ユーザ名: なし
-パスワード: なし
+# tailscaleの設定を行う
+sudo mkdir /etc/systemd/system/tailscaled.service.d
+sudo vi /etc/systemd/system/tailscaled.service.d/override.conf
 
-## 説明
-GitHubに何かしらの変更があると、自動でコンテナのビルドを行います。
-コンテナのビルドが終わると、podmanのauto-updateによって基地局側のコンテナも最新になります。
-```
-2101/tcp: ntrip caster
-2102/tcp: str2str(後述)
-```
-### str2str
-RTKLIBのstr2strをdocker化したものです。
-Windowsにインストールしたu-centerからリモートで設定の変更をするためのもの。
-### ntrip-caster
-RTKLIBのstr2strをdocker化したものです。
-str2strをNTRIP Casterとして動作させています。
+[Unit]
+After=wg-quick@wg0.service
 
-## メモ
-### git pull後の諸々の反映
-```
-git pull
-bash rm_containers.sh
-その後上記instllationの## run containersか
-systemctl --user enable --now podman-auto-update.timerまで
-実行
-```
-### firewalld
-```
+:wq
+
+
+# wireguardの設定を行う
+## 準備中
+
+# firewalld の設定
 sudo vi /etc/firewalld/services/str2str.xml
 
 <?xml version="1.0" encoding="utf-8"?>
@@ -201,6 +183,37 @@ sudo firewall-cmd --reload
 
 sudo firewall-cmd --remove-service={cockpit,ssh,dhcpv6-client} --permanent
 sudo firewall-cmd --reload
+
+sudo reboot
+
+```
+## Usage
+マウントポイント: main
+ユーザ名: なし
+パスワード: なし
+
+## 説明
+GitHubに何かしらの変更があると、自動でコンテナのビルドを行います。
+コンテナのビルドが終わると、podmanのauto-updateによって基地局側のコンテナも最新になります。
+```
+2101/tcp: ntrip caster
+2102/tcp: str2str(後述)
+```
+### str2str
+RTKLIBのstr2strをdocker化したものです。
+Windowsにインストールしたu-centerからリモートで設定の変更をするためのもの。
+### ntrip-caster
+RTKLIBのstr2strをdocker化したものです。
+str2strをNTRIP Casterとして動作させています。
+
+## メモ
+### git pull後の諸々の反映
+```
+git pull
+bash rm_containers.sh
+その後上記instllationの## run containersか
+systemctl --user enable --now podman-auto-update.timerまで
+実行
 ```
 
 ## Lisence

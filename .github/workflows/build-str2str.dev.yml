@@ -1,8 +1,20 @@
 on:
-  schedule:
-    - cron: "42 17 * * 0" # Run weekly at 5:42 PM on Sunday
+  push:
+    branches:
+      - develop
+    paths:
+      - str2str/**
+      - .github/workflows/**
 
-name: WEEKLY str2str Docker Build and Push
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - str2str/**
+      - .github/workflows/**
+
+name: str2str Docker Build and Push
 
 jobs:
     publish_docker_image:
@@ -11,7 +23,7 @@ jobs:
         - name: Checkout
           uses: actions/checkout@v4
         - name: Set up QEMU
-          uses: docker/setup-qemu-action@v3.0.0
+          uses: docker/setup-qemu-action@v3
           with:
             platforms: linux/arm64
         - name: Set up Docker Buildx
@@ -26,6 +38,8 @@ jobs:
           uses: docker/build-push-action@v5
           with:
             context: ./str2str
+            cache-from: type=gha
+            cache-to: type=gha, mode=max
             platforms: linux/arm64
             push: true
             tags: |
