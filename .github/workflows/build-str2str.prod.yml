@@ -2,18 +2,11 @@ on:
   push:
     branches:
       - main
-      - develop
     paths:
       - str2str/**
+      - .github/workflows/**
 
-  pull_request:
-    branches:
-      - main
-      - develop
-    paths:
-      - str2str/**
-
-name: str2str Docker Build and Push
+name: (PROD) str2str Docker Build and Push
 
 jobs:
     publish_docker_image:
@@ -22,7 +15,7 @@ jobs:
         - name: Checkout
           uses: actions/checkout@v4
         - name: Set up QEMU
-          uses: docker/setup-qemu-action@v3.0.0
+          uses: docker/setup-qemu-action@v3
           with:
             platforms: linux/arm64
         - name: Set up Docker Buildx
@@ -42,4 +35,4 @@ jobs:
             platforms: linux/arm64
             push: true
             tags: |
-              ghcr.io/symysak/str2str:latest
+              ghcr.io/symysak/str2str:main
