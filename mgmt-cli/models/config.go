@@ -17,24 +17,20 @@ type Ntripcaster struct {
 }
 
 type Sourcetable struct {
-	Mountpoint     string        `json:"mountpoint"`
-	Identifier     string        `json:"identifier"` // 地名等
-	Format         string        `json:"format"`     // RTCM3 や ubx など
-	FormatDetails  FormatDetails `json:"format_details"`
-	Carrer         int           `json:"carrer" validate:"oneof=1 2 3"`               // 1: None, 2: L1, 3: L1+L2
-	NavSystem      string        `json:"nav_system"`                                  // ex: GPS+GLONASS+Galileo+SBAS+QZSS+BeiDou
-	Network        string        `json:"network"`                                     // ネットワーク名　なんでもいい
-	Country        string        `json:"country"`                                     // ISO3166 の国コード
-	ShortLatitude  float64       `json:"short_latitude" validate:"min=-90,max=90"`    // 緯度
-	ShortLongitude float64       `json:"short_longitude" validate:"min=-180,max=180"` // 経度
-	Nmea           int           `json:"nmea" validate:"oneof=0 1"`                   // NMEAをクライアントが送信可能か 0: NG, 1: OK
-	Solution       int           `json:"solution" validate:"oneof=0 1"`               // ソリューションの種類 0: 単一, 1: ネットワーク
-	Generator      string        `json:"generator"`                                   // 生成ソフトウェア名
-	ComprEncryp    string        `json:"compr_encryp"`                                // 圧縮・暗号化の種類
-	Authentication string        `json:"authentication" validate:"oneof=N B D"`       // 認証の種類 N: None, B: Basic, D: Digest
-	Fee            string        `json:"fee" validate:"oneof=N Y"`                    // 料金 N: No/Free, Y: Yes/Pay
-	Bitrate        string        `json:"bitrate"`                                     // ビットレート
-	Misc           string        `json:"misc"`                                        // その他
+	Identifier    string        `json:"identifier"` // 地名等
+	Format        string        `json:"format"`     // RTCM3 や ubx など
+	FormatDetails FormatDetails `json:"format_details"`
+	Carrer        int           `json:"carrer" validate:"oneof=1 2 3"` // 1: None, 2: L1, 3: L1+L2
+	NavSystem     string        `json:"nav_system"`                    // ex: GPS+GLONASS+Galileo+SBAS+QZSS+BeiDou
+	Network       string        `json:"network"`                       // ネットワーク名　なんでもいい
+	Country       string        `json:"country"`                       // ISO3166 の国コード
+	Nmea          int           `json:"nmea" validate:"oneof=0 1"`     // NMEAをクライアントが送信可能か 0: NG, 1: OK
+	Solution      int           `json:"solution" validate:"oneof=0 1"` // ソリューションの種類 0: 単一, 1: ネットワーク
+	Generator     string        `json:"generator"`                     // 生成ソフトウェア名
+	ComprEncryp   string        `json:"compr_encryp"`                  // 圧縮・暗号化の種類
+	Fee           string        `json:"fee" validate:"oneof=N Y"`      // 料金 N: No/Free, Y: Yes/Pay
+	Bitrate       string        `json:"bitrate"`                       // ビットレート
+	Misc          string        `json:"misc"`                          // その他
 }
 
 type FormatDetails struct {

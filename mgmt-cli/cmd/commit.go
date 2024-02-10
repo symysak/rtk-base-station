@@ -78,17 +78,6 @@ var commitCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		if running_config.Ntripcaster.Mountpoint != new_config.Ntripcaster.Mountpoint {
-
-			// Ntripcaster.Mountpointのみを設定される想定なので
-			// 絶対に異なるけど念のため確認
-			if new_config.Ntripcaster.Mountpoint != new_config.Ntripcaster.Sourcetable.Mountpoint {
-
-				// Ntripcaster.Sourcetable.Mountpointも変更する
-				new_config.Ntripcaster.Sourcetable.Mountpoint = new_config.Ntripcaster.Mountpoint
-			}
-		}
-
 		// パスワードまたはユーザ名が設定されている場合、両方が設定されているか確認
 		if new_config.Ntripcaster.Username != "" || new_config.Ntripcaster.Password != "" {
 			var ok1, ok2 bool
@@ -102,13 +91,6 @@ var commitCmd = &cobra.Command{
 				fmt.Println("Username and Password must be set together")
 				os.Exit(1)
 			}
-		}
-
-		// Ntripcaster.Sourcetable.AuthenticationはUsernameとPasswordの有無で決まる
-		if new_config.Ntripcaster.Username == "" && new_config.Ntripcaster.Password == "" {
-			new_config.Ntripcaster.Sourcetable.Authentication = "N"
-		} else {
-			new_config.Ntripcaster.Sourcetable.Authentication = "B"
 		}
 
 		fmt.Println("Check Completed")
@@ -150,7 +132,7 @@ var commitCmd = &cobra.Command{
 
 out="`
 
-		if new_config.Ntripcaster.Sourcetable.Authentication == "B" {
+		if new_config.Ntripcaster.Username != "" && new_config.Ntripcaster.Password != "" {
 			text += "ntripc://"
 			text += new_config.Ntripcaster.Username
 			text += ":"
@@ -162,7 +144,7 @@ out="`
 
 		text += "/"
 
-		text += new_config.Ntripcaster.Sourcetable.Mountpoint + ";"
+		text += new_config.Ntripcaster.Mountpoint + ";"
 		text += new_config.Ntripcaster.Sourcetable.Identifier + ";"
 		text += new_config.Ntripcaster.Sourcetable.Format + ";"
 
@@ -211,13 +193,17 @@ out="`
 		text += new_config.Ntripcaster.Sourcetable.NavSystem + ";"
 		text += new_config.Ntripcaster.Sourcetable.Network + ";"
 		text += new_config.Ntripcaster.Sourcetable.Country + ";"
-		text += strconv.FormatFloat(new_config.Ntripcaster.Sourcetable.ShortLatitude, 'f', 2, 64) + ";"
-		text += strconv.FormatFloat(new_config.Ntripcaster.Sourcetable.ShortLongitude, 'f', 2, 64) + ";"
+		text += strconv.FormatFloat(new_config.Ntripcaster.Latitude, 'f', 2, 64) + ";"
+		text += strconv.FormatFloat(new_config.Ntripcaster.Longitude, 'f', 2, 64) + ";"
 		text += strconv.Itoa(new_config.Ntripcaster.Sourcetable.Nmea) + ";"
 		text += strconv.Itoa(new_config.Ntripcaster.Sourcetable.Solution) + ";"
 		text += new_config.Ntripcaster.Sourcetable.Generator + ";"
 		text += new_config.Ntripcaster.Sourcetable.ComprEncryp + ";"
-		text += new_config.Ntripcaster.Sourcetable.Authentication + ";"
+		if new_config.Ntripcaster.Username != "" && new_config.Ntripcaster.Password != "" {
+			text += "B" + ";"
+		} else {
+			text += "N" + ";"
+		}
 		text += new_config.Ntripcaster.Sourcetable.Fee + ";"
 		text += new_config.Ntripcaster.Sourcetable.Bitrate + ";"
 		text += new_config.Ntripcaster.Sourcetable.Misc
