@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -15,6 +16,42 @@ import (
 )
 
 var validate *validator.Validate
+
+func validateNavSystem(fl validator.FieldLevel) bool {
+	// 英大文字と+のみで構成されているか
+	// かつ、+が連続していないか
+	// かつ、+で始まっていないか
+	// かつ、+で終わっていないか
+
+	if fl.Field().String()[0] == '+' {
+		return false
+	}
+	if fl.Field().String()[len(fl.Field().String())-1] == '+' {
+		return false
+	}
+	for i := 0; i < len(fl.Field().String()); i++ {
+		if fl.Field().String()[i] == '+' {
+			if i+1 < len(fl.Field().String()) {
+				if fl.Field().String()[i+1] == '+' {
+					return false
+				}
+			}
+		}
+		if fl.Field().String()[i] < 'A' || fl.Field().String()[i] > 'Z' {
+			return false
+		}
+	}
+	return true
+}
+func validateGenerator(fl validator.FieldLevel) bool {
+	// 英字と/のみで構成されているか
+
+	var ValueCheck = regexp.MustCompile("^[0-9a-zA-Z_]+$").MatchString
+	if !ValueCheck(fl.Field().String()) {
+		return false
+	}
+	return true
+}
 
 // configファイルのディレクトリのパス
 var configDir string
@@ -72,6 +109,8 @@ var commitCmd = &cobra.Command{
 
 		// バリデーションチェック
 		validate = validator.New(validator.WithRequiredStructEnabled())
+		validate.RegisterValidation("navsystem", validateNavSystem)
+		validate.RegisterValidation("generator", validateGenerator)
 		err = validate.Struct(new_config)
 		if err != nil {
 			fmt.Println(err)
