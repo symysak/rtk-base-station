@@ -16,6 +16,12 @@ import (
 
 var validate *validator.Validate
 
+// configファイルのディレクトリのパス
+var configDir string
+
+// ntrip-casterのディレクトリのパス
+var ntripcasterDir string
+
 // commitCmd represents the commit command
 var commitCmd = &cobra.Command{
 	Use:   "commit",
@@ -24,12 +30,25 @@ var commitCmd = &cobra.Command{
 
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		raw_running_config, err := os.ReadFile("mgmt-cli/running-config.json")
+		// configDirの存在確認
+		var f, err = os.Stat(configDir)
+		if os.IsNotExist(err) || !f.IsDir() {
+			fmt.Println(configDir + " is not exist or not directory")
+			os.Exit(1)
+		}
+		// ntripcasterDirの存在確認
+		f, err = os.Stat(ntripcasterDir)
+		if os.IsNotExist(err) || !f.IsDir() {
+			fmt.Println(ntripcasterDir + " is not exist or not directory")
+			os.Exit(1)
+		}
+
+		raw_running_config, err := os.ReadFile(configDir + "running-config.json")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		raw_new_config, err := os.ReadFile("mgmt-cli/new-config.json")
+		raw_new_config, err := os.ReadFile(configDir + "new-config.json")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -70,6 +89,21 @@ var commitCmd = &cobra.Command{
 			}
 		}
 
+		// パスワードまたはユーザ名が設定されている場合、両方が設定されているか確認
+		if new_config.Ntripcaster.Username != "" || new_config.Ntripcaster.Password != "" {
+			var ok1, ok2 bool
+			if new_config.Ntripcaster.Username != "" {
+				ok1 = true
+			}
+			if new_config.Ntripcaster.Password != "" {
+				ok2 = true
+			}
+			if ok1 != ok2 {
+				fmt.Println("Username and Password must be set together")
+				os.Exit(1)
+			}
+		}
+
 		// Ntripcaster.Sourcetable.AuthenticationはUsernameとPasswordの有無で決まる
 		if new_config.Ntripcaster.Username == "" && new_config.Ntripcaster.Password == "" {
 			new_config.Ntripcaster.Sourcetable.Authentication = "N"
@@ -92,8 +126,8 @@ var commitCmd = &cobra.Command{
 			os.Exit(0)
 		}
 
-		// 差分のチェックが終わったのでmgmt-cli/new-config.jsonを書き換える
-		new_new_config, err := os.Create("mgmt-cli/new-config.json")
+		// 差分のチェックが終わったのでconfigDir + new-config.jsonを書き換える
+		new_new_config, err := os.Create(configDir + "new-config.json")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -116,7 +150,7 @@ var commitCmd = &cobra.Command{
 
 out="`
 
-		if new_config.Ntripcaster.Sourcetable.Authentication == "Y" {
+		if new_config.Ntripcaster.Sourcetable.Authentication == "B" {
 			text += "ntripc://"
 			text += new_config.Ntripcaster.Username
 			text += ":"
@@ -201,13 +235,13 @@ out="`
 		text += msg
 		text += `" -opt -TADJ=1`
 
-		f, err := os.Create("ntrip-caster/entrypoint.sh")
+		f2, err := os.Create(ntripcasterDir + "entrypoint.sh")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		defer f.Close()
-		f.Write(([]byte)(text))
+		defer f2.Close()
+		f2.Write(([]byte)(text))
 
 		// コンテナを再起動する
 		exec.Command("podman", "restart", "ntrip-caster")
@@ -217,8 +251,8 @@ out="`
 		// コミット処理おわり
 		//
 
-		// コミットが終わったのでmgmt-cli/running-config.jsonを書き換える
-		new_running_config, err := os.Create("mgmt-cli/running-config.json")
+		// コミットが終わったのでconfigDir + running-config.jsonを書き換える
+		new_running_config, err := os.Create(configDir + "running-config.json")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -232,8 +266,8 @@ out="`
 
 		// もともとのrunning-configを念のため保存しておく
 		var date string = strconv.Itoa(time.Now().Year()) + "-" + strconv.Itoa(int(time.Now().Month())) + "-" + strconv.Itoa(time.Now().Day()) + "-" + strconv.Itoa(time.Now().Hour()) + "-" + strconv.Itoa(time.Now().Minute()) + "-" + strconv.Itoa(time.Now().Second())
-		fmt.Print(date)
-		running_config_bak, err := os.Create("mgmt-cli/running-config." + date + ".json")
+		fmt.Print("config backed up: " + configDir + "running-config." + date + ".json")
+		running_config_bak, err := os.Create(configDir + "running-config." + date + ".json")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -252,13 +286,8 @@ out="`
 func init() {
 	rootCmd.AddCommand(commitCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// commitCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// commitCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	commitCmd.Flags().StringVarP(&configDir, "config-dir", "c", "", "config file directory ex: mgmt-cli/")
+	commitCmd.MarkFlagRequired("config-dir")
+	commitCmd.Flags().StringVarP(&ntripcasterDir, "ntripcaster-dir", "n", "", "ntripcaster directory ex: ../ntrip-caster/")
+	commitCmd.MarkFlagRequired("ntripcaster-dir")
 }
