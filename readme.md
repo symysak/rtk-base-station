@@ -2,7 +2,8 @@
 ```.
 ├── str2str         # RTKLIB str2str docker image
 ├── ntrip-caster    # ntrip caster docker image
-├── sync-run-containers-script # to sync docker-compose with github
+├── mgmt-cli        # CLI tool for management of configuration files
+├── mgmt-dashboard  # Web Dashboard for Cockpit
 └── README.md
 ```
 
@@ -195,6 +196,7 @@ sudo reboot
 ## 説明
 GitHubに何かしらの変更があると、自動でコンテナのビルドを行います。
 コンテナのビルドが終わると、podmanのauto-updateによって基地局側のコンテナも最新になります。
+また、コンテナイメージのタグは、mainが本番環境、latestが開発環境です。
 ```
 2101/tcp: ntrip caster
 2102/tcp: str2str(後述)
