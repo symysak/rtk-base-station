@@ -18,7 +18,7 @@ import (
 var validate *validator.Validate
 
 func validateNavSystem(fl validator.FieldLevel) bool {
-	// 英大文字と+のみで構成されているか
+	// 英文字と+のみで構成されているか
 	// かつ、+が連続していないか
 	// かつ、+で始まっていないか
 	// かつ、+で終わっていないか
@@ -36,17 +36,18 @@ func validateNavSystem(fl validator.FieldLevel) bool {
 					return false
 				}
 			}
-		}
-		if fl.Field().String()[i] < 'A' || fl.Field().String()[i] > 'Z' {
-			return false
+		} else if fl.Field().String()[i] < 'A' || fl.Field().String()[i] > 'Z' {
+			if fl.Field().String()[i] < 'a' || fl.Field().String()[i] > 'z' {
+				return false
+			}
 		}
 	}
 	return true
 }
 func validateGenerator(fl validator.FieldLevel) bool {
-	// 英字と/のみで構成されているか
+	// 英字と/と-と.のみで構成されているか
 
-	var ValueCheck = regexp.MustCompile("^[0-9a-zA-Z_]+$").MatchString
+	var ValueCheck = regexp.MustCompile("^[0-9a-zA-Z./-]+$").MatchString
 	if !ValueCheck(fl.Field().String()) {
 		return false
 	}
@@ -68,6 +69,12 @@ var commitCmd = &cobra.Command{
 		f, err := os.Stat(ntripcasterDir)
 		if os.IsNotExist(err) || !f.IsDir() {
 			fmt.Println(ntripcasterDir + " is not exist or not directory")
+			os.Exit(1)
+		}
+		// ntripcasterのconfigが存在するか確認
+		f, err = os.Stat(ntripcasterDir + "entrypoint.sh")
+		if os.IsNotExist(err) || f.IsDir() {
+			fmt.Println(ntripcasterDir + "entrypoint.sh is not exist or directory")
 			os.Exit(1)
 		}
 
@@ -100,8 +107,16 @@ var commitCmd = &cobra.Command{
 
 		// バリデーションチェック
 		validate = validator.New(validator.WithRequiredStructEnabled())
-		validate.RegisterValidation("navsystem", validateNavSystem)
-		validate.RegisterValidation("generator", validateGenerator)
+		err = validate.RegisterValidation("navsystem", validateNavSystem)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		err = validate.RegisterValidation("generator", validateGenerator)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 		err = validate.Struct(new_config)
 		if err != nil {
 			fmt.Println(err)
@@ -146,6 +161,7 @@ var commitCmd = &cobra.Command{
 		}
 		defer new_new_config.Close()
 		encoder1 := json.NewEncoder(new_new_config)
+		encoder1.SetIndent("", "  ")
 		if err := encoder1.Encode(new_config); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -251,6 +267,7 @@ out="`
 		text += msg
 		text += `" -opt -TADJ=1`
 
+		//
 		f2, err := os.Create(ntripcasterDir + "entrypoint.sh")
 		if err != nil {
 			fmt.Println(err)
@@ -275,6 +292,7 @@ out="`
 		}
 		defer new_running_config.Close()
 		encoder2 := json.NewEncoder(new_running_config)
+		encoder2.SetIndent("", "  ")
 		if err := encoder2.Encode(new_config); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -290,6 +308,7 @@ out="`
 		}
 		defer running_config_bak.Close()
 		encoder3 := json.NewEncoder(running_config_bak)
+		encoder3.SetIndent("", "  ")
 		if err := encoder3.Encode(running_config); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
