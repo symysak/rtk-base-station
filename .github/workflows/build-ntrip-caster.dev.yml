@@ -53,7 +53,7 @@ jobs:
             labels: |
               org.opencontainers.image.title=ntrip-caster
               org.opencontainers.image.description=An NTRIP Caster
-              org.opencontainers.image.licenses="(c) 2024 Yoshiaki Suyama"
+              org.opencontainers.image.licenses=(c) 2024 Yoshiaki Suyama
     
         - name: Build and Push
           uses: docker/build-push-action@v5
