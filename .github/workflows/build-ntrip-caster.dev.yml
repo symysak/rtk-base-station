@@ -53,11 +53,9 @@ jobs:
             labels: |
               org.opencontainers.image.title=ntrip-caster
               org.opencontainers.image.description=An NTRIP Caster
-              org.opencontainers.image.licenses=(c) 2024 Yoshiaki Suyama
             annotations: |
               org.opencontainers.image.title=ntrip-caster
               org.opencontainers.image.description=An NTRIP Caster
-              org.opencontainers.image.licenses=(c) 2024 Yoshiaki Suyama
     
         - name: Build and Push
           uses: docker/build-push-action@v5
@@ -69,3 +67,4 @@ jobs:
             push: true
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
+            annotations: ${{ steps.meta.outputs.annotations }}
