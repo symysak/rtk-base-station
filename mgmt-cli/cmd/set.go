@@ -62,6 +62,7 @@ var setCmd = &cobra.Command{
 		}
 		defer new_new_config.Close()
 		encoder := json.NewEncoder(new_new_config)
+		encoder.SetIndent("", "  ")
 		if err := encoder.Encode(new_config); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
