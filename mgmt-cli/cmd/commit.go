@@ -53,9 +53,6 @@ func validateGenerator(fl validator.FieldLevel) bool {
 	return true
 }
 
-// configファイルのディレクトリのパス
-var configDir string
-
 // ntrip-casterのディレクトリのパス
 var ntripcasterDir string
 
@@ -67,14 +64,8 @@ var commitCmd = &cobra.Command{
 
 	RunE: func(cmd *cobra.Command, args []string) error {
 
-		// configDirの存在確認
-		var f, err = os.Stat(configDir)
-		if os.IsNotExist(err) || !f.IsDir() {
-			fmt.Println(configDir + " is not exist or not directory")
-			os.Exit(1)
-		}
 		// ntripcasterDirの存在確認
-		f, err = os.Stat(ntripcasterDir)
+		f, err := os.Stat(ntripcasterDir)
 		if os.IsNotExist(err) || !f.IsDir() {
 			fmt.Println(ntripcasterDir + " is not exist or not directory")
 			os.Exit(1)
@@ -311,8 +302,6 @@ out="`
 func init() {
 	rootCmd.AddCommand(commitCmd)
 
-	commitCmd.Flags().StringVarP(&configDir, "config-dir", "c", "", "config file directory ex: mgmt-cli/")
-	commitCmd.MarkFlagRequired("config-dir")
 	commitCmd.Flags().StringVarP(&ntripcasterDir, "ntripcaster-dir", "n", "", "ntripcaster directory ex: ../ntrip-caster/")
 	commitCmd.MarkFlagRequired("ntripcaster-dir")
 }

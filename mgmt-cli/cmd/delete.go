@@ -25,7 +25,7 @@ var deleteCmd = &cobra.Command{
 			return fmt.Errorf("Too many arguments")
 		}
 
-		raw_new_config, err := os.ReadFile("mgmt-cli/new-config.json")
+		raw_new_config, err := os.ReadFile(configDir + "new-config.json")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -51,7 +51,7 @@ var deleteCmd = &cobra.Command{
 			v.SetFloat(float64(0.0))
 		}
 
-		new_new_config, err := os.Create("mgmt-cli/new-config.json")
+		new_new_config, err := os.Create(configDir + "new-config.json")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

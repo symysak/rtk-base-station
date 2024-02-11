@@ -22,7 +22,7 @@ var getCmd = &cobra.Command{
 			return fmt.Errorf("Too many arguments")
 		}
 
-		raw_running_config, err := os.ReadFile("mgmt-cli/running-config.json")
+		raw_running_config, err := os.ReadFile(configDir + "running-config.json")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

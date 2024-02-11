@@ -24,7 +24,7 @@ var setCmd = &cobra.Command{
 			return fmt.Errorf("Too many arguments")
 		}
 
-		raw_new_config, err := os.ReadFile("mgmt-cli/new-config.json")
+		raw_new_config, err := os.ReadFile(configDir + "new-config.json")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
@@ -55,7 +55,7 @@ var setCmd = &cobra.Command{
 		// 設定した内容を表示
 		fmt.Println(args[0], "=", v)
 
-		new_new_config, err := os.Create("mgmt-cli/new-config.json")
+		new_new_config, err := os.Create(configDir + "new-config.json")
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
