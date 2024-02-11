@@ -196,7 +196,7 @@ sudo reboot
 ## 説明
 GitHubに何かしらの変更があると、自動でコンテナのビルドを行います。
 コンテナのビルドが終わると、podmanのauto-updateによって基地局側のコンテナも最新になります。
-また、コンテナイメージのタグは、mainが本番環境、latestが開発環境です。
+また、コンテナイメージのタグは、mainが本番環境、developが開発環境です。
 ```
 2101/tcp: ntrip caster
 2102/tcp: str2str(後述)
