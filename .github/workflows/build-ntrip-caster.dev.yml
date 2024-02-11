@@ -4,7 +4,7 @@ on:
       - develop
     paths:
       - ntrip-caster/**
-      - .github/workflows/**
+      - .github/workflows/build-ntrip-caster.dev.yml
 
   pull_request:
     branches:
@@ -52,7 +52,7 @@ jobs:
               type=sha
             labels: |
               org.opencontainers.image.title=ntrip-caster
-              org.opencontainers.image.description=An NTRIP Caster
+              org.opencontainers.image.description="An NTRIP Caster"
     
         - name: Build and Push
           uses: docker/build-push-action@v5

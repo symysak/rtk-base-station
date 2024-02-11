@@ -4,7 +4,7 @@ on:
       - develop
     paths:
       - str2str/**
-      - .github/workflows/**
+      - .github/workflows/build-str2str.dev.yml
 
   pull_request:
     branches:

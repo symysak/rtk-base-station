@@ -4,7 +4,7 @@ on:
       - main
     paths:
       - ntrip-caster/**
-      - .github/workflows/**
+      - .github/workflows/build-ntrip-caster.prod.yml
 
 name: (PROD) ntrip-caster Docker Build and Push
 
