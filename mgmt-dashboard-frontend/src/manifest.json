@@ -1,10 +1,11 @@
 {
-    "version": 0,
+    "requires": {
+        "cockpit": "137"
+    },
 
     "tools": {
-        "rtk": {
-            "label": "RTK base station",
-            "path": "index.html"
+        "index": {
+            "label": "Starter Kit"
         }
     }
 }
