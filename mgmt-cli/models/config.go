@@ -22,7 +22,7 @@ type Sourcetable struct {
 	FormatDetails FormatDetails `json:"format_details"`
 	Carrer        int           `json:"carrer" validate:"oneof=1 2 3,required"`       // 1: None, 2: L1, 3: L1+L2
 	NavSystem     string        `json:"nav_system" validate:"navsystem,required"`     // ex: GPS+GLONASS+Galileo+SBAS+QZSS+BeiDou
-	Network       string        `json:"network" validate:"alphanum,required"`         // ネットワーク名　なんでもいい
+	Network       string        `json:"network" validate:"omitempty,alphanum"`        // ネットワーク名　なんでもいい
 	Country       string        `json:"country" validate:"iso3166_1_alpha3,required"` // ISO3166 の国コード
 	Nmea          int           `json:"nmea" validate:"min=0,max=1"`                  // NMEAをクライアントが送信可能か 0: NG, 1: OK
 	Solution      int           `json:"solution" validate:"min=0,max=1"`              // ソリューションの種類 0: 単一, 1: ネットワーク

@@ -115,6 +115,10 @@ go build main.go -o mgmt-cli
 sudo chmod +x mgmt-cli
 cd ..
 
+# configファイルの設定
+mv config/new-config.example.json config/new-config.json
+mv config/running-config.example.json config/running-config.json
+
 # ntrip casterの設定
 sudo chmod +x ntrip-caster/entrypoint.sh
 
@@ -188,10 +192,86 @@ sudo firewall-cmd --reload
 sudo reboot
 
 ```
+## Update
+```
+bash rm_containers.sh
+
+git pull
+
+## run containers
+bash run_containers.sh
+
+# enable podman auto-update
+podman generate systemd -f --new --restart-policy always --name str2str
+podman generate systemd -f --new --restart-policy always --name ntrip-caster
+mv container-str2str.service ~/.config/systemd/user/
+mv container-ntrip-caster.service ~/.config/systemd/user/
+
+vi ~/.config/systemd/user/container-str2str.service
+
+[Unit]
+# 以下追記
+StartLimitInterval=10s
+StartLimitBurst=20
+# 追記終わり
+
+[Service]
+# 以下追記
+RestartSec=1s
+# 追記終わり
+
+vi ~/.config/systemd/user/container-ntrip-caster.service
+
+[Unit]
+# 以下追記
+StartLimitInterval=10s
+StartLimitBurst=20
+# 追記終わり
+
+[Service]
+# 以下追記
+RestartSec=1s
+# 追記終わり
+
+:wq
+
+systemctl --user daemon-reload
+systemctl --user enable container-str2str.service
+systemctl --user enable container-ntrip-caster.service
+systemctl --user start container-str2str.service
+systemctl --user start container-ntrip-caster.service
+
+sudo vi ~/.config/systemd/user/timers.target.wants/podman-auto-update.timer
+
+# 以下のように変更
+#OnCalendar=daily
+#RandomizedDelaySec=900
+OnUnitActiveSec=1m
+## 変更終わり
+
+systemctl --user daemon-reload
+systemctl --user enable --now podman-auto-update.service
+systemctl --user enable --now podman-auto-update.timer
+systemctl --user restart podman-auto-update.service
+systemctl --user restart podman-auto-update.timer
+
+# mgmt-cliのビルド
+cd mgmt-cli
+go build main.go -o mgmt-cli
+sudo chmod +x mgmt-cli
+cd ..
+
+# configファイルに破壊的変更がある場合
+# configファイルの設定
+mv config/new-config.example.json config/new-config.json
+mv config/running-config.example.json config/running-config.json
+
+# ntrip casterの設定
+sudo chmod +x ntrip-caster/entrypoint.sh
+
+```
 ## Usage
-マウントポイント: main
-ユーザ名: なし
-パスワード: なし
+設定画面: https://[ip-address]:9090 (cockpitを使用)
 
 ## 説明
 GitHubに何かしらの変更があると、自動でコンテナのビルドを行います。
@@ -209,15 +289,8 @@ RTKLIBのstr2strをdocker化したものです。
 str2strをNTRIP Casterとして動作させています。
 
 ## メモ
-### git pull後の諸々の反映
-```
-git pull
-bash rm_containers.sh
-その後上記instllationの## run containersか
-systemctl --user enable --now podman-auto-update.timerまで
-実行
-```
-
+git flowに従う
+releaseも開発にキリが付いたら行う
 ### wireguard config
 ```
 [Interface]

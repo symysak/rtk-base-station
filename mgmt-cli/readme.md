@@ -37,15 +37,27 @@ ex: `<実行ファイル名> <コマンド名> -h`
 
 追加で説明しておく必要があることについて、以下に説明する。
 ### 設定の保存場所
-実際の設定の保存場所は、mgmt-cli/直下にあるrunning-config.jsonとnew-config.jsonである。ここで２つの設定ファイルの違いについて説明する。
+実際の設定の保存場所は、rtk-base-station/config直下にあるrunning-config.jsonとnew-config.jsonである。ここで２つの設定ファイルの違いについて説明する。
  - running-config.json: 現在動いている設定が保存されている
  - new-config.json: 適用前の設定が保存されている
  すなわち、適用(commit)を行えば、設定が適用されて、new-config.jsonの内容がrunning-config.jsonにコピーされ、２つは同じ内容になるということである。また、commit時にrunning-config.jsonのバックアップとして、running-config.YYYY-M-D-H-M-S.jsonという名前でバックアップが保存される。
 ### -cフラグ
 これは、設定ファイルのディレクトリのパスを指定するためのフラグである。このフラグは、すべてのコマンドで必須である。
+```
+pwd
+rtk-base-stationのディレクトリのパス
+// の場合
+<実行ファイル名> <コマンド名> -c rtk-base-stationのディレクトリのパス/config
+```
 ### commitコマンド
 これは、設定ファイルの適用を行うことである。イメージ的には、Windowsのコントロールパネルで設定を変更した際に押す必要がある"適用"ボタンがコマンドになったようなものである。
-ここでは-nフラグが必須である。これで、ntrip-casterのフォルダのパスを指定する必要がある。
+ここでは-nフラグが必須である。これで、ntrip-casterのフォルダのパスを指定する必要がある
+```。
+pwd
+rtk-base-stationのディレクトリのパス
+// の場合
+<実行ファイル名> commit -c <configディレクトリ> -n rtk-base-stationのディレクトリのパス/ntrip-caster
+```
 
 ## examples
 ### keyに設定を投入

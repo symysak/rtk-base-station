@@ -20,7 +20,7 @@
       },
       "carrer": 3,
       "nav_system": "GPS+GLONASS+Galileo+SBAS+QZSS+BeiDou",
-      "network": "RaspberryPi",
+      "network": "",
       "country": "JPN",
       "nmea": 0,
       "solution": 0,
@@ -36,3 +36,4 @@
     "antenna_info": ""
   }
 }
+

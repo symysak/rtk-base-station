@@ -1,3 +1,18 @@
+```
+#まあなんかいろいろ説明あるけど、とりあえず開発時は以下のコマンドを実行すればよさげ
+
+# ここでcockpitのインストールをする これは公式ドキュメントを参照
+
+# インストール
+sudo apt install gettext nodejs npm make
+git clone https://github.com/cockpit-project/starter-kit.git
+cd starter-kit
+make
+make devel-install
+
+# 開発時
+make watch
+```
 # Cockpit Starter Kit
 
 Scaffolding for a [Cockpit](https://cockpit-project.org/) module.
