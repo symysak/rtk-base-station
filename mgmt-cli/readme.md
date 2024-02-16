@@ -24,7 +24,7 @@ rtk-base-stationはこのCLIツールですべての設定行う。
 
 本ツールで特有のワードがあるので、説明をする。
  - key: 設定の項目名
- これは、mgmt-cli/models/config.goに定義されている。
+ これは、mgmt-cli/models/config.goに定義されている。s
  例えば、"Ntripcaster.Mountpoint"というkeyは、Ntripcaster構造体の中のMountpointを指す。
  また、"Ntripcaster.Sourcetable.Identifier"というような複数の層を持つkeyもある。
  - value: 設定の値
@@ -51,12 +51,12 @@ rtk-base-stationのディレクトリのパス
 ```
 ### commitコマンド
 これは、設定ファイルの適用を行うことである。イメージ的には、Windowsのコントロールパネルで設定を変更した際に押す必要がある"適用"ボタンがコマンドになったようなものである。
-ここでは-nフラグが必須である。これで、ntrip-casterのフォルダのパスを指定する必要がある
+ここでは-nフラグと-sフラグが必須である。これで、ntrip-casterとstr2strのフォルダのパスを指定する必要がある
 ```。
 pwd
 rtk-base-stationのディレクトリのパス
 // の場合
-<実行ファイル名> commit -c <configディレクトリ> -n rtk-base-stationのディレクトリのパス/ntrip-caster
+<実行ファイル名> commit -c <configディレクトリ> -n rtk-base-stationのディレクトリのパス/ntrip-caster -s rtk-base-stationのディレクトリのパス/str2str
 ```
 
 ## examples
@@ -77,7 +77,7 @@ rtk-base-stationのディレクトリのパス
 ```
 ### 設定を適用
 ```
-<実行ファイル名> commit -c <configファイル群のディレクトリのパス> -n <ntrip-casterのフォルダのパス>
+<実行ファイル名> commit -c <configファイル群のディレクトリのパス> -n <ntrip-casterのフォルダのパス> -s <str2strのフォルダのパス>
 ```
 ### すべての設定を表示(configファイルを表示)
 ```
