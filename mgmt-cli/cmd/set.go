@@ -50,6 +50,9 @@ var setCmd = &cobra.Command{
 		case reflect.Float64:
 			n, _ := strconv.ParseFloat(args[1], 64)
 			v.SetFloat(float64(n))
+		case reflect.Bool:
+			n, _ := strconv.ParseBool(args[1])
+			v.SetBool(n)
 		}
 
 		// 設定した内容を表示

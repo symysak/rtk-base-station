@@ -2,6 +2,7 @@ package models
 
 type Config struct {
 	Ntripcaster Ntripcaster `json:"ntripcaster"`
+	Debug       bool        `json:"debug"`
 }
 
 type Ntripcaster struct {

@@ -49,6 +49,8 @@ var deleteCmd = &cobra.Command{
 			v.SetInt(int64(0))
 		case reflect.Float64:
 			v.SetFloat(float64(0.0))
+		case reflect.Bool:
+			v.SetBool(false)
 		}
 
 		new_new_config, err := os.Create(configDir + "new-config.json")
