@@ -34,6 +34,7 @@
     "longitude": 0,
     "height": 0,
     "antenna_info": ""
-  }
+  },
+  "debug": false
 }
 

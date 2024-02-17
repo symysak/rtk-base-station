@@ -42,7 +42,7 @@ sudo stty -F /dev/ttyACM0 230400
 
 ## run containers
 cd rtk-base-station
-bash run_containers.sh
+bash run_containers.prod.sh
 # 初回インストール時はsystemdのファイルが無いと言われますが、無視してください
 
 # enable podman auto-update
@@ -51,33 +51,27 @@ podman generate systemd -f --new --restart-policy always --name ntrip-caster
 mv container-str2str.service ~/.config/systemd/user/
 mv container-ntrip-caster.service ~/.config/systemd/user/
 
-vi ~/.config/systemd/user/container-str2str.service
-
-[Unit]
-# 以下追記
+sed -i '/\[Unit\]/{a\
 StartLimitInterval=10s
+a\
 StartLimitBurst=20
-# 追記終わり
+}' ~/.config/systemd/user/container-str2str.service
 
-[Service]
-# 以下追記
+sed -i '/\[Service\]/{a\
 RestartSec=1s
-# 追記終わり
+}' ~/.config/systemd/user/container-str2str.service
 
-vi ~/.config/systemd/user/container-ntrip-caster.service
 
-[Unit]
-# 以下追記
+sed -i '/\[Unit\]/{a\
 StartLimitInterval=10s
+a\
 StartLimitBurst=20
-# 追記終わり
+}' ~/.config/systemd/user/container-ntrip-caster.service
 
-[Service]
-# 以下追記
+sed -i '/\[Service\]/{a\
 RestartSec=1s
-# 追記終わり
+}' ~/.config/systemd/user/container-ntrip-caster.service
 
-:wq
 
 systemctl --user daemon-reload
 systemctl --user enable container-str2str.service
@@ -89,13 +83,7 @@ mkdir ~/.config/systemd/user/timers.target.wants/
 cp /etc/systemd/system/timers.target.wants/podman-auto-update.timer ~/.config/systemd/user
 cp /etc/systemd/system/default.target.wants/podman-auto-update.service ~/.config/systemd/user
 
-sudo vi ~/.config/systemd/user/podman-auto-update.timer
-
-# 以下のように変更
-#OnCalendar=daily
-#RandomizedDelaySec=900
-OnUnitActiveSec=1m
-## 変更終わり
+sed -i 's/^\(OnCalendar=daily\)/#&/; s/^\(RandomizedDelaySec=900\)/#&/; /^#RandomizedDelaySec=900/a OnUnitActiveSec=1m' ~/.config/systemd/user/podman-auto-update.timer
 
 systemctl --user daemon-reload
 systemctl --user enable --now podman-auto-update.service
@@ -110,13 +98,13 @@ sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf ~/go1.22.0.linux-arm64.
 export PATH=$PATH:/usr/local/go/bin
 go version
 cd mgmt-cli
-go build main.go -o mgmt-cli
+go build -o mgmt-cli
 sudo chmod +x mgmt-cli
 cd ..
 
 # configファイルの設定
-mv config/new-config.example.json config/new-config.json
-mv config/running-config.example.json config/running-config.json
+cp config/new-config.example.json config/new-config.json
+cp config/running-config.example.json config/running-config.json
 
 # ntrip casterの設定
 sudo chmod +x ntrip-caster/entrypoint.sh
@@ -136,40 +124,46 @@ sudo apt install -y raspi-config
 sudo raspi-config
 # fanの設定などをする
 
-
 # tailscaleの設定を行う
-sudo mkdir /etc/systemd/system/tailscaled.service.d
-sudo vi /etc/systemd/system/tailscaled.service.d/override.conf
+curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up --advertise-exit-node
+sudo tailscale set --auto-update
 
+sudo mkdir /etc/systemd/system/tailscaled.service.d
+sudo tee /etc/systemd/system/tailscaled.service.d/override.conf <<EOF
 [Unit]
 After=wg-quick@wg0.service
+EOF
 
-:wq
-
+sudo systemctl daemon-reload
+sudo systemctl restart tailscaled
 
 # wireguardの設定を行う
-## 準備中
+sudo apt install -y wireguard
+wg genkey | sudo tee /etc/wireguard/client.key
+sudo cat /etc/wireguard/client.key | wg pubkey | sudo tee /etc/wireguard/client.pub
+# 下にwireguardの参考configあり。それを参考にconfigを作成する
+sudo systemctl enable --now wg-quick@wg0
+
 
 # firewalld の設定
-sudo vi /etc/firewalld/services/str2str.xml
-
+sudo tee /etc/firewalld/services/str2str.xml <<EOF
 <?xml version="1.0" encoding="utf-8"?>
 <service>
   <short>str2str</short>
   <description>2102/tcp</description>
   <port protocol="tcp" port="2102"/>
 </service>
-:wq
+EOF
 
-sudo vi /etc/firewalld/services/ntrip-caster.xml
-
+sudo tee /etc/firewalld/services/ntrip-caster.xml <<EOF
 <?xml version="1.0" encoding="utf-8"?>
 <service>
   <short>ntrip-caster</short>
   <description>2101/tcp</description>
   <port protocol="tcp" port="2101"/>
 </service>
-:wq
+EOF
 
 sudo firewall-cmd --reload
 
@@ -200,7 +194,7 @@ bash rm_containers.sh
 git pull
 
 ## run containers
-bash run_containers.sh
+bash run_containers.prod.sh
 
 # enable podman auto-update
 podman generate systemd -f --new --restart-policy always --name str2str

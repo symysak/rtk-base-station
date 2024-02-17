@@ -192,7 +192,7 @@ out="`
 
 		text += "/"
 
-		text += new_config.Ntripcaster.Mountpoint + ";"
+		text += new_config.Ntripcaster.Mountpoint + ":"
 		text += new_config.Ntripcaster.Sourcetable.Identifier + ";"
 		text += new_config.Ntripcaster.Sourcetable.Format + ";"
 
