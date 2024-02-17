@@ -12,6 +12,8 @@ make devel-install
 
 # 開発時
 make watch
+
+# cockpitのURL https://localhost:9090
 ```
 # Cockpit Starter Kit
 

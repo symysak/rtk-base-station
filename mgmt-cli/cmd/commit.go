@@ -57,6 +57,9 @@ func validateGenerator(fl validator.FieldLevel) bool {
 // ntrip-casterのディレクトリのパス
 var ntripcasterDir string
 
+// str2strのディレクトリのパス
+var str2strDir string
+
 // commitCmd represents the commit command
 var commitCmd = &cobra.Command{
 	Use:   "commit",
@@ -75,6 +78,19 @@ var commitCmd = &cobra.Command{
 		f, err = os.Stat(ntripcasterDir + "entrypoint.sh")
 		if os.IsNotExist(err) || f.IsDir() {
 			fmt.Println(ntripcasterDir + "entrypoint.sh is not exist or directory")
+			os.Exit(1)
+		}
+
+		// str2strDirの存在確認
+		f, err = os.Stat(str2strDir)
+		if os.IsNotExist(err) || !f.IsDir() {
+			fmt.Println(str2strDir + " is not exist or not directory")
+			os.Exit(1)
+		}
+		// str2strのconfigが存在するか確認
+		f, err = os.Stat(str2strDir + "entrypoint.sh")
+		if os.IsNotExist(err) || f.IsDir() {
+			fmt.Println(str2strDir + "entrypoint.sh is not exist or directory")
 			os.Exit(1)
 		}
 
@@ -151,20 +167,6 @@ var commitCmd = &cobra.Command{
 		if ok != "y" {
 			fmt.Println("Commit aborted")
 			os.Exit(0)
-		}
-
-		// 差分のチェックが終わったのでconfigDir + new-config.jsonを書き換える
-		new_new_config, err := os.Create(configDir + "new-config.json")
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
-		defer new_new_config.Close()
-		encoder1 := json.NewEncoder(new_new_config)
-		encoder1.SetIndent("", "  ")
-		if err := encoder1.Encode(new_config); err != nil {
-			fmt.Println(err)
-			os.Exit(1)
 		}
 
 		//
@@ -266,8 +268,10 @@ out="`
 		text += `-msg "`
 		text += msg
 		text += `" -opt -TADJ=1`
+		if !new_config.Debug {
+			text += " 2> /dev/null"
+		}
 
-		//
 		f2, err := os.Create(ntripcasterDir + "entrypoint.sh")
 		if err != nil {
 			fmt.Println(err)
@@ -276,8 +280,26 @@ out="`
 		defer f2.Close()
 		f2.Write(([]byte)(text))
 
+		// str2strのentrypoint.shを書き換える
+		text = ""
+		text += `#!/bin/bash
+`
+		text += "exec /app/str2str -in serial://ttyACM0:230400 -out tcpsvr://:2102 -b 1"
+		if !new_config.Debug {
+			text += " 2> /dev/null"
+		}
+
+		f3, err := os.Create(str2strDir + "entrypoint.sh")
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		defer f3.Close()
+		f3.Write(([]byte)(text))
+
 		// コンテナを再起動する
 		exec.Command("podman", "restart", "ntrip-caster")
+		exec.Command("podman", "restart", "str2str")
 
 		fmt.Println("Commit Completed")
 		//
@@ -323,4 +345,6 @@ func init() {
 
 	commitCmd.Flags().StringVarP(&ntripcasterDir, "ntripcaster-dir", "n", "", "ntripcaster directory ex: ../ntrip-caster/")
 	commitCmd.MarkFlagRequired("ntripcaster-dir")
+	commitCmd.Flags().StringVarP(&str2strDir, "str2str-dir", "s", "", "str2str directory ex: ../str2str/")
+	commitCmd.MarkFlagRequired("str2str-dir")
 }

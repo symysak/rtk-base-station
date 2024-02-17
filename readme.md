@@ -121,6 +121,9 @@ mv config/running-config.example.json config/running-config.json
 # ntrip casterの設定
 sudo chmod +x ntrip-caster/entrypoint.sh
 
+# str2strの設定
+sudo chmod +x str2str/entrypoint.sh
+
 # ufwをfirewalldにする
 sudo apt install -y firewalld
 sudo systemctl disable ufw
