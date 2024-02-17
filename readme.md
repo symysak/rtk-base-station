@@ -103,9 +103,9 @@ systemctl --user restart podman-auto-update.timer
 wget https://go.dev/dl/go1.22.0.linux-arm64.tar.gz -P ~/
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf ~/go1.22.0.linux-arm64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
-go version
+/usr/local/go/bin/go version
 cd mgmt-cli
-go build -o mgmt-cli
+/usr/local/go/bin/go build -o mgmt-cli
 sudo chmod +x mgmt-cli
 cd ..
 
@@ -249,16 +249,18 @@ systemctl --user restart podman-auto-update.timer
 
 # mgmt-cliのビルド
 cd mgmt-cli
-go build main.go -o mgmt-cli
+/usr/local/go/bin/go build -o mgmt-cli
 sudo chmod +x mgmt-cli
 cd ..
 
 # configファイルに破壊的変更がある場合
 # configファイルの設定
-mv config/new-config.example.json config/new-config.json
-mv config/running-config.example.json config/running-config.json
+cp config/new-config.example.json config/new-config.json
+cp config/running-config.example.json config/running-config.json
 
 ```
+### ZED-F9Pの設定
+#### 
 ## Usage
 設定画面: https://[ip-address]:9090 (cockpitを使用)
 
