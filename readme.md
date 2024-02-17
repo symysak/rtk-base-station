@@ -16,27 +16,15 @@ sudo apt upgrade -y
 sudo apt -y install language-pack-ja-base language-pack-ja
 sudo localectl set-locale LANG=ja_JP.UTF-8 LANGUAGE="ja_JP:ja"
 sudo source /etc/default/locale
+# raspberrypiの場所はユーザ名を入れる
 sudo loginctl enable-linger raspberrypi
 
 # install cockpit
-sudo apt install -y git cockpit cockpit-pcp
+. /etc/os-release
+sudo apt install -y -t ${VERSION_CODENAME}-backports cockpit cockpit-pcp
 
 # install podman
-sudo mkdir -p /etc/apt/keyrings
-curl -fsSL "https://download.opensuse.org/repositories/devel:kubic:libcontainers:unstable/xUbuntu_$(lsb_release -rs)/Release.key" \
-  | gpg --dearmor \
-  | sudo tee /etc/apt/keyrings/devel_kubic_libcontainers_unstable.gpg > /dev/null
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/devel_kubic_libcontainers_unstable.gpg]\
-    https://download.opensuse.org/repositories/devel:kubic:libcontainers:unstable/xUbuntu_$(lsb_release -rs)/ /" \
-  | sudo tee /etc/apt/sources.list.d/devel:kubic:libcontainers:unstable.list > /dev/null
-sudo apt-get update -qq
-sudo apt-get -qq -y install podman
-
-wget https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_22.04/arm64/conmon_2.1.2~0_arm64.deb
-sudo dpkg -i conmon_2.1.2~0_arm64.deb
-
-sudo apt install -y containernetworking-plugins
+sudo apt-get -y install podman
 
 systemctl --user daemon-reload
 systemctl --user enable --now podman.socket
@@ -46,6 +34,7 @@ systemctl --user enable --now podman.socket
 sudo apt install -y cockpit-podman
 
 # git clone
+sudo apt install -y git
 git clone https://github.com/symysak/rtk-base-station.git
 
 sudo cp rtk-base-station/99-zed-f9p.rules /etc/udev/rules.d/
@@ -54,6 +43,7 @@ sudo stty -F /dev/ttyACM0 230400
 ## run containers
 cd rtk-base-station
 bash run_containers.sh
+# 初回インストール時はsystemdのファイルが無いと言われますが、無視してください
 
 # enable podman auto-update
 podman generate systemd -f --new --restart-policy always --name str2str
@@ -95,7 +85,11 @@ systemctl --user enable container-ntrip-caster.service
 systemctl --user start container-str2str.service
 systemctl --user start container-ntrip-caster.service
 
-sudo vi ~/.config/systemd/user/timers.target.wants/podman-auto-update.timer
+mkdir ~/.config/systemd/user/timers.target.wants/
+cp /etc/systemd/system/timers.target.wants/podman-auto-update.timer ~/.config/systemd/user
+cp /etc/systemd/system/default.target.wants/podman-auto-update.service ~/.config/systemd/user
+
+sudo vi ~/.config/systemd/user/podman-auto-update.timer
 
 # 以下のように変更
 #OnCalendar=daily
@@ -110,6 +104,11 @@ systemctl --user restart podman-auto-update.service
 systemctl --user restart podman-auto-update.timer
 
 # mgmt-cliのビルド
+# goのインストール(公式doc通り)
+wget https://go.dev/dl/go1.22.0.linux-arm64.tar.gz -P ~/
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf ~/go1.22.0.linux-arm64.tar.gz
+export PATH=$PATH:/usr/local/go/bin
+go version
 cd mgmt-cli
 go build main.go -o mgmt-cli
 sudo chmod +x mgmt-cli
@@ -123,9 +122,9 @@ mv config/running-config.example.json config/running-config.json
 sudo chmod +x ntrip-caster/entrypoint.sh
 
 # ufwをfirewalldにする
+sudo apt install -y firewalld
 sudo systemctl disable ufw
 sudo systemctl stop ufw
-sudo apt install firewalld
 sudo systemctl enable --now firewalld
 
 
@@ -170,7 +169,6 @@ sudo vi /etc/firewalld/services/ntrip-caster.xml
 :wq
 
 sudo firewall-cmd --reload
-sudo firewall-cmd  --get-services
 
 sudo firewall-cmd --new-zone mgmt --permanent
 sudo firewall-cmd --reload
