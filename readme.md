@@ -42,6 +42,13 @@ sudo stty -F /dev/ttyACM0 230400
 
 ## run containers
 cd rtk-base-station
+
+# ntrip casterの設定
+sudo chmod +x ntrip-caster/entrypoint.sh
+
+# str2strの設定
+sudo chmod +x str2str/entrypoint.sh
+
 bash run_containers.prod.sh
 # 初回インストール時はsystemdのファイルが無いと言われますが、無視してください
 
@@ -106,11 +113,6 @@ cd ..
 cp config/new-config.example.json config/new-config.json
 cp config/running-config.example.json config/running-config.json
 
-# ntrip casterの設定
-sudo chmod +x ntrip-caster/entrypoint.sh
-
-# str2strの設定
-sudo chmod +x str2str/entrypoint.sh
 
 # ufwをfirewalldにする
 sudo apt install -y firewalld
@@ -193,6 +195,12 @@ bash rm_containers.sh
 
 git pull
 
+# ntrip casterの設定
+sudo chmod +x ntrip-caster/entrypoint.sh
+
+# str2strの設定
+sudo chmod +x str2str/entrypoint.sh
+
 ## run containers
 bash run_containers.prod.sh
 
@@ -202,33 +210,27 @@ podman generate systemd -f --new --restart-policy always --name ntrip-caster
 mv container-str2str.service ~/.config/systemd/user/
 mv container-ntrip-caster.service ~/.config/systemd/user/
 
-vi ~/.config/systemd/user/container-str2str.service
-
-[Unit]
-# 以下追記
+sed -i '/\[Unit\]/{a\
 StartLimitInterval=10s
+a\
 StartLimitBurst=20
-# 追記終わり
+}' ~/.config/systemd/user/container-str2str.service
 
-[Service]
-# 以下追記
+sed -i '/\[Service\]/{a\
 RestartSec=1s
-# 追記終わり
+}' ~/.config/systemd/user/container-str2str.service
 
-vi ~/.config/systemd/user/container-ntrip-caster.service
 
-[Unit]
-# 以下追記
+sed -i '/\[Unit\]/{a\
 StartLimitInterval=10s
+a\
 StartLimitBurst=20
-# 追記終わり
+}' ~/.config/systemd/user/container-ntrip-caster.service
 
-[Service]
-# 以下追記
+sed -i '/\[Service\]/{a\
 RestartSec=1s
-# 追記終わり
+}' ~/.config/systemd/user/container-ntrip-caster.service
 
-:wq
 
 systemctl --user daemon-reload
 systemctl --user enable container-str2str.service
@@ -236,13 +238,8 @@ systemctl --user enable container-ntrip-caster.service
 systemctl --user start container-str2str.service
 systemctl --user start container-ntrip-caster.service
 
-sudo vi ~/.config/systemd/user/timers.target.wants/podman-auto-update.timer
+sed -i 's/^\(OnCalendar=daily\)/#&/; s/^\(RandomizedDelaySec=900\)/#&/; /^#RandomizedDelaySec=900/a OnUnitActiveSec=1m' ~/.config/systemd/user/podman-auto-update.timer
 
-# 以下のように変更
-#OnCalendar=daily
-#RandomizedDelaySec=900
-OnUnitActiveSec=1m
-## 変更終わり
 
 systemctl --user daemon-reload
 systemctl --user enable --now podman-auto-update.service
@@ -260,9 +257,6 @@ cd ..
 # configファイルの設定
 mv config/new-config.example.json config/new-config.json
 mv config/running-config.example.json config/running-config.json
-
-# ntrip casterの設定
-sudo chmod +x ntrip-caster/entrypoint.sh
 
 ```
 ## Usage
