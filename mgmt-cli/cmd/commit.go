@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -298,8 +299,29 @@ out="`
 		f3.Write(([]byte)(text))
 
 		// コンテナを再起動する
-		exec.Command("podman", "restart", "ntrip-caster")
-		exec.Command("podman", "restart", "str2str")
+		var stdout bytes.Buffer
+		var stderr bytes.Buffer
+		cmd1 := exec.Command("systemctl", "--user", "restart", "container-ntrip-caster.service")
+		cmd1.Stdout = &stdout
+		cmd1.Stderr = &stderr
+		err = cmd1.Run()
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println(stderr.String())
+			os.Exit(1)
+		}
+		fmt.Println(stdout.String())
+
+		cmd2 := exec.Command("podman", "--user", "restart", "container-str2str-caster.service")
+		cmd2.Stdout = &stdout
+		cmd2.Stderr = &stderr
+		err = cmd2.Run()
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println(stderr.String())
+			os.Exit(1)
+		}
+		fmt.Println(stdout.String())
 
 		fmt.Println("Commit Completed")
 		//
@@ -322,7 +344,7 @@ out="`
 
 		// もともとのrunning-configを念のため保存しておく
 		var date string = strconv.Itoa(time.Now().Year()) + "-" + strconv.Itoa(int(time.Now().Month())) + "-" + strconv.Itoa(time.Now().Day()) + "-" + strconv.Itoa(time.Now().Hour()) + "-" + strconv.Itoa(time.Now().Minute()) + "-" + strconv.Itoa(time.Now().Second())
-		fmt.Print("config backed up: " + configDir + "running-config." + date + ".json")
+		fmt.Println("config backed up: " + configDir + "running-config." + date + ".json")
 		running_config_bak, err := os.Create(configDir + "running-config." + date + ".json")
 		if err != nil {
 			fmt.Println(err)
