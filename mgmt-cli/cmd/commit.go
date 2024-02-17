@@ -312,7 +312,7 @@ out="`
 		}
 		fmt.Println(stdout.String())
 
-		cmd2 := exec.Command("systemctl", "--user", "restart", "container-str2str-caster.service")
+		cmd2 := exec.Command("systemctl", "--user", "restart", "container-str2str.service")
 		cmd2.Stdout = &stdout
 		cmd2.Stderr = &stderr
 		err = cmd2.Run()
