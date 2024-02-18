@@ -22,6 +22,7 @@ sudo loginctl enable-linger raspberrypi
 # install cockpit
 . /etc/os-release
 sudo apt install -y -t ${VERSION_CODENAME}-backports cockpit cockpit-pcp
+sudo systemctl enable --now cockpit.socket
 
 # install podman
 sudo apt-get -y install podman
