@@ -5,18 +5,33 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/mgmt-dashboard-frontend" # Location of package manifests
-    schedule:
-      interval: "daily"
-      time: "00:00"
-      timezone: "Asia/Tokyo"
-    target-branch: "develop"
-
   - package-ecosystem: "gomod" # See documentation for possible values
     directory: "/mgmt-cli" # Location of package manifests
     schedule:
       interval: "daily"
-      time: "00:00"
+      time: "00:15"
       timezone: "Asia/Tokyo"
     target-branch: "develop"
+
+  - package-ecosystem: "npm"
+    directory: "/mgmt-dashboard-frontend"
+    schedule:
+      interval: "daily"
+      # run these when most of our developers don't work, don't DoS our CI over the day
+      time: "00:13"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
+    open-pull-requests-limit: 3
+    groups:
+      eslint:
+        patterns:
+          - "eslint*"
+      esbuild:
+        patterns:
+          - "esbuild*"
+      stylelint:
+        patterns:
+          - "stylelint*"
+      patternfly:
+        patterns:
+          - "@patternfly*"
