@@ -35,5 +35,92 @@
     "height": 0,
     "antenna_info": ""
   },
+  "ublox_receiver": {
+    "save_config": false,
+    "CFG": {
+      "MSGOUT": {
+        "NMEA": {
+          "ID": {
+            "GGA": {
+              "I2C": false,
+              "SPI": false,
+              "UART1": false,
+              "UART2": false,
+              "USB": false
+            },
+            "GLL": {
+              "I2C": false,
+              "SPI": false,
+              "UART1": false,
+              "UART2": false,
+              "USB": false
+            },
+            "GSA": {
+              "I2C": false,
+              "SPI": false,
+              "UART1": false,
+              "UART2": false,
+              "USB": false
+            },
+            "GSV": {
+              "I2C": false,
+              "SPI": false,
+              "UART1": false,
+              "UART2": false,
+              "USB": false
+            },
+            "RMC": {
+              "I2C": false,
+              "SPI": false,
+              "UART1": false,
+              "UART2": false,
+              "USB": false
+            },
+            "VTG": {
+              "I2C": false,
+              "SPI": false,
+              "UART1": false,
+              "UART2": false,
+              "USB": false
+            }
+          }
+        },
+        "UBX": {
+          "NAV": {
+            "SAT": {
+              "I2C": false,
+              "SPI": false,
+              "UART1": false,
+              "UART2": false,
+              "USB": true
+            },
+            "PVT": {
+              "I2C": false,
+              "SPI": false,
+              "UART1": false,
+              "UART2": false,
+              "USB": true
+            }
+          },
+          "RXM": {
+            "RAWX": {
+              "I2C": false,
+              "SPI": false,
+              "UART1": false,
+              "UART2": false,
+              "USB": true
+            },
+            "SFRBX": {
+              "I2C": false,
+              "SPI": false,
+              "UART1": false,
+              "UART2": false,
+              "USB": true
+            }
+          }
+        }
+      }
+    }
+  },
   "debug": false
 }
