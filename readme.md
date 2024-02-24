@@ -50,7 +50,9 @@ sudo chmod +x ntrip-caster/entrypoint.sh
 # str2strの設定
 sudo chmod +x str2str/entrypoint.sh
 
-bash run_containers.prod.sh
+chmod +x run_containers.prod.sh
+./run_containers.prod.sh <バージョン>
+# e.g ./run_containers.prod.sh 1.0.0
 # 初回インストール時はsystemdのファイルが無いと言われますが、無視してください
 
 # enable podman auto-update
@@ -197,7 +199,8 @@ sudo reboot
 ```
 ## Update
 ```
-bash rm_containers.sh
+chmod +x rm_containers.sh
+./rm_containers.sh
 
 git pull
 
@@ -208,7 +211,9 @@ sudo chmod +x ntrip-caster/entrypoint.sh
 sudo chmod +x str2str/entrypoint.sh
 
 ## run containers
-bash run_containers.prod.sh
+chmod +x run_containers.prod.sh
+./run_containers.prod.sh <バージョン>
+# e.g ./run_containers.prod.sh 1.0.0
 
 # enable podman auto-update
 podman generate systemd -f --new --restart-policy always --name str2str
@@ -273,7 +278,7 @@ cp config/running-config.example.json config/running-config.json
 ## 説明
 GitHubに何かしらの変更があると、自動でコンテナのビルドを行います。
 コンテナのビルドが終わると、podmanのauto-updateによって基地局側のコンテナも最新になります。
-また、コンテナイメージのタグは、mainが本番環境、developが開発環境です。
+また、コンテナイメージのタグは、developが開発環境です。
 ```
 2101/tcp: ntrip caster
 2102/tcp: str2str(後述)

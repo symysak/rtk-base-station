@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - main
+      - release/*
 
 name: (PROD) ntrip-caster Docker Build and Push
 
