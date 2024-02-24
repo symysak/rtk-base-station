@@ -102,7 +102,6 @@ systemctl --user restart podman-auto-update.timer
 # goのインストール(公式doc通り)
 wget https://go.dev/dl/go1.22.0.linux-arm64.tar.gz -P ~/
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf ~/go1.22.0.linux-arm64.tar.gz
-export PATH=$PATH:/usr/local/go/bin
 /usr/local/go/bin/go version
 cd mgmt-cli
 /usr/local/go/bin/go build -o mgmt-cli
