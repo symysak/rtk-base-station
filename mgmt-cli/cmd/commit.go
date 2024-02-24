@@ -522,7 +522,7 @@ func commitUbloxReceiver(new_config models.Config) {
 	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.VTG.USB)})
 
 	// CFG-MSGOUT-UBX-NAV-*の設定を適用する
-	tmp = "CFG-MSGOUT-UBX-NAV-"
+	tmp = "CFG-MSGOUT-UBX_NAV_"
 	// SAT
 	name = "SAT"
 	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.SAT.I2C)})
@@ -539,7 +539,7 @@ func commitUbloxReceiver(new_config models.Config) {
 	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.PVT.USB)})
 
 	// CFG-MSGOUT-UBX-RXM-*の設定を適用する
-	tmp = "CFG-MSGOUT-UBX-RXM-"
+	tmp = "CFG-MSGOUT-UBX_RXM_"
 	// RAWX
 	name = "RAWX"
 	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.RAWX.I2C)})
