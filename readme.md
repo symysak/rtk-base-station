@@ -105,6 +105,9 @@ wget https://go.dev/dl/go1.22.0.linux-arm64.tar.gz -P ~/
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf ~/go1.22.0.linux-arm64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 /usr/local/go/bin/go version
+# mgmt-cliの依存関係をインストール
+sudo apt install gpsd gpsd-clients
+
 cd mgmt-cli
 /usr/local/go/bin/go build -o mgmt-cli
 sudo chmod +x mgmt-cli

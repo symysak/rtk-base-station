@@ -573,6 +573,16 @@ func commitUbloxReceiver(new_config models.Config) {
 		fmt.Println(stderr.String())
 		os.Exit(1)
 	}
+	// ntrip-casterのdockerがstr2strに依存しているので、一旦停止する
+	cmd = exec.Command("systemctl", "--user", "stop", "container-ntrip-caster.service")
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println(stderr.String())
+		os.Exit(1)
+	}
 
 	for i := 0; i < len(commands); i++ {
 		var cmd *exec.Cmd
@@ -595,6 +605,16 @@ func commitUbloxReceiver(new_config models.Config) {
 
 	// str2strのコンテナを再起動する
 	cmd = exec.Command("systemctl", "--user", "start", "container-str2str.service")
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println(stderr.String())
+		os.Exit(1)
+	}
+	// ntrip-casterのコンテナを再起動する
+	cmd = exec.Command("systemctl", "--user", "start", "container-ntrip-caster.service")
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err = cmd.Run()
