@@ -414,7 +414,8 @@ func commitStr2str(new_config models.Config) {
 func commitUbloxReceiver(new_config models.Config) {
 
 	// receiverのPROTVERを取得
-	cmd := exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-p", "MON-VER", "|", "grep", "PROTVER")
+	arg := "ubxtool -f /dev/ttyACM0 -p MON-VER | grep PROTVER"
+	cmd := exec.Command("bash", "-c", arg)
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	cmd.Stdout = &stdout
