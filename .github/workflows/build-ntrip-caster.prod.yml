@@ -2,6 +2,8 @@ on:
   push:
     branches:
       - release/*
+    tags:
+      - v*
 
 name: (PROD) ntrip-caster Docker Build and Push
 

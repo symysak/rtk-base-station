@@ -2,6 +2,8 @@ on:
   push:
     branches:
       - release/*
+    tags:
+      - v*
 
 name: (PROD) str2str Docker Build and Push
 
