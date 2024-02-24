@@ -40,7 +40,6 @@ jobs:
               type=semver,pattern={{major}}
               type=ref,event=branch
               type=ref,event=pr
-              type=ref,event=tag
               type=sha
             labels: |
               org.opencontainers.image.title=ntrip-caster
