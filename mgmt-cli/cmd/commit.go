@@ -476,84 +476,84 @@ func commitUbloxReceiver(new_config models.Config) {
 	commands := [][]string{}
 
 	// CFG-MSGOUT-NMEA-ID-*の設定を適用する
-	tmp := "CFG-MSGOUT-NMEA-ID-"
+	tmp := "CFG-MSGOUT-NMEA_ID_"
 	name := ""
 	// GGA
 	name = "GGA"
-	commands = append(commands, []string{tmp + name + "-I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GGA.I2C)})
-	commands = append(commands, []string{tmp + name + "-SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GGA.SPI)})
-	commands = append(commands, []string{tmp + name + "-UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GGA.UART1)})
-	commands = append(commands, []string{tmp + name + "-UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GGA.UART2)})
-	commands = append(commands, []string{tmp + name + "-USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GGA.USB)})
+	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GGA.I2C)})
+	commands = append(commands, []string{tmp + name + "_SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GGA.SPI)})
+	commands = append(commands, []string{tmp + name + "_UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GGA.UART1)})
+	commands = append(commands, []string{tmp + name + "_UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GGA.UART2)})
+	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GGA.USB)})
 	// GLL
 	name = "GLL"
-	commands = append(commands, []string{tmp + name + "-I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GLL.I2C)})
-	commands = append(commands, []string{tmp + name + "-SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GLL.SPI)})
-	commands = append(commands, []string{tmp + name + "-UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GLL.UART1)})
-	commands = append(commands, []string{tmp + name + "-UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GLL.UART2)})
-	commands = append(commands, []string{tmp + name + "-USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GLL.USB)})
+	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GLL.I2C)})
+	commands = append(commands, []string{tmp + name + "_SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GLL.SPI)})
+	commands = append(commands, []string{tmp + name + "_UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GLL.UART1)})
+	commands = append(commands, []string{tmp + name + "_UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GLL.UART2)})
+	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GLL.USB)})
 	// GSA
 	name = "GSA"
-	commands = append(commands, []string{tmp + name + "-I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSA.I2C)})
-	commands = append(commands, []string{tmp + name + "-SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSA.SPI)})
-	commands = append(commands, []string{tmp + name + "-UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSA.UART1)})
-	commands = append(commands, []string{tmp + name + "-UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSA.UART2)})
-	commands = append(commands, []string{tmp + name + "-USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSA.USB)})
+	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSA.I2C)})
+	commands = append(commands, []string{tmp + name + "_SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSA.SPI)})
+	commands = append(commands, []string{tmp + name + "_UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSA.UART1)})
+	commands = append(commands, []string{tmp + name + "_UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSA.UART2)})
+	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSA.USB)})
 	// GSV
 	name = "GSV"
-	commands = append(commands, []string{tmp + name + "-I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSV.I2C)})
-	commands = append(commands, []string{tmp + name + "-SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSV.SPI)})
-	commands = append(commands, []string{tmp + name + "-UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSV.UART1)})
-	commands = append(commands, []string{tmp + name + "-UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSV.UART2)})
-	commands = append(commands, []string{tmp + name + "-USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSV.USB)})
+	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSV.I2C)})
+	commands = append(commands, []string{tmp + name + "_SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSV.SPI)})
+	commands = append(commands, []string{tmp + name + "_UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSV.UART1)})
+	commands = append(commands, []string{tmp + name + "_UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSV.UART2)})
+	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.GSV.USB)})
 	// RMC
 	name = "RMC"
-	commands = append(commands, []string{tmp + name + "-I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.RMC.I2C)})
-	commands = append(commands, []string{tmp + name + "-SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.RMC.SPI)})
-	commands = append(commands, []string{tmp + name + "-UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.RMC.UART1)})
-	commands = append(commands, []string{tmp + name + "-UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.RMC.UART2)})
-	commands = append(commands, []string{tmp + name + "-USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.RMC.USB)})
+	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.RMC.I2C)})
+	commands = append(commands, []string{tmp + name + "_SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.RMC.SPI)})
+	commands = append(commands, []string{tmp + name + "_UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.RMC.UART1)})
+	commands = append(commands, []string{tmp + name + "_UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.RMC.UART2)})
+	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.RMC.USB)})
 	// VTG
 	name = "VTG"
-	commands = append(commands, []string{tmp + name + "-I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.VTG.I2C)})
-	commands = append(commands, []string{tmp + name + "-SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.VTG.SPI)})
-	commands = append(commands, []string{tmp + name + "-UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.VTG.UART1)})
-	commands = append(commands, []string{tmp + name + "-UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.VTG.UART2)})
-	commands = append(commands, []string{tmp + name + "-USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.VTG.USB)})
+	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.VTG.I2C)})
+	commands = append(commands, []string{tmp + name + "_SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.VTG.SPI)})
+	commands = append(commands, []string{tmp + name + "_UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.VTG.UART1)})
+	commands = append(commands, []string{tmp + name + "_UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.VTG.UART2)})
+	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.NMEA.ID.VTG.USB)})
 
 	// CFG-MSGOUT-UBX-NAV-*の設定を適用する
 	tmp = "CFG-MSGOUT-UBX-NAV-"
 	// SAT
 	name = "SAT"
-	commands = append(commands, []string{tmp + name + "-I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.SAT.I2C)})
-	commands = append(commands, []string{tmp + name + "-SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.SAT.SPI)})
-	commands = append(commands, []string{tmp + name + "-UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.SAT.UART1)})
-	commands = append(commands, []string{tmp + name + "-UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.SAT.UART2)})
-	commands = append(commands, []string{tmp + name + "-USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.SAT.USB)})
+	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.SAT.I2C)})
+	commands = append(commands, []string{tmp + name + "_SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.SAT.SPI)})
+	commands = append(commands, []string{tmp + name + "_UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.SAT.UART1)})
+	commands = append(commands, []string{tmp + name + "_UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.SAT.UART2)})
+	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.SAT.USB)})
 	// PVT
 	name = "PVT"
-	commands = append(commands, []string{tmp + name + "-I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.PVT.I2C)})
-	commands = append(commands, []string{tmp + name + "-SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.PVT.SPI)})
-	commands = append(commands, []string{tmp + name + "-UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.PVT.UART1)})
-	commands = append(commands, []string{tmp + name + "-UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.PVT.UART2)})
-	commands = append(commands, []string{tmp + name + "-USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.PVT.USB)})
+	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.PVT.I2C)})
+	commands = append(commands, []string{tmp + name + "_SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.PVT.SPI)})
+	commands = append(commands, []string{tmp + name + "_UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.PVT.UART1)})
+	commands = append(commands, []string{tmp + name + "_UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.PVT.UART2)})
+	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.NAV.PVT.USB)})
 
 	// CFG-MSGOUT-UBX-RXM-*の設定を適用する
 	tmp = "CFG-MSGOUT-UBX-RXM-"
 	// RAWX
 	name = "RAWX"
-	commands = append(commands, []string{tmp + name + "-I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.RAWX.I2C)})
-	commands = append(commands, []string{tmp + name + "-SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.RAWX.SPI)})
-	commands = append(commands, []string{tmp + name + "-UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.RAWX.UART1)})
-	commands = append(commands, []string{tmp + name + "-UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.RAWX.UART2)})
-	commands = append(commands, []string{tmp + name + "-USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.RAWX.USB)})
+	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.RAWX.I2C)})
+	commands = append(commands, []string{tmp + name + "_SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.RAWX.SPI)})
+	commands = append(commands, []string{tmp + name + "_UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.RAWX.UART1)})
+	commands = append(commands, []string{tmp + name + "_UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.RAWX.UART2)})
+	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.RAWX.USB)})
 	// SFRBX
 	name = "SFRBX"
-	commands = append(commands, []string{tmp + name + "-I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.I2C)})
-	commands = append(commands, []string{tmp + name + "-SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.SPI)})
-	commands = append(commands, []string{tmp + name + "-UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.UART1)})
-	commands = append(commands, []string{tmp + name + "-UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.UART2)})
-	commands = append(commands, []string{tmp + name + "-USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.USB)})
+	commands = append(commands, []string{tmp + name + "_I2C", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.I2C)})
+	commands = append(commands, []string{tmp + name + "_SPI", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.SPI)})
+	commands = append(commands, []string{tmp + name + "_UART1", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.UART1)})
+	commands = append(commands, []string{tmp + name + "_UART2", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.UART2)})
+	commands = append(commands, []string{tmp + name + "_USB", strconv.FormatBool(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.USB)})
 
 	// 作成した配列をforで回して、ubxtoolで設定を行う
 	for i := 0; i < len(commands); i++ {
