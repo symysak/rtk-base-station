@@ -2,9 +2,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - ntrip-caster/**
-      - .github/workflows/build-ntrip-caster.prod.yml
 
 name: (PROD) ntrip-caster Docker Build and Push
 

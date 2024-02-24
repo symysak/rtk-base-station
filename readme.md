@@ -103,7 +103,6 @@ systemctl --user restart podman-auto-update.timer
 # goのインストール(公式doc通り)
 wget https://go.dev/dl/go1.22.0.linux-arm64.tar.gz -P ~/
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf ~/go1.22.0.linux-arm64.tar.gz
-export PATH=$PATH:/usr/local/go/bin
 /usr/local/go/bin/go version
 # mgmt-cliの依存関係をインストール
 sudo apt install gpsd gpsd-clients
@@ -148,7 +147,10 @@ sudo systemctl restart tailscaled
 sudo apt install -y wireguard
 wg genkey | sudo tee /etc/wireguard/client.key
 sudo cat /etc/wireguard/client.key | wg pubkey | sudo tee /etc/wireguard/client.pub
-# 下にwireguardの参考configあり。それを参考にconfigを作成する
+
+# 下にwireguardの参考configあり。それを参考にconfigを作成してください
+# 作成したconfigを/etc/wireguard/wg0.confに配置したら続きを実行してください
+
 sudo systemctl enable --now wg-quick@wg0
 
 
