@@ -475,7 +475,7 @@ func commitUbloxReceiver(new_config models.Config) {
 	*/
 	commands := [][]string{}
 
-	boolToString := func (a bool) string {
+	boolToString := func(a bool) string {
 		if a {
 			return "1"
 		} else {
@@ -563,6 +563,17 @@ func commitUbloxReceiver(new_config models.Config) {
 	commands = append(commands, []string{tmp + name + "_USB", boolToString(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.USB)})
 
 	// 作成した配列をforで回して、ubxtoolで設定を行う
+	// /dev/ttyACM0はstr2strのdockerによって使用されいているので、一旦停止する
+	cmd = exec.Command("systemctl", "--user", "stop", "container-str2str.service")
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println(stderr.String())
+		os.Exit(1)
+	}
+
 	for i := 0; i < len(commands); i++ {
 		var cmd *exec.Cmd
 		if new_config.UbloxReceiver.SaveConfig {
@@ -580,6 +591,17 @@ func commitUbloxReceiver(new_config models.Config) {
 			fmt.Println(stderr.String())
 			os.Exit(1)
 		}
+	}
+
+	// str2strのコンテナを再起動する
+	cmd = exec.Command("systemctl", "--user", "start", "container-str2str.service")
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err = cmd.Run()
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println(stderr.String())
+		os.Exit(1)
 	}
 
 	// デフォルトでは設定をflashに保存しないので、フラグをfalseにする
