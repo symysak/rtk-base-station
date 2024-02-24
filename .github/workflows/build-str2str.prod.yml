@@ -2,9 +2,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - str2str/**
-      - .github/workflows/build-str2str.prod.yml
 
 name: (PROD) str2str Docker Build and Push
 
