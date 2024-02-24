@@ -428,7 +428,7 @@ func commitUbloxReceiver(new_config models.Config) {
 	}
 	// "extention PROTVER=XX.XX"という形式で出力されるので、XX.XXの部分だけ取り出す
 	var protVer string
-	for i := 18; i < len(stdout.String()); i++ {
+	for i := 20; i < len(stdout.String())-1; i++ {
 		protVer += string(stdout.String()[i])
 	}
 
