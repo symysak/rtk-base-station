@@ -53,6 +53,9 @@ var setCmd = &cobra.Command{
 		case reflect.Bool:
 			n, _ := strconv.ParseBool(args[1])
 			v.SetBool(n)
+		default:
+			fmt.Println("Invalid type")
+			os.Exit(1)
 		}
 
 		// 設定した内容を表示

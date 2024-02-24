@@ -1,8 +1,9 @@
 package models
 
 type Config struct {
-	Ntripcaster Ntripcaster `json:"ntripcaster"`
-	Debug       bool        `json:"debug"`
+	Ntripcaster   Ntripcaster   `json:"ntripcaster"`
+	UbloxReceiver UbloxReceiver `json:"ublox_receiver"`
+	Debug         bool          `json:"debug"`
 }
 
 type Ntripcaster struct {
@@ -44,4 +45,54 @@ type FormatDetails struct {
 	Msg1117 int `json:"msg_1117" validate:"min=0"` // QZSS MSM7 のinterval
 	Msg1127 int `json:"msg_1127" validate:"min=0"` // BeiDou MSM7 のinterval
 	Msg1230 int `json:"msg_1230" validate:"min=0"` // GLONASS L1/L2 のinterval
+}
+
+type UbloxReceiver struct {
+	SaveConfig bool `json:"save_config"` // レシーバのconfigを保存するflag
+	CFG        CFG  `json:"CFG"`
+}
+
+type CFG struct {
+	MSGOUT MSGOUT `json:"MSGOUT"`
+}
+
+type MSGOUT struct {
+	NMEA NMEA `json:"NMEA"`
+	UBX  UBX  `json:"UBX"`
+}
+
+type NMEA struct {
+	ID ID `json:"ID"`
+}
+
+type ID struct {
+	GGA OutputDestination `json:"GGA"`
+	GLL OutputDestination `json:"GLL"`
+	GSA OutputDestination `json:"GSA"`
+	GSV OutputDestination `json:"GSV"`
+	RMC OutputDestination `json:"RMC"`
+	VTG OutputDestination `json:"VTG"`
+}
+
+type UBX struct {
+	NAV NAV `json:"NAV"`
+	RXM RXM `json:"RXM"`
+}
+
+type NAV struct {
+	SAT OutputDestination `json:"SAT"`
+	PVT OutputDestination `json:"PVT"`
+}
+
+type RXM struct {
+	RAWX  OutputDestination `json:"RAWX"`
+	SFRBX OutputDestination `json:"SFRBX"`
+}
+
+type OutputDestination struct {
+	I2C   bool `json:"I2C"`
+	SPI   bool `json:"SPI"`
+	UART1 bool `json:"UART1"`
+	UART2 bool `json:"UART2"`
+	USB   bool `json:"USB"`
 }

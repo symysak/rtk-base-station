@@ -40,7 +40,20 @@ var getCmd = &cobra.Command{
 			}
 		}
 
-		fmt.Println(v)
+		switch v.Kind() {
+		case reflect.String:
+			fmt.Println(v.String())
+		case reflect.Int:
+			fmt.Println(v.Int())
+		case reflect.Float64:
+			fmt.Println(v.Float())
+		case reflect.Bool:
+			fmt.Println(v.Bool())
+		default:
+			fmt.Println("Invalid Key")
+			os.Exit(1)
+		}
+
 
 		return nil
 	},
