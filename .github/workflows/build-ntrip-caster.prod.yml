@@ -2,6 +2,9 @@ on:
   push:
     branches:
       - release/*
+    paths:
+      - ntrip-caster/**
+      - .github/workflows/build-ntrip-caster.prod.yml
     tags:
       - v*
 

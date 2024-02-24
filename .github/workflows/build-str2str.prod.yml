@@ -2,6 +2,9 @@ on:
   push:
     branches:
       - release/*
+    paths:
+      - str2str/**
+      - .github/workflows/build-str2str.prod.yml
     tags:
       - v*
 
