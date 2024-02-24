@@ -50,9 +50,9 @@ sudo chmod +x ntrip-caster/entrypoint.sh
 # str2strの設定
 sudo chmod +x str2str/entrypoint.sh
 
-chmod +x run_containers.prod.sh
-./run_containers.prod.sh <バージョン>
-# e.g ./run_containers.prod.sh 1.0.0
+chmod +x run_containers.sh
+./run_containers.sh <バージョン>
+# e.g ./run_containers.sh 1.0.0
 # 初回インストール時はsystemdのファイルが無いと言われますが、無視してください
 
 # enable podman auto-update
@@ -211,9 +211,9 @@ sudo chmod +x ntrip-caster/entrypoint.sh
 sudo chmod +x str2str/entrypoint.sh
 
 ## run containers
-chmod +x run_containers.prod.sh
-./run_containers.prod.sh <バージョン>
-# e.g ./run_containers.prod.sh 1.0.0
+chmod +x run_containers.sh
+./run_containers.sh <バージョン>
+# e.g ./run_containers.sh 1.0.0
 
 # enable podman auto-update
 podman generate systemd -f --new --restart-policy always --name str2str
