@@ -143,7 +143,10 @@ sudo systemctl restart tailscaled
 sudo apt install -y wireguard
 wg genkey | sudo tee /etc/wireguard/client.key
 sudo cat /etc/wireguard/client.key | wg pubkey | sudo tee /etc/wireguard/client.pub
-# 下にwireguardの参考configあり。それを参考にconfigを作成する
+
+# 下にwireguardの参考configあり。それを参考にconfigを作成してください
+# 作成したconfigを/etc/wireguard/wg0.confに配置したら続きを実行してください
+
 sudo systemctl enable --now wg-quick@wg0
 
 
