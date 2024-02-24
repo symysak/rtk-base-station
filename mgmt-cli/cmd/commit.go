@@ -132,9 +132,7 @@ var commitCmd = &cobra.Command{
 		commitStr2str(new_config)
 
 		// UloxReceiverのcommit処理
-		if new_config.UbloxReceiver != running_config.UbloxReceiver {
-			commitUbloxReceiver(new_config)
-		}
+		commitUbloxReceiver(new_config)
 
 		fmt.Println("Commit Completed")
 		//
