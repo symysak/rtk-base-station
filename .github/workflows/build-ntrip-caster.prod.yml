@@ -1,7 +1,12 @@
 on:
   push:
     branches:
-      - main
+      - release/*
+    paths:
+      - ntrip-caster/**
+      - .github/workflows/build-ntrip-caster.prod.yml
+    tags:
+      - v*
 
 name: (PROD) ntrip-caster Docker Build and Push
 
@@ -38,7 +43,6 @@ jobs:
               type=semver,pattern={{major}}
               type=ref,event=branch
               type=ref,event=pr
-              type=ref,event=tag
               type=sha
             labels: |
               org.opencontainers.image.title=ntrip-caster

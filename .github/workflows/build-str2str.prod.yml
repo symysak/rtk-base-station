@@ -1,7 +1,12 @@
 on:
   push:
     branches:
-      - main
+      - release/*
+    paths:
+      - str2str/**
+      - .github/workflows/build-str2str.prod.yml
+    tags:
+      - v*
 
 name: (PROD) str2str Docker Build and Push
 
@@ -38,7 +43,6 @@ jobs:
               type=semver,pattern={{major}}
               type=ref,event=branch
               type=ref,event=pr
-              type=ref,event=tag
               type=sha
             labels: |
               org.opencontainers.image.title=str2str

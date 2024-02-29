@@ -51,6 +51,9 @@ var deleteCmd = &cobra.Command{
 			v.SetFloat(float64(0.0))
 		case reflect.Bool:
 			v.SetBool(false)
+		default:
+			fmt.Println("Invalid Key")
+			os.Exit(1)
 		}
 
 		new_new_config, err := os.Create(configDir + "new-config.json")
