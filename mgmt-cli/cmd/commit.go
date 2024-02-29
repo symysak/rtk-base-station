@@ -659,7 +659,7 @@ func commitUbloxReceiver(new_config models.Config) {
 		os.Exit(1)
 	}
 
-	// デフォルトでは設定をflashに保存しないので、フラグをfalseにする
-	new_config.UbloxReceiver.SaveConfig = false
+	// デフォルトで設定をflashに保存するので、trueにしておく
+	new_config.UbloxReceiver.SaveConfig = true
 
 }

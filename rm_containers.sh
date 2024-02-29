@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 systemctl --user stop container-str2str.service
 systemctl --user disable container-str2str.service
