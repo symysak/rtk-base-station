@@ -54,6 +54,7 @@ type UbloxReceiver struct {
 
 type CFG struct {
 	MSGOUT MSGOUT `json:"MSGOUT"`
+	SIGNAL SIGNAL `json:"SIGNAL"`
 }
 
 type MSGOUT struct {
@@ -95,4 +96,49 @@ type OutputDestination struct {
 	UART1 bool `json:"UART1"`
 	UART2 bool `json:"UART2"`
 	USB   bool `json:"USB"`
+}
+
+type SIGNAL struct {
+	GPS  GPS  `json:"GPS"`
+	SBAS SBAS `json:"SBAS"`
+	GAL  GAL  `json:"GAL"`
+	BDS  BDS  `json:"BDS"`
+	QZSS QZSS `json:"QZSS"`
+	GLO  GLO  `json:"GLO"`
+}
+
+type GPS struct {
+	ENA      bool `json:"ENA"`
+	L1CA_ENA bool `json:"L1CA_ENA"`
+	L2C_ENA  bool `json:"L2C_ENA"`
+}
+
+type SBAS struct {
+	ENA      bool `json:"ENA"`
+	L1CA_ENA bool `json:"L1CA_ENA"`
+}
+
+type GAL struct {
+	ENA     bool `json:"ENA"`
+	E1_ENA  bool `json:"E1_ENA"`
+	E5B_ENA bool `json:"E5B_ENA"`
+}
+
+type BDS struct {
+	ENA    bool `json:"ENA"`
+	B1_ENA bool `json:"B1_ENA"`
+	B2_ENA bool `json:"B2_ENA"`
+}
+
+type QZSS struct {
+	ENA      bool `json:"ENA"`
+	L1CA_ENA bool `json:"L1CA_ENA"`
+	L1S_ENA  bool `json:"L1S_ENA"`
+	L2C_ENA  bool `json:"L2C_ENA"`
+}
+
+type GLO struct {
+	ENA    bool `json:"ENA"`
+	L1_ENA bool `json:"L1_ENA"`
+	L2_ENA bool `json:"L2_ENA"`
 }

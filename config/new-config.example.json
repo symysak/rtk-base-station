@@ -36,7 +36,7 @@
     "antenna_info": ""
   },
   "ublox_receiver": {
-    "save_config": false,
+    "save_config": true,
     "CFG": {
       "MSGOUT": {
         "NMEA": {
@@ -118,6 +118,38 @@
               "USB": true
             }
           }
+        }
+      },
+      "SIGNAL": {
+        "GPS": {
+          "ENA": true,
+          "L1CA_ENA": true,
+          "L2C_ENA": true
+        },
+        "SBAS": {
+          "ENA": true,
+          "L1CA_ENA": true
+        },
+        "GAL": {
+          "ENA": true,
+          "E1_ENA": true,
+          "E5B_ENA": true
+        },
+        "BDS": {
+          "ENA": true,
+          "B1_ENA": true,
+          "B2_ENA": true
+        },
+        "QZSS": {
+          "ENA": true,
+          "L1CA_ENA": true,
+          "L1S_ENA": true,
+          "L2C_ENA": true
+        },
+        "GLO": {
+          "ENA": true,
+          "L1_ENA": true,
+          "L2_ENA": true
         }
       }
     }

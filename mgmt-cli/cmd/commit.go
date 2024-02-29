@@ -464,6 +464,8 @@ func commitUbloxReceiver(new_config models.Config) {
 						RXM
 							RAWX
 							SFRBX
+				SIGNAL
+				 	<省略>
 	*/
 	/*
 			設定の適用は以下の手順で行う
@@ -561,6 +563,39 @@ func commitUbloxReceiver(new_config models.Config) {
 	commands = append(commands, []string{tmp + name + "_UART1", boolToString(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.UART1)})
 	commands = append(commands, []string{tmp + name + "_UART2", boolToString(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.UART2)})
 	commands = append(commands, []string{tmp + name + "_USB", boolToString(new_config.UbloxReceiver.CFG.MSGOUT.UBX.RXM.SFRBX.USB)})
+
+	// CFG-SIGNAL-*の設定を適用する
+	tmp = "CFG-SIGNAL-"
+	// GPS
+	name = "GPS"
+	commands = append(commands, []string{tmp + name + "_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GPS.ENA)})
+	commands = append(commands, []string{tmp + name + "_L1CA_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GPS.L1CA_ENA)})
+	commands = append(commands, []string{tmp + name + "_L2C_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GPS.L2C_ENA)})
+	// SBAS
+	name = "SBAS"
+	commands = append(commands, []string{tmp + name + "_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.SBAS.ENA)})
+	commands = append(commands, []string{tmp + name + "_L1CA_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.SBAS.L1CA_ENA)})
+	// GAL
+	name = "GAL"
+	commands = append(commands, []string{tmp + name + "_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GAL.ENA)})
+	commands = append(commands, []string{tmp + name + "_E1_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GAL.E1_ENA)})
+	commands = append(commands, []string{tmp + name + "_E5B_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GAL.E5B_ENA)})
+	// BDS
+	name = "BDS"
+	commands = append(commands, []string{tmp + name + "_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.BDS.ENA)})
+	commands = append(commands, []string{tmp + name + "_B1_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.BDS.B1_ENA)})
+	commands = append(commands, []string{tmp + name + "_B2_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.BDS.B2_ENA)})
+	// QZSS
+	name = "QZSS"
+	commands = append(commands, []string{tmp + name + "_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.QZSS.ENA)})
+	commands = append(commands, []string{tmp + name + "_L1CA_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.QZSS.L1CA_ENA)})
+	commands = append(commands, []string{tmp + name + "_L1S_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.QZSS.L1S_ENA)})
+	commands = append(commands, []string{tmp + name + "_L2C_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.QZSS.L2C_ENA)})
+	// GLO
+	name = "GLO"
+	commands = append(commands, []string{tmp + name + "_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GLO.ENA)})
+	commands = append(commands, []string{tmp + name + "_L1_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GLO.L1_ENA)})
+	commands = append(commands, []string{tmp + name + "_L2_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GLO.L2_ENA)})
 
 	// 作成した配列をforで回して、ubxtoolで設定を行う
 	// /dev/ttyACM0はstr2strのdockerによって使用されいているので、一旦停止する
