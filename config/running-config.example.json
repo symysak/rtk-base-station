@@ -36,7 +36,7 @@
     "antenna_info": ""
   },
   "ublox_receiver": {
-    "save_config": false,
+    "save_config": true,
     "CFG": {
       "MSGOUT": {
         "NMEA": {
