@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>RTK-SET-FORM</title>
+        <style>
+            *{
+                padding: 0;
+                margin: 0;
+                font-size: 12px;
+            }
+            .color_box{
+                background-color: darkred;
+                color: white;
+            }
+        </style>
+    </head>
+    <body style="width:1000px;height:600px">
+        <div style="padding:1px;text-align:right">
+            <span>設定一覧へ</span>
+            &nbsp;
+            <span>メニューへ</span>
+            &nbsp;
+            <span>閉じる</span>
+        </div>
+        <div class="color_box" style="width:1000px;height: 40px;">
+            <div style="padding: 10px;">
+                <span style="font-size: 20px;">
+                RTK 管理システム
+                </span>
+            </div>
+        </div>
+        <div style="clear: both;text-align: right;">
+            <div>
+                ログインID
+            </div>
+            <div>
+                現在時刻
+            </div>
+        </div>
+        <div v style="border-bottom:1px solid darkred;margin-bottom:5px">
+            <span style="font-size:18px">RTK 設定一覧</span>
+        </div>
+        <div>
+            <table style="float: left;margin: 10px;" border="1" cellspacing="0">
+                <tr>
+                    <td class="color_box" style="height: 30px;width: 200px;text-align: center;">項目</td>
+                    <td class="color_box" style="height: 30px;width: 400px;text-align: center;">設定</td>
+                    <td class="color_box" style="height: 30px;width: 400px;text-align: center;">変更後設定</td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;text-align: center;">Username</td>
+                    <td style="width: 400px;text-align: center;"></td>
+                    <td style="width: 400px;text-align: center;">
+                        <input type="text" style="width: 400px;height: 30px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;text-align: center;">Password</td>
+                    <td style="width: 400px;text-align: center;"></td>
+                    <td style="width: 400px;text-align: center;">
+                        <input type="text" style="width: 400px;height: 30px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;text-align: center;">port</td>
+                    <td style="width: 400px;text-align: center;">2101</td>
+                    <td style="width: 400px;text-align: center;">
+                        <input type="text" style="width: 400px;height: 30px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;text-align: center;">mountpoint</td>
+                    <td style="width: 400px;text-align: center;">main</td>
+                    <td style="width: 400px;text-align: center;">
+                        <input type="text" style="width: 400px;height: 30px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;text-align: center;">identifier</td>
+                    <td style="width: 400px;text-align: center;">exampleCity</td>
+                    <td style="width: 400px;text-align: center;">
+                        <input type="text" style="width: 400px;height: 30px;" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 200px;text-align: center;">format</td>
+                    <td style="width: 400px;text-align: center;">rtcm3</td>
+                    <td style="width: 400px;text-align: center;">
+                        <input type="text" style="width: 400px;height: 30px;" />
+                    </td>
+                </tr>
+                
+            </table>
+        </div>
+        <div style="padding-left: 970px;">
+            <button>変更</button>
+        </div>
+    </body>
+</html>
