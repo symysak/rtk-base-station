@@ -360,6 +360,7 @@ out="`
 	defer f.Close()
 	f.Write(([]byte)(text))
 
+	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	// ntrip-casterのコンテナを再起動する
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
@@ -367,6 +368,7 @@ out="`
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err = cmd.Run()
+	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println(stderr.String())
@@ -395,6 +397,7 @@ func commitStr2str(new_config models.Config) {
 	defer f.Close()
 	f.Write(([]byte)(text))
 
+	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	// str2strのコンテナを再起動する
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
@@ -402,6 +405,7 @@ func commitStr2str(new_config models.Config) {
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err = cmd.Run()
+	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	if err != nil {
 		fmt.Println(err)
 		fmt.Println(stderr.String())
@@ -432,8 +436,9 @@ func commitUbloxReceiver(new_config models.Config) {
 		protVer += string(stdout.String()[i])
 	}
 
+	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	// 設定の適用前に、コンフリクトが生じないようにレシーバをリセットする
-	cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-P", protVer, "-p", "RESET")
+	cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-p", "RESET")
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	err = cmd.Run()
@@ -597,6 +602,7 @@ func commitUbloxReceiver(new_config models.Config) {
 	commands = append(commands, []string{tmp + name + "_L1_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GLO.L1_ENA)})
 	commands = append(commands, []string{tmp + name + "_L2_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GLO.L2_ENA)})
 
+	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	// 作成した配列をforで回して、ubxtoolで設定を行う
 	// /dev/ttyACM0はstr2strのdockerによって使用されいているので、一旦停止する
 	cmd = exec.Command("systemctl", "--user", "stop", "container-str2str.service")
@@ -625,9 +631,9 @@ func commitUbloxReceiver(new_config models.Config) {
 		fmt.Print(".") // ちゃんと処理してますよ感を出す
 		var cmd *exec.Cmd
 		if new_config.UbloxReceiver.SaveConfig {
-			cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-P", protVer, "-z", commands[i][0]+","+commands[i][1])
+			cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1])
 		} else {
-			cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-P", protVer, "-z", commands[i][0]+","+commands[i][1]+","+"1")
+			cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1]+","+"1")
 		}
 		var stdout bytes.Buffer
 		var stderr bytes.Buffer
@@ -662,7 +668,7 @@ func commitUbloxReceiver(new_config models.Config) {
 		fmt.Println(stderr.String())
 		os.Exit(1)
 	}
-	fmt.Print(".") // ちゃんと処理してますよ感を出す
+	fmt.Println(".") // ちゃんと処理してますよ感を出す
 
 	// デフォルトで設定をflashに保存するので、trueにしておく
 	new_config.UbloxReceiver.SaveConfig = true
