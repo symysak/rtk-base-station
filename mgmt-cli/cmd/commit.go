@@ -608,6 +608,7 @@ func commitUbloxReceiver(new_config models.Config) {
 		fmt.Println(stderr.String())
 		os.Exit(1)
 	}
+	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	// ntrip-casterのdockerがstr2strに依存しているので、一旦停止する
 	cmd = exec.Command("systemctl", "--user", "stop", "container-ntrip-caster.service")
 	cmd.Stdout = &stdout
@@ -618,8 +619,10 @@ func commitUbloxReceiver(new_config models.Config) {
 		fmt.Println(stderr.String())
 		os.Exit(1)
 	}
+	fmt.Print(".") // ちゃんと処理してますよ感を出す
 
 	for i := 0; i < len(commands); i++ {
+		fmt.Print(".") // ちゃんと処理してますよ感を出す
 		var cmd *exec.Cmd
 		if new_config.UbloxReceiver.SaveConfig {
 			cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-P", protVer, "-z", commands[i][0]+","+commands[i][1])
@@ -648,6 +651,7 @@ func commitUbloxReceiver(new_config models.Config) {
 		fmt.Println(stderr.String())
 		os.Exit(1)
 	}
+	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	// ntrip-casterのコンテナを再起動する
 	cmd = exec.Command("systemctl", "--user", "start", "container-ntrip-caster.service")
 	cmd.Stdout = &stdout
@@ -658,6 +662,7 @@ func commitUbloxReceiver(new_config models.Config) {
 		fmt.Println(stderr.String())
 		os.Exit(1)
 	}
+	fmt.Print(".") // ちゃんと処理してますよ感を出す
 
 	// デフォルトで設定をflashに保存するので、trueにしておく
 	new_config.UbloxReceiver.SaveConfig = true
