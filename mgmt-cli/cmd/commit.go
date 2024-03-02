@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/google/go-cmp/cmp"
 	"github.com/spf13/cobra"
 	"github.com/symysak/rtk-base-station/mgmt-cli/models"
 )
@@ -59,17 +58,6 @@ var commitCmd = &cobra.Command{
 		var new_config models.Config
 		json.Unmarshal(raw_new_config, &new_config)
 
-		// 差分があるかチェック
-		if running_config == new_config {
-			fmt.Println("No changes to commit")
-			fmt.Println("Do you want to commit anyway? [y/N]")
-			var ok string
-			fmt.Scan(&ok)
-			if ok != "y" {
-				os.Exit(0)
-			}
-		}
-
 		// バリデーションチェック
 		validate = validator.New(validator.WithRequiredStructEnabled())
 		// navsystemというカスタムバリデーションを登録
@@ -109,16 +97,6 @@ var commitCmd = &cobra.Command{
 		//
 		// 諸々のチェックおわり
 		//
-
-		// 差分確認画面を表示
-		fmt.Println(cmp.Diff(running_config, new_config))
-		fmt.Println("ok? [y/N]")
-		var ok string
-		fmt.Scan(&ok)
-		if ok != "y" {
-			fmt.Println("Commit aborted")
-			os.Exit(0)
-		}
 
 		//
 		// コミット処理
