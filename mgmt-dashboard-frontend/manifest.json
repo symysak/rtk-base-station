@@ -1,0 +1,9 @@
+{
+  "menu": {
+    "rtk-dashboard": {
+        "label": "RTK基地局 管理ページ",
+        "order": 0,
+        "path": "index.html"
+     }
+  }
+}
