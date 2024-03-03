@@ -7,6 +7,11 @@ on:
       - .github/workflows/build-ntrip-caster.prod.yml
     tags:
       - v*
+  pull_request:
+    types:
+      - opened
+    branches:
+      - main
 
 name: (PROD) ntrip-caster Docker Build and Push
 
