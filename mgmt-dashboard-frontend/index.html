@@ -1,8 +1,43 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8" />
         <title>RTK-SET-FORM</title>
+        <script src="/cockpit/@localhost/base1/cockpit.js"></script>
+        <script>
+            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Port");
+            process.then(data=>{
+                document.getElementById("port").innerHTML = data;
+            })
+            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Username");
+            process.then(data=>{
+                document.getElementById("name").innerHTML = data;
+            })
+            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Password");
+            process.then(data=>{
+                document.getElementById("pass").innerHTML = data;
+            })
+            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Mountpoint");
+            process.then(data=>{
+                document.getElementById("mountpoint").innerHTML = data;
+            })
+            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Sourcetable.Identifier");
+            process.then(data=>{
+                document.getElementById("identifier").innerHTML = data;
+            })
+            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Sourcetable.Format");
+            process.then(data=>{
+                document.getElementById("format").innerHTML = data;
+            })
+            function setValue(){
+                cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli  get Ntripcaster.Username",document.getElementById("name").innerHTML);
+                cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli  get Ntripcaster.PassWord",document.getElementById("pass").innerHTML);
+                cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli  get Ntripcaster.Port",document.getElementById("port").innerHTML);
+                cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli  get Ntripcaster.Mountpoint",document.getElementById("mountpoint").innerHTML);
+                cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli  get Ntripcaster.Sourcetable.Identifier",document.getElementById("identifier").innerHTML);
+                cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli  get Ntripcaster.Sourcetable.Format",document.getElementById("format").innerHTML);
+            }
+        </script>
         <style>
             *{
                 padding: 0;
@@ -50,42 +85,42 @@
                 </tr>
                 <tr>
                     <td style="width: 200px;text-align: center;">Username</td>
-                    <td style="width: 400px;text-align: center;"></td>
+                    <td style="width: 400px;text-align: center;" id="name"></td>
                     <td style="width: 400px;text-align: center;">
                         <input type="text" style="width: 400px;height: 30px;" />
                     </td>
                 </tr>
                 <tr>
                     <td style="width: 200px;text-align: center;">Password</td>
-                    <td style="width: 400px;text-align: center;"></td>
+                    <td style="width: 400px;text-align: center;" id="pass"></td>
                     <td style="width: 400px;text-align: center;">
                         <input type="text" style="width: 400px;height: 30px;" />
                     </td>
                 </tr>
                 <tr>
                     <td style="width: 200px;text-align: center;">port</td>
-                    <td style="width: 400px;text-align: center;">2101</td>
+                    <td style="width: 400px;text-align: center;" id="port"></td>
                     <td style="width: 400px;text-align: center;">
                         <input type="text" style="width: 400px;height: 30px;" />
                     </td>
                 </tr>
                 <tr>
                     <td style="width: 200px;text-align: center;">mountpoint</td>
-                    <td style="width: 400px;text-align: center;">main</td>
+                    <td style="width: 400px;text-align: center;" id="mountpoint"></td>
                     <td style="width: 400px;text-align: center;">
                         <input type="text" style="width: 400px;height: 30px;" />
                     </td>
                 </tr>
                 <tr>
                     <td style="width: 200px;text-align: center;">identifier</td>
-                    <td style="width: 400px;text-align: center;">exampleCity</td>
+                    <td style="width: 400px;text-align: center;" id="identifier"></td>
                     <td style="width: 400px;text-align: center;">
                         <input type="text" style="width: 400px;height: 30px;" />
                     </td>
                 </tr>
                 <tr>
                     <td style="width: 200px;text-align: center;">format</td>
-                    <td style="width: 400px;text-align: center;">rtcm3</td>
+                    <td style="width: 400px;text-align: center;" id="format"></td>
                     <td style="width: 400px;text-align: center;">
                         <input type="text" style="width: 400px;height: 30px;" />
                     </td>

@@ -1,4 +1,4 @@
-{
+﻿{
   "menu": {
     "rtk-dashboard": {
         "label": "RTK基地局 管理ページ",
@@ -6,5 +6,5 @@
         "path": "index.html"
      }
   },
-  "content-security-policy": "style-src 'unsafe-inline'"
+  "content-security-policy": "default-src 'self' 'unsafe-inline'"
 }
