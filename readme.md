@@ -45,9 +45,11 @@ sudo stty -F /dev/ttyACM0 230400
 cd rtk-base-station
 
 # ntrip casterの設定
+cp ntrip-caster/entrypoint.example.sh ntrip-caster/entrypoint.sh
 sudo chmod +x ntrip-caster/entrypoint.sh
 
 # str2strの設定
+cp str2str/entrypoint.example.sh str2str/entrypoint.sh
 sudo chmod +x str2str/entrypoint.sh
 
 chmod +x run_containers.sh
@@ -205,9 +207,11 @@ chmod +x rm_containers.sh
 git pull
 
 # ntrip casterの設定
+cp ntrip-caster/entrypoint.example.sh ntrip-caster/entrypoint.sh
 sudo chmod +x ntrip-caster/entrypoint.sh
 
 # str2strの設定
+cp str2str/entrypoint.example.sh str2str/entrypoint.sh
 sudo chmod +x str2str/entrypoint.sh
 
 ## run containers
