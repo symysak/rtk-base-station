@@ -3,6 +3,30 @@
     <head>
         <meta charset="UTF-8" />
         <title>RTK-SET-FORM</title>
+        <script src="/cockpit/@localhost/base1/cockpit.js"></script>
+        <script>
+            process = cockpit.script("/home/yoshi/rtk-base-station/mgmt-cli/mgmt-cli -c /home/yoshi/rtk-base-station/config/ get Ntripcaster.Mountpoint");
+            process.then( data => {
+                console.log(data);
+            });
+            process.catch(exception => {
+                console.log(exception);
+            });
+            process.stream( data => {
+                console.log(data);
+            });
+
+            process = cockpit.spawn(["/home/yoshi/rtk-base-station/mgmt-cli/mgmt-cli", "-c", "/home/yoshi/rtk-base-station/config/", "get", "Ntripcaster.Port"]);
+            process.then( data => {
+                console.log(data);
+            });
+            process.catch(exception => {
+                console.log(exception);
+            });
+            process.stream( data => {
+                console.log(data);
+            });
+        </script>
         <style>
             *{
                 padding: 0;
