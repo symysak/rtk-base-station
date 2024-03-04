@@ -36,6 +36,7 @@ sudo apt install -y cockpit-podman
 
 # git clone
 sudo apt install -y git
+cd ~
 git clone https://github.com/symysak/rtk-base-station.git
 
 sudo cp rtk-base-station/99-zed-f9p.rules /etc/udev/rules.d/
@@ -201,6 +202,8 @@ sudo reboot
 ```
 ## Update
 ```
+cd ~/rtk-base-station
+
 chmod +x rm_containers.sh
 ./rm_containers.sh
 
