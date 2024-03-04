@@ -1,18 +1,33 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8" />
         <title>RTK-SET-FORM</title>
         <style>
-            *{
-                padding: 0;
-                margin: 0;
-                font-size: 12px;
-            }
             .color_box{
-                background-color: #a10115;
-                color: #f0efea;
+                background-color: #bde5e0;
+                margin-bottom: 30px;
+                text-align: center;
             }
+            .side-box{
+                padding-top: 15px;
+                font-size: 10px;
+                border-radius: 10px;
+                padding-left: 10px;
+                margin-right: 20px;
+            }
+            .title{
+                text-align: center;
+            }
+            .link:hover{
+                cursor: pointer;
+                color: #335566;
+            }
+            .main-title{
+                color: antiquewhite;
+                border-radius: 10px;
+            }
+            
         </style>
         <script src="/cockpit/@localhost/base1/cockpit.js"></script>
         
@@ -42,262 +57,139 @@
             process.then( data => {
                 document.getElementById("identifier").innerHTML = data;
             });
-            function pagemove(){
-                window.location.hash = "ank"
-            }
         </script>
     </head>
-    <body style="width:1000px">
-        <div style="padding:1px;text-align:right">
-            <span>設定一覧へ</span>
-            &nbsp;
-            <span>メニューへ</span>
-            &nbsp;
-            <span>閉じる</span>
-        </div>
-        <div class="color_box" style="width:1000px;height: 40px;">
-            <div style="padding: 10px;">
+    <body style="width:1200px;height: 100%;">
+        <a name="pagetop"></a>
+        <div class="color_box" style="width:1200px;height: 40px;">
+            <div  class="main-title" style="padding: 10px; background-color: #335566;">
                 <span style="font-size: 20px;">
                 RTK 管理システム
                 </span>
             </div>
         </div>
-        <div style="clear: both;text-align: right;">
-            <div>
-                ログインID
+        <div style="display: flex;">
+            <div class="side-box" style="width: 200px;height: 1500px; background-color: #bde5e0;">
+                <h1 class="link" onclick="location.hash='';location.hash='pagetop';return false;">Pagetop</h1></br></br>
+                <h1 class="link" onclick="location.hash='';location.hash='Ntripcaster';return false;">Ntripcaster</h1></br></br>
+                <h1 class="link" onclick="location.hash='';location.hash='Ntripcaster_2';return false;">Ntripcaster_2</h1></br></br>
             </div>
             <div>
-                現在時刻
+                <div style="width: 1000px;">
+                    <a name="Ntripcaster"></a>
+                    <div class="title" style="border-bottom:1px solid #bde5e0;margin-bottom:5px">
+                        <span style="font-size:18px; padding-left: 10px;" >RTK 設定一覧</span>
+                    </div>
+                    <div>
+                        <table style="float: left;margin: 10px;" border="1" cellspacing="0">
+                            <tr>
+                                <td class="color_box" style="height: 30px;width: 200px;text-align: center;">項目</td>
+                                <td class="color_box" style="height: 30px;width: 400px;text-align: center;">設定</td>
+                                <td class="color_box" style="height: 30px;width: 400px;text-align: center;">変更後設定</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">Username</td>
+                                <td style="width: 400px;text-align: center;" id="name"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">Password</td>
+                                <td style="width: 400px;text-align: center;" id="pass"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">port</td>
+                                <td style="width: 400px;text-align: center;" id="port"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">mountpoint</td>
+                                <td style="width: 400px;text-align: center;" id="mountpoint"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">identifier</td>
+                                <td style="width: 400px;text-align: center;" id="identifier"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">format</td>
+                                <td style="width: 400px;text-align: center;" id="format"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div style="width: 1000px;">
+                    <a name="Ntripcaster_2"></a>
+                    <div class="title" style="border-bottom:1px solid #bde5e0;margin-bottom:5px">
+                        <span style="font-size:18px; padding-left: 10px;" >RTK 設定一覧</span>
+                    </div>
+                    <div>
+                        <table style="float: left;margin: 10px;" border="1" cellspacing="0">
+                            <tr>
+                                <td class="color_box" style="height: 30px;width: 200px;text-align: center;">項目</td>
+                                <td class="color_box" style="height: 30px;width: 400px;text-align: center;">設定</td>
+                                <td class="color_box" style="height: 30px;width: 400px;text-align: center;">変更後設定</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">Username</td>
+                                <td style="width: 400px;text-align: center;" id="name"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">Password</td>
+                                <td style="width: 400px;text-align: center;" id="pass"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">port</td>
+                                <td style="width: 400px;text-align: center;" id="port"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">mountpoint</td>
+                                <td style="width: 400px;text-align: center;" id="mountpoint"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">identifier</td>
+                                <td style="width: 400px;text-align: center;" id="identifier"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 200px;text-align: center;">format</td>
+                                <td style="width: 400px;text-align: center;" id="format"></td>
+                                <td style="width: 400px;text-align: center;">
+                                    <input type="text" style="width: 400px;height: 30px;" />
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-        <div style="width: 50px;height: 300px;">
-            <h2 onclick="pagemove()">pagemove</h2>
-        </div>
-        <div>
-            <div v style="border-bottom:1px solid #a10115;margin-bottom:5px">
-                <span style="font-size:18px; padding-left: 10px;" >RTK 設定一覧</span>
-            </div>
-            <div>
-                <table style="float: left;margin: 10px;" border="1" cellspacing="0">
-                    <tr>
-                        <td class="color_box" style="height: 30px;width: 200px;text-align: center;">項目</td>
-                        <td class="color_box" style="height: 30px;width: 400px;text-align: center;">設定</td>
-                        <td class="color_box" style="height: 30px;width: 400px;text-align: center;">変更後設定</td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">Username</td>
-                        <td style="width: 400px;text-align: center;" id="name"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">Password</td>
-                        <td style="width: 400px;text-align: center;" id="pass"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">port</td>
-                        <td style="width: 400px;text-align: center;" id="port"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">mountpoint</td>
-                        <td style="width: 400px;text-align: center;" id="mountpoint"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">identifier</td>
-                        <td style="width: 400px;text-align: center;" id="identifier"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">format</td>
-                        <td style="width: 400px;text-align: center;" id="format"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div>
-            <div v style="border-bottom:1px solid #a10115;margin-bottom:5px">
-                <span style="font-size:18px; padding-left: 10px;" >RTK 設定一覧</span>
-            </div>
-            <div>
-                <table style="float: left;margin: 10px;" border="1" cellspacing="0">
-                    <tr>
-                        <td class="color_box" style="height: 30px;width: 200px;text-align: center;">項目</td>
-                        <td class="color_box" style="height: 30px;width: 400px;text-align: center;">設定</td>
-                        <td class="color_box" style="height: 30px;width: 400px;text-align: center;">変更後設定</td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">Username</td>
-                        <td style="width: 400px;text-align: center;" id="name"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">Password</td>
-                        <td style="width: 400px;text-align: center;" id="pass"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">port</td>
-                        <td style="width: 400px;text-align: center;" id="port"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">mountpoint</td>
-                        <td style="width: 400px;text-align: center;" id="mountpoint"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">identifier</td>
-                        <td style="width: 400px;text-align: center;" id="identifier"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">format</td>
-                        <td style="width: 400px;text-align: center;" id="format"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div>
-            <div v style="border-bottom:1px solid #a10115;margin-bottom:5px">
-                <span style="font-size:18px; padding-left: 10px;" >RTK 設定一覧</span>
-            </div>
-            <div>
-                <table style="float: left;margin: 10px;" border="1" cellspacing="0">
-                    <tr>
-                        <td class="color_box" style="height: 30px;width: 200px;text-align: center;">項目</td>
-                        <td class="color_box" style="height: 30px;width: 400px;text-align: center;">設定</td>
-                        <td class="color_box" style="height: 30px;width: 400px;text-align: center;">変更後設定</td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">Username</td>
-                        <td style="width: 400px;text-align: center;" id="name"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">Password</td>
-                        <td style="width: 400px;text-align: center;" id="pass"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">port</td>
-                        <td style="width: 400px;text-align: center;" id="port"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">mountpoint</td>
-                        <td style="width: 400px;text-align: center;" id="mountpoint"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">identifier</td>
-                        <td style="width: 400px;text-align: center;" id="identifier"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">format</td>
-                        <td style="width: 400px;text-align: center;" id="format"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div>
-            <div v style="border-bottom:1px solid #a10115;margin-bottom:5px">
-                <span style="font-size:18px; padding-left: 10px;" >RTK 設定一覧</span>
-            </div>
-            <div>
-                <table style="float: left;margin: 10px;" border="1" cellspacing="0">
-                    <tr>
-                        <td class="color_box" style="height: 30px;width: 200px;text-align: center;">項目</td>
-                        <td class="color_box" style="height: 30px;width: 400px;text-align: center;">設定</td>
-                        <td class="color_box" style="height: 30px;width: 400px;text-align: center;">変更後設定</td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">Username</td>
-                        <td style="width: 400px;text-align: center;" id="name"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">Password</td>
-                        <td style="width: 400px;text-align: center;" id="pass"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">port</td>
-                        <td style="width: 400px;text-align: center;" id="port"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">mountpoint</td>
-                        <td style="width: 400px;text-align: center;" id="mountpoint"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">identifier</td>
-                        <td style="width: 400px;text-align: center;" id="identifier"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px;text-align: center;">format</td>
-                        <td style="width: 400px;text-align: center;" id="format"></td>
-                        <td style="width: 400px;text-align: center;">
-                            <input type="text" style="width: 400px;height: 30px;" />
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <a name="ank"></a>
-        
     </body>
 </html>
