@@ -32,28 +32,28 @@
         <script src="/cockpit/@localhost/base1/cockpit.js"></script>
         
         <script>
-            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Username");
+            process = cockpit.script("~/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk-base-station/config/ get Ntripcaster.Username");
             process.then( data => {
                 
                 document.getElementById("name").innerHTML = data;
             });
-            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Password");
+            process = cockpit.script("~/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk-base-station/config/ get Ntripcaster.Password");
             process.then( data => {
                 document.getElementById("pass").innerHTML = data;
             });
-            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Port");
+            process = cockpit.script("~/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk-base-station/config/ get Ntripcaster.Port");
             process.then( data => {
                 document.getElementById("port").innerHTML = data;
             });
-            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Mountpoint");
+            process = cockpit.script("~/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk-base-station/config/ get Ntripcaster.Mountpoint");
             process.then( data => {
                 document.getElementById("mountpoint").innerHTML = data;
             });
-            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Sourcetable.Format");
+            process = cockpit.script("~/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk-base-station/config/ get Ntripcaster.Sourcetable.Format");
             process.then( data => {
                 document.getElementById("format").innerHTML = data;
             });
-            process = cockpit.script("~/rtk/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk/rtk-base-station/config/ get Ntripcaster.Sourcetable.Identifier");
+            process = cockpit.script("~/rtk-base-station/mgmt-cli/mgmt-cli -c ~/rtk-base-station/config/ get Ntripcaster.Sourcetable.Identifier");
             process.then( data => {
                 document.getElementById("identifier").innerHTML = data;
             });
