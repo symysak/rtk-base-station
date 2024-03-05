@@ -43,7 +43,12 @@
                         <h2 class="pf-v5-c-nav__section-title" id="grouped-title1">Ublox受信機設定</h2>
                         <ul class="pf-v5-c-nav__list" role="list">
                             <li class="pf-v5-c-nav__item">
-                                <a href="#" class="pf-v5-c-nav__link">使用する衛星</a>
+                                <a onclick="document.getElementById('satelite-selection').scrollIntoView({behavior: 'smooth'});" class="pf-v5-c-nav__link">使用する衛星</a>
+                            </li>
+                        </ul>
+                        <ul class="pf-v5-c-nav__list" role="list">
+                            <li class="pf-v5-c-nav__item">
+                                <a onclick="document.getElementById('actions').scrollIntoView({behavior: 'smooth'});" class="pf-v5-c-nav__link">操作</a>
                             </li>
                         </ul>
                     </section>
@@ -51,375 +56,466 @@
             </div>
         </aside>
         <main class="pf-v5-c-page__main" tabindex="-1">
-            <sectio class="pf-v5-c-page__main-section">
-                <label class="pf-v5-c-switch pf-m-reverse" for="SaveConfig">
-                    <input
-                        class="pf-v5-c-switch__input"
-                        type="checkbox"
-                        id="SaveConfig"
-                        aria-labelledby="SaveConfig-on"
-                        disabled
-                    />
-                    <span class="pf-v5-c-switch__toggle"></span>
-                    <span
-                        class="pf-v5-c-switch__label"
-                        id="SaveConfig-on"
-                        aria-hidden="true"
-                    >設定を再起動後も保持する</span>
-                </label>
-
-                <!-- 衛星選択 -->
-                <div class="pf-v5-c-panel">
-
-                    <!-- GPS -->
-                    <div class="pf-v5-c-panel__header">
-                        <label class="pf-v5-c-switch" for="GPS-ENA">
-                            <input
-                                class="pf-v5-c-switch__input"
-                                type="checkbox"
-                                id="GPS-ENA"
-                                aria-labelledby="GPS-ENA-on"
-                                disabled
-                            />
-                            <span class="pf-v5-c-switch__toggle"></span>
-                            <span
-                                class="pf-v5-c-switch__label"
-                                id="GPS-ENA-on"
-                                aria-hidden="true"
-                            >GPSを使用する</span>
-                        </label>
-                    </div>
-                    <hr class="pf-v5-c-divider" />
-                    <div class="pf-v5-c-panel__main">
-                        <div class="pf-v5-c-panel__main-body">
-                            <!-- GPS-L1CA_ENA -->
-                            <label class="pf-v5-c-switch" for="GPS-L1CA_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="GPS-L1CA_ENA"
-                                    aria-labelledby="GPS-L1CA_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="GPS-L1CA_ENA-on"
-                                    aria-hidden="true"
-                                >L1CA</span>
-                            </label>
-                            <br>
-                            <!-- GPS-L2C_ENA -->
-                            <label class="pf-v5-c-switch" for="GPS-L2C_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="GPS-L2C_ENA"
-                                    aria-labelledby="GPS-L2C_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="GPS-L2C_ENA-on"
-                                    aria-hidden="true"
-                                >L2C</span>
-                            </label>
+            <section class="pf-v5-c-page__main-section">
+                    <div class="pf-v5-l-stack pf-m-gutter">
+                        <!-- saveconfig -->
+                        <div class="pf-v5-l-stack__item">
+                            <div class="pf-v5-c-card">
+                                <div class="pf-v5-c-card__body">
+                                    <label class="pf-v5-c-switch pf-m-reverse" for="SaveConfig">
+                                        <input
+                                            class="pf-v5-c-switch__input"
+                                            type="checkbox"
+                                            id="SaveConfig"
+                                            aria-labelledby="SaveConfig-on"
+                                            disabled
+                                        />
+                                        <span class="pf-v5-c-switch__toggle"></span>
+                                        <span
+                                            class="pf-v5-c-switch__label"
+                                            id="SaveConfig-on"
+                                            aria-hidden="true"
+                                        >設定を再起動後も保持する</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <!-- 衛星選択 -->
+                        <div class="pf-v5-l-stack__item" id="satelite-selection">
+                            <div class="pf-v5-c-card">
+                                <div class="pf-v5-c-card__title">
+                                    <h2 class="pf-v5-c-card__title-text">衛星選択</h2>
+                                </div>
+                                <div class="pf-v5-c-card__body">
+                                    <div class="pf-v5-c-panel">
 
-                    <!-- SBAS -->
-                    <hr class="pf-v5-c-divider" />
-                    <hr class="pf-v5-c-divider" />
-                    <div class="pf-v5-c-panel__header">
-                        <label class="pf-v5-c-switch" for="SBAS-ENA">
-                            <input
-                                class="pf-v5-c-switch__input"
-                                type="checkbox"
-                                id="SBAS-ENA"
-                                aria-labelledby="SBAS-ENA-on"
-                                disabled
-                            />
-                            <span class="pf-v5-c-switch__toggle"></span>
-                            <span
-                                class="pf-v5-c-switch__label"
-                                id="SBAS-ENA-on"
-                                aria-hidden="true"
-                            >SBASを使用する</span>
-                        </label>
-                    </div>
-                    <hr class="pf-v5-c-divider" />
-                    <div class="pf-v5-c-panel__main">
-                        <div class="pf-v5-c-panel__main-body">
-                            <!-- SBAS-L1CA_ENA -->
-                            <label class="pf-v5-c-switch" for="SBAS-L1CA_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="SBAS-L1CA_ENA"
-                                    aria-labelledby="SBAS-L1CA_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="SBAS-L1CA_ENA-on"
-                                    aria-hidden="true"
-                                >L1CA</span>
-                            </label>
+                                        <!-- GPS -->
+                                        <div class="pf-v5-c-panel__header">
+                                            <label class="pf-v5-c-switch" for="GPS-ENA">
+                                                <input
+                                                    class="pf-v5-c-switch__input"
+                                                    type="checkbox"
+                                                    id="GPS-ENA"
+                                                    aria-labelledby="GPS-ENA-on"
+                                                    disabled
+                                                />
+                                                <span class="pf-v5-c-switch__toggle"></span>
+                                                <span
+                                                    class="pf-v5-c-switch__label"
+                                                    id="GPS-ENA-on"
+                                                    aria-hidden="true"
+                                                >GPSを使用する</span>
+                                            </label>
+                                        </div>
+                                        <hr class="pf-v5-c-divider" />
+                                        <div class="pf-v5-c-panel__main">
+                                            <div class="pf-v5-c-panel__main-body">
+                                                <!-- GPS-L1CA_ENA -->
+                                                <label class="pf-v5-c-switch" for="GPS-L1CA_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="GPS-L1CA_ENA"
+                                                        aria-labelledby="GPS-L1CA_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="GPS-L1CA_ENA-on"
+                                                        aria-hidden="true"
+                                                    >L1CA</span>
+                                                </label>
+                                                <br>
+                                                <!-- GPS-L2C_ENA -->
+                                                <label class="pf-v5-c-switch" for="GPS-L2C_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="GPS-L2C_ENA"
+                                                        aria-labelledby="GPS-L2C_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="GPS-L2C_ENA-on"
+                                                        aria-hidden="true"
+                                                    >L2C</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <br>
+
+                                        <!-- SBAS -->
+                                        <div class="pf-v5-c-panel__header">
+                                            <label class="pf-v5-c-switch" for="SBAS-ENA">
+                                                <input
+                                                    class="pf-v5-c-switch__input"
+                                                    type="checkbox"
+                                                    id="SBAS-ENA"
+                                                    aria-labelledby="SBAS-ENA-on"
+                                                    disabled
+                                                />
+                                                <span class="pf-v5-c-switch__toggle"></span>
+                                                <span
+                                                    class="pf-v5-c-switch__label"
+                                                    id="SBAS-ENA-on"
+                                                    aria-hidden="true"
+                                                >SBASを使用する</span>
+                                            </label>
+                                        </div>
+                                        <hr class="pf-v5-c-divider" />
+                                        <div class="pf-v5-c-panel__main">
+                                            <div class="pf-v5-c-panel__main-body">
+                                                <!-- SBAS-L1CA_ENA -->
+                                                <label class="pf-v5-c-switch" for="SBAS-L1CA_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="SBAS-L1CA_ENA"
+                                                        aria-labelledby="SBAS-L1CA_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="SBAS-L1CA_ENA-on"
+                                                        aria-hidden="true"
+                                                    >L1CA</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <br>
+
+                                        <!-- GAL -->
+                                        <div class="pf-v5-c-panel__header">
+                                            <label class="pf-v5-c-switch" for="GAL-ENA">
+                                                <input
+                                                    class="pf-v5-c-switch__input"
+                                                    type="checkbox"
+                                                    id="GAL-ENA"
+                                                    aria-labelledby="GAL-ENA-on"
+                                                    disabled
+                                                />
+                                                <span class="pf-v5-c-switch__toggle"></span>
+                                                <span
+                                                    class="pf-v5-c-switch__label"
+                                                    id="GAL-ENA-on"
+                                                    aria-hidden="true"
+                                                >Galileoを使用する</span>
+                                            </label>
+                                        </div>
+                                        <hr class="pf-v5-c-divider" />
+                                        <div class="pf-v5-c-panel__main">
+                                            <div class="pf-v5-c-panel__main-body">
+                                                <!-- GAL-E1_ENA -->
+                                                <label class="pf-v5-c-switch" for="GAL-E1_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="GAL-E1_ENA"
+                                                        aria-labelledby="GAL-E1_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="GAL-E1_ENA-on"
+                                                        aria-hidden="true"
+                                                    >E1</span>
+                                                </label>
+                                                <br>
+                                                <!-- GAL-E5B_ENA -->
+                                                <label class="pf-v5-c-switch" for="GAL-E5B_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="GAL-E5B_ENA"
+                                                        aria-labelledby="GAL-E5B_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="GAL-E5B_ENA-on"
+                                                        aria-hidden="true"
+                                                    >E5B</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <br>
+
+                                        <!-- BDS -->
+                                        <div class="pf-v5-c-panel__header">
+                                            <label class="pf-v5-c-switch" for="BDS-ENA">
+                                                <input
+                                                    class="pf-v5-c-switch__input"
+                                                    type="checkbox"
+                                                    id="BDS-ENA"
+                                                    aria-labelledby="BDS-ENA-on"
+                                                    disabled
+                                                />
+                                                <span class="pf-v5-c-switch__toggle"></span>
+                                                <span
+                                                    class="pf-v5-c-switch__label"
+                                                    id="BDS-ENA-on"
+                                                    aria-hidden="true"
+                                                >BeiDuを使用する</span>
+                                            </label>
+                                        </div>
+                                        <hr class="pf-v5-c-divider" />
+                                        <div class="pf-v5-c-panel__main">
+                                            <div class="pf-v5-c-panel__main-body">
+                                                <!-- BDS-B1_ENA -->
+                                                <label class="pf-v5-c-switch" for="BDS-B1_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="BDS-B1_ENA"
+                                                        aria-labelledby="BDS-B1_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="BDS-B1_ENA-on"
+                                                        aria-hidden="true"
+                                                    >B1</span>
+                                                </label>
+                                                <br>
+                                                <!-- BDS-B2_ENA -->
+                                                <label class="pf-v5-c-switch" for="BDS-B2_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="BDS-B2_ENA"
+                                                        aria-labelledby="BDS-B2_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="BDS-B2_ENA-on"
+                                                        aria-hidden="true"
+                                                    >B2</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <br>
+
+                                        <!-- QZSS -->
+                                        <div class="pf-v5-c-panel__header">
+                                            <label class="pf-v5-c-switch" for="QZSS-ENA">
+                                                <input
+                                                    class="pf-v5-c-switch__input"
+                                                    type="checkbox"
+                                                    id="QZSS-ENA"
+                                                    aria-labelledby="QZSS-ENA-on"
+                                                    disabled
+                                                />
+                                                <span class="pf-v5-c-switch__toggle"></span>
+                                                <span
+                                                    class="pf-v5-c-switch__label"
+                                                    id="QZSS-ENA-on"
+                                                    aria-hidden="true"
+                                                >QZSSを使用する</span>
+                                            </label>
+                                        </div>
+                                        <hr class="pf-v5-c-divider" />
+                                        <div class="pf-v5-c-panel__main">
+                                            <div class="pf-v5-c-panel__main-body">
+                                                <!-- QZSS-L1CA_ENA -->
+                                                <label class="pf-v5-c-switch" for="QZSS-L1CA_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="QZSS-L1CA_ENA"
+                                                        aria-labelledby="QZSS-L1CA_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="QZSS-L1CA_ENA-on"
+                                                        aria-hidden="true"
+                                                    >L1CA</span>
+                                                </label>
+                                                <br>
+                                                <!-- QZSS-L1S_ENA -->
+                                                <label class="pf-v5-c-switch" for="QZSS-L1S_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="QZSS-L1S_ENA"
+                                                        aria-labelledby="QZSS-L1S_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="QZSS-L1S_ENA-on"
+                                                        aria-hidden="true"
+                                                    >L1S</span>
+                                                </label>
+                                                <br>
+                                                <!-- QZSS-L2C_ENA -->
+                                                <label class="pf-v5-c-switch" for="QZSS-L2C_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="QZSS-L2C_ENA"
+                                                        aria-labelledby="QZSS-L2C_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="QZSS-L2C_ENA-on"
+                                                        aria-hidden="true"
+                                                    >L2C</span>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <br>
+
+                                        <!-- GLO -->
+                                        <div class="pf-v5-c-panel__header">
+                                            <label class="pf-v5-c-switch" for="GLO-ENA">
+                                                <input
+                                                    class="pf-v5-c-switch__input"
+                                                    type="checkbox"
+                                                    id="GLO-ENA"
+                                                    aria-labelledby="GLO-ENA-on"
+                                                    disabled
+                                                />
+                                                <span class="pf-v5-c-switch__toggle"></span>
+                                                <span
+                                                    class="pf-v5-c-switch__label"
+                                                    id="GLO-ENA-on"
+                                                    aria-hidden="true"
+                                                >GLONASSを使用する</span>
+                                            </label>
+                                        </div>
+                                        <hr class="pf-v5-c-divider" />
+                                        <div class="pf-v5-c-panel__main">
+                                            <div class="pf-v5-c-panel__main-body">
+                                                <!-- GLO-L1_ENA -->
+                                                <label class="pf-v5-c-switch" for="GLO-L1_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="GLO-L1_ENA"
+                                                        aria-labelledby="GLO-L1_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="GLO-L1_ENA-on"
+                                                        aria-hidden="true"
+                                                    >L1</span>
+                                                </label>
+                                                <br>
+                                                <!-- GLO-L2_ENA -->
+                                                <label class="pf-v5-c-switch" for="GLO-L2_ENA">
+                                                    <input
+                                                        class="pf-v5-c-switch__input"
+                                                        type="checkbox"
+                                                        id="GLO-L2_ENA"
+                                                        aria-labelledby="GLO-L2_ENA-on"
+                                                        disabled
+                                                    />
+                                                    <span class="pf-v5-c-switch__toggle"></span>
+                                                    <span
+                                                        class="pf-v5-c-switch__label"
+                                                        id="GLO-L2_ENA-on"
+                                                        aria-hidden="true"
+                                                    >L2</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- GAL -->
-                    <hr class="pf-v5-c-divider" />
-                    <hr class="pf-v5-c-divider" />
-                    <div class="pf-v5-c-panel__header">
-                        <label class="pf-v5-c-switch" for="GAL-ENA">
-                            <input
-                                class="pf-v5-c-switch__input"
-                                type="checkbox"
-                                id="GAL-ENA"
-                                aria-labelledby="GAL-ENA-on"
-                                disabled
-                            />
-                            <span class="pf-v5-c-switch__toggle"></span>
-                            <span
-                                class="pf-v5-c-switch__label"
-                                id="GAL-ENA-on"
-                                aria-hidden="true"
-                            >GALを使用する</span>
-                        </label>
-                    </div>
-                    <hr class="pf-v5-c-divider" />
-                    <div class="pf-v5-c-panel__main">
-                        <div class="pf-v5-c-panel__main-body">
-                            <!-- GAL-E1_ENA -->
-                            <label class="pf-v5-c-switch" for="GAL-E1_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="GAL-E1_ENA"
-                                    aria-labelledby="GAL-E1_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="GAL-E1_ENA-on"
-                                    aria-hidden="true"
-                                >E1</span>
-                            </label>
-                            <br>
-                            <!-- GAL-E5B_ENA -->
-                            <label class="pf-v5-c-switch" for="GAL-E5B_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="GAL-E5B_ENA"
-                                    aria-labelledby="GAL-E5B_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="GAL-E5B_ENA-on"
-                                    aria-hidden="true"
-                                >E5B</span>
-                            </label>
-                        </div>
-                    </div>
+                        <!-- 操作 -->
+                        <div id="loadingAnimation" class="pf-v5-c-skeleton">
+                            <div id="actions" class="pf-v5-l-stack__item">
+                                <div class="pf-v5-c-card">
+                                    <div class="pf-v5-c-card__title">
+                                        <h2 class="pf-v5-c-card__title-text">操作</h2>
+                                    </div>
+                                    <div class="pf-v5-c-card__body">
+                                        <div class="pf-v5-c-alert pf-m-warning" aria-label="Warning alert">
+                                            <div class="pf-v5-c-alert__icon">
+                                                <i class="fas fa-fw fa-exclamation-triangle" aria-hidden="true"></i>
+                                            </div>
+                                            <p class="pf-v5-c-alert__title">
+                                                <span class="pf-v5-screen-reader"></span>
+                                                操作は順番に行ってください。
+                                            </p>
+                                        </div>
 
-                    <!-- BDS -->
-                    <hr class="pf-v5-c-divider" />
-                    <hr class="pf-v5-c-divider" />
-                    <div class="pf-v5-c-panel__header">
-                        <label class="pf-v5-c-switch" for="BDS-ENA">
-                            <input
-                                class="pf-v5-c-switch__input"
-                                type="checkbox"
-                                id="BDS-ENA"
-                                aria-labelledby="BDS-ENA-on"
-                                disabled
-                            />
-                            <span class="pf-v5-c-switch__toggle"></span>
-                            <span
-                                class="pf-v5-c-switch__label"
-                                id="BDS-ENA-on"
-                                aria-hidden="true"
-                            >BDSを使用する</span>
-                        </label>
-                    </div>
-                    <hr class="pf-v5-c-divider" />
-                    <div class="pf-v5-c-panel__main">
-                        <div class="pf-v5-c-panel__main-body">
-                            <!-- BDS-B1_ENA -->
-                            <label class="pf-v5-c-switch" for="BDS-B1_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="BDS-B1_ENA"
-                                    aria-labelledby="BDS-B1_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="BDS-B1_ENA-on"
-                                    aria-hidden="true"
-                                >B1</span>
-                            </label>
-                            <br>
-                            <!-- BDS-B2_ENA -->
-                            <label class="pf-v5-c-switch" for="BDS-B2_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="BDS-B2_ENA"
-                                    aria-labelledby="BDS-B2_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="BDS-B2_ENA-on"
-                                    aria-hidden="true"
-                                >B2</span>
-                            </label>
-                        </div>
-                    </div>
+                                        <br>
+                                        <hr class="pf-v5-c-divider" />
+                                        <br>
 
-                    <!-- QZSS -->
-                    <hr class="pf-v5-c-divider" />
-                    <hr class="pf-v5-c-divider" />
-                    <div class="pf-v5-c-panel__header">
-                        <label class="pf-v5-c-switch" for="QZSS-ENA">
-                            <input
-                                class="pf-v5-c-switch__input"
-                                type="checkbox"
-                                id="QZSS-ENA"
-                                aria-labelledby="QZSS-ENA-on"
-                                disabled
-                            />
-                            <span class="pf-v5-c-switch__toggle"></span>
-                            <span
-                                class="pf-v5-c-switch__label"
-                                id="QZSS-ENA-on"
-                                aria-hidden="true"
-                            >QZSSを使用する</span>
-                        </label>
-                    </div>
-                    <hr class="pf-v5-c-divider" />
-                    <div class="pf-v5-c-panel__main">
-                        <div class="pf-v5-c-panel__main-body">
-                            <!-- QZSS-L1CA_ENA -->
-                            <label class="pf-v5-c-switch" for="QZSS-L1CA_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="QZSS-L1CA_ENA"
-                                    aria-labelledby="QZSS-L1CA_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="QZSS-L1CA_ENA-on"
-                                    aria-hidden="true"
-                                >L1CA</span>
-                            </label>
-                            <br>
-                            <!-- QZSS-L1S_ENA -->
-                            <label class="pf-v5-c-switch" for="QZSS-L1S_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="QZSS-L1S_ENA"
-                                    aria-labelledby="QZSS-L1S_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="QZSS-L1S_ENA-on"
-                                    aria-hidden="true"
-                                >L1S</span>
-                            </label>
-                            <br>
-                            <!-- QZSS-L2C_ENA -->
-                            <label class="pf-v5-c-switch" for="QZSS-L2C_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="QZSS-L2C_ENA"
-                                    aria-labelledby="QZSS-L2C_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="QZSS-L2C_ENA-on"
-                                    aria-hidden="true"
-                                >L2C</span>
-                            </label>
-                        </div>
-                    </div>
+                                        <button id="set-button" class="pf-v5-c-button pf-m-primary" type="button" onclick="sendSetCommand()">設定を保存</button>
+                                        <div id="progress-bar" class="pf-v5-c-progress pf-m-outside pf-m-lg" id="progress-outside-static-width-example">
+                                            <div class="pf-v5-c-progress__status" aria-hidden="true">
+                                                <span id="progress-num-outside" class="pf-v5-c-progress__measure pf-m-static-width">設定を保存を押してください</span>
+                                                <span class="pf-v5-c-progress__status-icon">
+                                                    <i id="progress-icon" class="fas fa-fw fa-check-circle" aria-hidden="true"></i>
+                                                </span>
+                                            </div>
+                                            <div class="pf-v5-c-progress__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="1"
+                                                aria-label="Progress status">
+                                                <div id="progress-num-inside" class="pf-v5-c-progress__indicator" style="width:0%;"></div>
+                                            </div>
+                                        </div>
 
-                    <!-- GLO -->
-                    <hr class="pf-v5-c-divider" />
-                    <hr class="pf-v5-c-divider" />
-                    <div class="pf-v5-c-panel__header">
-                        <label class="pf-v5-c-switch" for="GLO-ENA">
-                            <input
-                                class="pf-v5-c-switch__input"
-                                type="checkbox"
-                                id="GLO-ENA"
-                                aria-labelledby="GLO-ENA-on"
-                                disabled
-                            />
-                            <span class="pf-v5-c-switch__toggle"></span>
-                            <span
-                                class="pf-v5-c-switch__label"
-                                id="GLO-ENA-on"
-                                aria-hidden="true"
-                            >GLOを使用する</span>
-                        </label>
-                    </div>
-                    <hr class="pf-v5-c-divider" />
-                    <div class="pf-v5-c-panel__main">
-                        <div class="pf-v5-c-panel__main-body">
-                            <!-- GLO-L1_ENA -->
-                            <label class="pf-v5-c-switch" for="GLO-L1_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="GLO-L1_ENA"
-                                    aria-labelledby="GLO-L1_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="GLO-L1_ENA-on"
-                                    aria-hidden="true"
-                                >L1</span>
-                            </label>
-                            <br>
-                            <!-- GLO-L2_ENA -->
-                            <label class="pf-v5-c-switch" for="GLO-L2_ENA">
-                                <input
-                                    class="pf-v5-c-switch__input"
-                                    type="checkbox"
-                                    id="GLO-L2_ENA"
-                                    aria-labelledby="GLO-L2_ENA-on"
-                                    disabled
-                                />
-                                <span class="pf-v5-c-switch__toggle"></span>
-                                <span
-                                    class="pf-v5-c-switch__label"
-                                    id="GLO-L2_ENA-on"
-                                    aria-hidden="true"
-                                >L2</span>
-                            </label>
+                                        <br>
+                                        <hr class="pf-v5-c-divider" />
+                                        <br>
+
+                                        <button id="compare-button" class="pf-v5-c-button pf-m-primary" type="button" onclick="sendCompareCommand()">差分を表示</button>
+                                        
+                                        <div class="pf-v5-c-code-editor pf-m-read-only">
+                                            <div class="pf-v5-c-code-editor__main" 
+                                                style="overflow-y: scroll;"
+                                            >
+                                                <code dir="ltr" class="pf-v5-c-code-editor__code">
+                                                    <pre class="pf-v5-c-code-editor__code-pre" id="comparison-area" style="text-wrap: nowrap;">差分を表示ボタンを押してください</pre>
+                                                </code>
+                                            </div>
+                                        </div>
+                                        
+                                        <br>
+                                        <hr class="pf-v5-c-divider" />
+                                        <br>
+
+                                        <button id="commit-button" class="pf-v5-c-button pf-m-primary" type="button" onclick="sendCommitCommand()">設定を適用</button>
+                                        <p>設定の適用に数十秒かかります。この画面のまま「Commit Completed」と表示されるまでお待ちください。</p>
+                                        <div class="pf-v5-c-code-editor pf-m-read-only">
+                                            <div class="pf-v5-c-code-editor__main" 
+                                                style="overflow-y: scroll;"
+                                            >
+                                                <code dir="ltr" class="pf-v5-c-code-editor__code">
+                                                    <pre class="pf-v5-c-code-editor__code-pre" id="result-area" style="text-wrap: nowrap;">設定を適用ボタンを押してください</pre>
+                                                </code>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

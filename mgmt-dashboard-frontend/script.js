@@ -1,7 +1,7 @@
 /*
     レシーバの衛星選択用
 */
-const scripts = [
+const satelites = [
     // [mgmt-cliのKey, id]
     ["UbloxReceiver.SaveConfig", "SaveConfig"],
     // GPS
@@ -33,33 +33,50 @@ const cliPath = "~/rtk-base-station/mgmt-cli/mgmt-cli"
 const configPath = "~/rtk-base-station/config/"
 
 // 衛星選択の項目用の値をgetする関数
-const sendGetCommandAboutSignal = () => {
-    for (let i = 0; i < scripts.length; i++) {
-        process = cockpit.script(`${cliPath} -c ${configPath} get ${scripts[i][0]}`);
-        process.then(data => {
-            console.log(scripts[i][0] + " = " + data);
+const sendGetCommandAboutSignal = async () => {
+    for (let i = 0; i < satelites.length; i++) {
+        process = await cockpit.script(`${cliPath} -c ${configPath} get ${satelites[i][0]}`)
+        .then(data => {
             if(data){
-                document.getElementById(scripts[i][1]).disabled = false;
-                document.getElementById(scripts[i][1]).checked = true;
+                document.getElementById(satelites[i][1]).disabled = false;
+                document.getElementById(satelites[i][1]).checked = true;
             }
             else if (!data){
-                document.getElementById(scripts[i][1]).disabled = false;
-                document.getElementById(scripts[i][1]).checked = false;
+                document.getElementById(satelites[i][1]).disabled = false;
+                document.getElementById(satelites[i][1]).checked = false;
             }
-        });
-        process.catch(exception => {
-            console.error(`Failed to get ${scripts[i][0]}`);
+        }).catch(exception => {
+            console.error(`Failed to get ${satelites[i][0]}`);
             console.error(exception);
         });
     }
 }
 
-// 衛星選択の項目用の値をsetする関数
-const sendSetCommandAboutSatelite = () => {
-    for (let i = 0; i < scripts.length; i++) {
-        if(document.getElementById(scripts[i][1]).disabled) continue;
+const sendGetCommand = async () => {
+    await sendGetCommandAboutSignal();
+    document.getElementById("loadingAnimation").classList.remove("pf-v5-c-skeleton");
+};
 
-        const element = document.getElementById(scripts[i][1]).checked;
+let blockReload = false;
+
+window.addEventListener('beforeunload', (e) => {
+    if(blockReload){
+        const message = '操作を実行中です。画面を離れないでください';
+        e.preventDefault();
+        e.returnValue = message;
+        return message;
+    }
+})
+
+
+let queue = [];
+
+// 衛星選択の項目用の値をqueueに追加する関数
+const addSateliteToQueue = () => {
+    for (let i = 0; i < satelites.length; i++) {
+        if(document.getElementById(satelites[i][1]).disabled) continue;
+
+        const element = document.getElementById(satelites[i][1]).checked;
         let value;
         if(element){
             value = "1"
@@ -70,11 +87,70 @@ const sendSetCommandAboutSatelite = () => {
         else{
             continue;
         }
-        process = cockpit.script(`${cliPath} -c ${configPath} set ${scripts[i][0]} ${value}`);
-        process.then(res => {
-            console.log(res);
-        });
+        queue.push([satelites[i][0], value]);
+        
     }
+    console.log(queue);
 }
 
-sendGetCommandAboutSignal();
+const sendSetCommand = async () => {
+    blockReload = true;
+
+    document.getElementById("set-button").disabled = true;
+    document.getElementById("progress-bar").classList.remove("pf-m-danger");
+    document.getElementById("progress-bar").classList.remove("pf-m-success");
+    document.getElementById("progress-icon").classList.remove("fa-times-circle");
+    document.getElementById("progress-icon").classList.add("fa-check-circle");
+    addSateliteToQueue();
+    
+    const len = queue.length;
+    for(let i = 0; i < len; i++){
+        process = await cockpit.script(`${cliPath} -c ${configPath} set ${queue[i][0]} ${queue[i][1]}`)
+        .then(res => {
+            const progress = Math.floor((i + 1) / len * 100);
+            document.getElementById("progress-num-outside").innerText = `${progress}%`;
+            document.getElementById("progress-num-inside").style.width = `${progress}%`;
+            console.log(progress);
+            console.log(res);
+        }).catch(exception => {
+            console.error(exception);
+            document.getElementById("progress-num-outside").innerText = "設定の保存に失敗しました";
+            document.getElementById("progress-bar").classList.add("pf-m-danger");
+            document.getElementById("progress-icon").classList.add("fa-times-circle");
+            document.getElementById("progress-icon").classList.remove("fa-check-circle");
+        });
+    }
+    document.getElementById("progress-bar").classList.add("pf-m-success");
+    queue = [];
+    document.getElementById("set-button").disabled = false;
+
+    blockReload = false;
+};
+
+const sendCompareCommand = async () => {
+    document.getElementById("compare-button").disabled = true;
+    process = await cockpit.script(`${cliPath} -c ${configPath} compare`)
+    .then(res => {
+        document.getElementById("comparison-area").innerText = res;
+        document.getElementById("compare-button").disabled = false;
+    });
+};
+
+const sendCommitCommand = async () => {
+    blockReload = true;
+
+    str2strPath = "~/rtk-base-station/str2str/";
+    ntripcasterPath = "~/rtk-base-station/ntrip-caster/";
+    document.getElementById("result-area").innerText = "";
+    document.getElementById("commit-button").disabled = true;
+
+    process = await cockpit.script(`${cliPath} -c ${configPath} commit -s ${str2strPath} -n ${ntripcasterPath}`)
+    .stream(res => {
+        document.getElementById("result-area").innerText += res;
+    });
+    document.getElementById("commit-button").disabled = false;
+
+    blockReload = false;
+};
+
+sendGetCommand();
