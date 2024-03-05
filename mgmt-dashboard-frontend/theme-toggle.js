@@ -6,6 +6,10 @@ window.addEventListener('storage', function(e) {
     }
 });
 
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    toggleDarkMode();
+});
+
 const toggleDarkMode = () => {
     element = document.getElementById("html")
     if (localStorage.getItem(key)){
