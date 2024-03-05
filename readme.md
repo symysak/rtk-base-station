@@ -58,7 +58,6 @@ chmod +x run_containers.sh
 # e.g ./run_containers.sh 1.0.0
 # 初回インストール時はsystemdのファイルが無いと言われますが、無視してください
 
-# enable podman auto-update
 podman generate systemd -f --new --restart-policy always --name str2str
 podman generate systemd -f --new --restart-policy always --name ntrip-caster
 mv container-str2str.service ~/.config/systemd/user/
@@ -91,18 +90,6 @@ systemctl --user enable container-str2str.service
 systemctl --user enable container-ntrip-caster.service
 systemctl --user start container-str2str.service
 systemctl --user start container-ntrip-caster.service
-
-mkdir ~/.config/systemd/user/timers.target.wants/
-cp /etc/systemd/system/timers.target.wants/podman-auto-update.timer ~/.config/systemd/user
-cp /etc/systemd/system/default.target.wants/podman-auto-update.service ~/.config/systemd/user
-
-sed -i 's/^\(OnCalendar=daily\)/#&/; s/^\(RandomizedDelaySec=900\)/#&/; /^#RandomizedDelaySec=900/a OnUnitActiveSec=1m' ~/.config/systemd/user/podman-auto-update.timer
-
-systemctl --user daemon-reload
-systemctl --user enable --now podman-auto-update.service
-systemctl --user enable --now podman-auto-update.timer
-systemctl --user restart podman-auto-update.service
-systemctl --user restart podman-auto-update.timer
 
 # mgmt-cliのビルド
 # goのインストール(公式doc通り)
@@ -222,7 +209,6 @@ chmod +x run_containers.sh
 ./run_containers.sh <バージョン>
 # e.g ./run_containers.sh 1.0.0
 
-# enable podman auto-update
 podman generate systemd -f --new --restart-policy always --name str2str
 podman generate systemd -f --new --restart-policy always --name ntrip-caster
 mv container-str2str.service ~/.config/systemd/user/
@@ -256,14 +242,6 @@ systemctl --user enable container-ntrip-caster.service
 systemctl --user start container-str2str.service
 systemctl --user start container-ntrip-caster.service
 
-sed -i 's/^\(OnCalendar=daily\)/#&/; s/^\(RandomizedDelaySec=900\)/#&/; /^#RandomizedDelaySec=900/a OnUnitActiveSec=1m' ~/.config/systemd/user/podman-auto-update.timer
-
-
-systemctl --user daemon-reload
-systemctl --user enable --now podman-auto-update.service
-systemctl --user enable --now podman-auto-update.timer
-systemctl --user restart podman-auto-update.service
-systemctl --user restart podman-auto-update.timer
 
 # mgmt-cliのビルド
 cd mgmt-cli

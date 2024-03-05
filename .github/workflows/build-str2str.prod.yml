@@ -7,6 +7,11 @@ on:
       - .github/workflows/build-str2str.prod.yml
     tags:
       - v*
+  pull_request:
+    types:
+      - opened
+    branches:
+      - main
 
 name: (PROD) str2str Docker Build and Push
 
