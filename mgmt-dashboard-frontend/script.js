@@ -37,11 +37,12 @@ const sendGetCommandAboutSignal = async () => {
     for (let i = 0; i < satelites.length; i++) {
         process = await cockpit.script(`${cliPath} -c ${configPath} get ${satelites[i][0]}`)
         .then(data => {
-            if(data){
+            console.log(`${satelites[i][0]}: ${data}`);
+            if(data.includes("true")){
                 document.getElementById(satelites[i][1]).disabled = false;
                 document.getElementById(satelites[i][1]).checked = true;
             }
-            else if (!data){
+            else if (data.includes("false")){
                 document.getElementById(satelites[i][1]).disabled = false;
                 document.getElementById(satelites[i][1]).checked = false;
             }
