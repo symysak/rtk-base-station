@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>
+            Set-Value-system
+        </title>
+        <script src="script.js"></script>
+        <script>
+        </script>
+        <link rel="stylesheet" href="patternfly/patternfly.min.css">
+    </head>
+    <body>
+        <div class="pf-v5-c-page">
+            <header class="pf-v5-c-masthead"> 
+                <span class="pf-v5-c-masthead__toggle">
+                    <button
+                        class="pf-v5-c-button pf-m-plain"
+                        type="button"
+                        aria-label="Global navigation"
+                        onclick="toggleSidebar()"
+                        >
+                        <i class="fas fa-bars" aria-hidden="true"></i>
+                    </button>
+                    <script>
+                        const toggleSidebar = () => {
+                            elem = document.getElementById("sidebar");
+                            elem.classList.toggle("pf-m-collapsed");
+                            elem.classList.toggle("pf-m-expanded");
+                        };
+                    </script>
+                </span>
+                <div class="pf-v5-c-masthead__content">
+                    <span>RTK-GNSS基準局 設定画面</span>
+                </div>
+            </header>
+            <aside class="pf-v5-c-page__sidebar pf-m-collapsed" id="sidebar">
+                <div class="pf-v5-c-page__sidebar-body">
+                    <nav class="pf-v5-c-nav" aria-label="Global">
+                        <section class="pf-v5-c-nav__section" aria-labelledby="grouped-title1">
+                            <h2 class="pf-v5-c-nav__section-title" id="grouped-title1">Ublox受信機設定</h2>
+                            <ul class="pf-v5-c-nav__list" role="list">
+                                <li class="pf-v5-c-nav__item">
+                                    <a onclick="location.href='new.html'" class="pf-v5-c-nav__link">衛星選択</a>
+                                </li>
+                            </ul>
+                            <ul class="pf-v5-c-nav__list" role="list">
+                                <li class="pf-v5-c-nav__item">
+                                    <a onclick="location.href='index.html'" class="pf-v5-c-nav__link"><Index class="html">Index.html</a>
+                                </li>
+                            </ul>
+                        </section>
+                    </nav>
+                </div>
+            </aside>
+            <main class="pf-v5-c-page__main" tabindex="-1">
+                <section class="pf-v5-c-page__main-section">
+                    <div class="pf-v5-l-stack pf-m-gutter">
+
+                    </div>
+                </section>
+            </main>
+        </div>
+    </body>
+</html>
