@@ -75,7 +75,7 @@ function Layout(props: LayoutProps) {
                             itemId="group-1_item-1"
                             isActive={activeItem === 'group-1_item-1'}
                         >
-                            <Link to={"/satelite"}>使用する衛星</Link>
+                            <Link to="/satelite">使用する衛星</Link>
                         </NavItem>
                     </NavGroup>
                 </Nav>

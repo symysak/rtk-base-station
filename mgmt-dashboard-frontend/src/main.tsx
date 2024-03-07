@@ -13,7 +13,7 @@ const routes = [
         element: <EasySettings />,
     },
     {
-        path: "/satelite",
+        path: "satelite",
         element: <SateliteSelection />,
     },
 ];
