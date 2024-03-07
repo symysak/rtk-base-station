@@ -1,10 +1,13 @@
 import React from 'react';
 import Layout from '../layout';
+import { PageSection } from '@patternfly/react-core';
 
 function EasySettings() {
     return (
         <Layout>
-            <></>
+            <PageSection>
+                
+            </PageSection>
         </Layout>
     );
 }
