@@ -10,6 +10,7 @@ cd mgmt-dashboard-frontend
 mkdir dist
 mkdir -p ~/.local/share/cockpit
 ln -s `pwd`/dist ~/.local/share/cockpit/rtk-dashboard
+npm install
 npm run build:watch
 code . # vscode立ち上げ
 ```

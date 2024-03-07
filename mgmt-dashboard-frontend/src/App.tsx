@@ -1,35 +1,74 @@
+import React from 'react'
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+import {
+    Page,
+    Masthead,
+    MastheadToggle,
+    MastheadMain,
+    MastheadBrand,
+    MastheadContent,
+    PageSidebar,
+    PageSidebarBody,
+    PageSection,
+    PageSectionVariants,
+    PageToggleButton,
+    Toolbar,
+    ToolbarContent,
+    ToolbarItem
+} from '@patternfly/react-core';
+import BarsIcon from '@patternfly/react-icons/dist/esm/icons/bars-icon';
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const onSidebarToggle = () => {
+        setIsSidebarOpen(!isSidebarOpen);
+    };
+
+    const headerToolbar = (
+        <Toolbar id="vertical-toolbar">
+            <ToolbarContent>
+                <ToolbarItem>header-tools</ToolbarItem>
+            </ToolbarContent>
+        </Toolbar>
+    );
+
+    const header = (
+        <Masthead>
+            <MastheadToggle>
+                <PageToggleButton
+                    variant="plain"
+                    aria-label="Global navigation"
+                    isSidebarOpen={isSidebarOpen}
+                    onSidebarToggle={onSidebarToggle}
+                    id="vertical-nav-toggle"
+                >
+                    <BarsIcon />
+                </PageToggleButton>
+            </MastheadToggle>
+            <MastheadMain>
+                <MastheadBrand href="https://patternfly.org" target="_blank">
+                    Logo
+                </MastheadBrand>
+            </MastheadMain>
+            <MastheadContent>{headerToolbar}</MastheadContent>
+        </Masthead>
+    );
+
+    const sidebar = (
+        <PageSidebar isSidebarOpen={isSidebarOpen} id="vertical-sidebar">
+            <PageSidebarBody>Navigation</PageSidebarBody>
+        </PageSidebar>
+    );
+
+    return (
+        <Page header={header} sidebar={sidebar}>
+            <PageSection variant={PageSectionVariants.darker}>Section with darker background</PageSection>
+            <PageSection variant={PageSectionVariants.dark}>Section with dark background</PageSection>
+            <PageSection variant={PageSectionVariants.light}>Section with light background</PageSection>
+        </Page>
+    );
 }
 
 export default App
