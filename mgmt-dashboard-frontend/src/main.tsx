@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom/client'
 import EasySettings from './pages/EasySettings.tsx'
 import SateliteSelection from './pages/SateliteSelection.tsx'
 import {
-    createBrowserRouter,
+    createHashRouter,
     RouterProvider,
 } from "react-router-dom";
 
-const router = createBrowserRouter([
+const routes = [
     {
         path: "/",
         element: <EasySettings />,
@@ -16,7 +16,12 @@ const router = createBrowserRouter([
         path: "/satelite",
         element: <SateliteSelection />,
     },
-]);
+];
+
+const router = createHashRouter(routes,
+{
+}
+);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>

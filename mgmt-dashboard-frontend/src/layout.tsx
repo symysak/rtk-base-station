@@ -16,6 +16,7 @@ import {
     ToolbarContent
 } from "@patternfly/react-core";
 import BarsIcon from '@patternfly/react-icons/dist/esm/icons/bars-icon';
+import { Link } from 'react-router-dom';
 
 type LayoutProps = {
     children: React.ReactNode;
@@ -74,7 +75,7 @@ function Layout(props: LayoutProps) {
                             itemId="group-1_item-1"
                             isActive={activeItem === 'group-1_item-1'}
                         >
-                            使用する衛星
+                            <Link to={"/satelite"}>使用する衛星</Link>
                         </NavItem>
                     </NavGroup>
                 </Nav>

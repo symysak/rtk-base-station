@@ -59,8 +59,9 @@ function SateliteSelection() {
     const [resultOfCompareCommand, setResultOfCompareCommand] = React.useState('差分を表示ボタンを押してください');
     const [resultOfCommitCommand, setResultOfCommitCommand] = React.useState('設定を適用ボタンを押してください');
 
-
-
+    setIsGetCommandComplete(false);
+    setResultOfCommitCommand('設定を適用ボタンを押してください');
+    setResultOfCompareCommand('差分を表示ボタンを押してください');
 
     return (
         <Layout>
