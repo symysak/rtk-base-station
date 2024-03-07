@@ -1,5 +1,5 @@
 # Web Admin Console for Cockpit
-`~/.local/share/cockpit`にこのフォルダを入れるとCockpitが自動で認識します。
+`~/.local/share/cockpit`にソースを入れるとCockpitが自動で認識します。
 
 WSLでの参考コマンド
 ```
