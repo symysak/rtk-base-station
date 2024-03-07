@@ -8,6 +8,7 @@ import {
     Nav,
     NavGroup,
     NavItem,
+    NavList,
     Page,
     PageSidebar,
     PageSidebarBody,
@@ -24,11 +25,7 @@ type LayoutProps = {
 
 function Layout(props: LayoutProps) {
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
-    const [activeItem, setActiveItem] = React.useState('group-1_item-1');
-    
-    const onSelect = (_event: React.FormEvent<HTMLInputElement>, result: { itemId: number | string }) => {
-        setActiveItem(result.itemId as string);
-      };
+
     
     const onSidebarToggle = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -65,16 +62,16 @@ function Layout(props: LayoutProps) {
     const sidebar = (
         <PageSidebar isSidebarOpen={isSidebarOpen} id="vertical-sidebar">
             <PageSidebarBody>
-                <Nav onSelect={onSelect} aria-label="Nav">
+                <Nav aria-label="Nav">
+                    <NavList>
+                        <NavItem>
+                            <Link to="/">簡単設定</Link>
+                        </NavItem>
+                    </NavList>
                     <NavGroup
                         title="受信機設定"
                     >
-                        <NavItem
-                            preventDefault
-                            to="#nav-group1-item1"
-                            itemId="group-1_item-1"
-                            isActive={activeItem === 'group-1_item-1'}
-                        >
+                        <NavItem>
                             <Link to="/satelite">使用する衛星</Link>
                         </NavItem>
                     </NavGroup>
