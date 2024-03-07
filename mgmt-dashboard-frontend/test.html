@@ -56,9 +56,134 @@
             </aside>
             <main class="pf-v5-c-page__main" tabindex="-1">
                 <section class="pf-v5-c-page__main-section">
-                    <div class="pf-v5-l-stack pf-m-gutter">
+                    <table class="pf-v5-c-table pf-m-grid-md" role="grid" aria-label="This is a simple table example" id="table-basic">
+                        <caption class="pf-v5-c-table__caption">This is the table caption</caption>
+                            <thead class="pf-v5-c-table__thead">
+                                <tr class="pf-v5-c-table__tr" role="row">
+                                <th class="pf-v5-c-table__th" role="columnheader" scope="col">Repositories</th>
+                                <th class="pf-v5-c-table__th" role="columnheader" scope="col">Branches</th>
+                                <th
+                                    class="pf-v5-c-table__th"
+                                    role="columnheader"
+                                    scope="col"
+                                >Pull requests</th>
+                                </tr>
+                            </thead>
 
-                    </div>
+                            <tbody class="pf-v5-c-table__tbody" role="rowgroup">
+                                <tr class="pf-v5-c-table__tr" role="row">
+                                <td
+                                    class="pf-v5-c-table__td"
+                                    role="cell"
+                                    data-label="Repository name"
+                                >Repository 1</td>
+                                <td class="pf-v5-c-table__td" role="cell" data-label="Branches">10</td>
+                                <td class="pf-v5-c-table__td" role="cell" data-label="Pull requests">25</td>
+                                </tr>
+
+                                <tr class="pf-v5-c-table__tr" role="row">
+                                <td
+                                    class="pf-v5-c-table__td"
+                                    role="cell"
+                                    data-label="Repository name"
+                                >Repository 2</td>
+                                <td class="pf-v5-c-table__td" role="cell" data-label="Branches">10</td>
+                                <td class="pf-v5-c-table__td" role="cell" data-label="Pull requests">25</td>
+                                </tr>
+
+                                <tr class="pf-v5-c-table__tr" role="row">
+                                <td
+                                    class="pf-v5-c-table__td"
+                                    role="cell"
+                                    data-label="Repository name"
+                                >Repository 3</td>
+                                <td class="pf-v5-c-table__td" role="cell" data-label="Branches">10</td>
+                                <td class="pf-v5-c-table__td" role="cell" data-label="Pull requests">25</td>
+                                </tr>
+
+                                <tr class="pf-v5-c-table__tr" role="row">
+                                    <td class="pf-v5-c-table__td" role="cell" data-label="Repository name">Repository 4</td>
+                                    <td class="pf-v5-c-table__td" role="cell" data-label="Branches">10</td>
+                                    <td class="pf-v5-c-table__td" role="cell" data-label="Pull requests">
+                                        <input class="pf-v5-c-form-control">
+                                    </td>
+                                </tr>
+                                <tr class="pf-v5-c-table__tr" role="row">
+                                    <td class="pf-v5-c-table__td" role="cell" data-label="Repository name">Repository 4</td>
+                                    <td class="pf-v5-c-table__td" role="cell" data-label="Branches">10</td>
+                                    <td class="pf-v5-c-table__td" role="cell" data-label="Pull requests">
+                                        <div class="pf-v5-c-slider" style="--pf-v5-c-slider--value: 25%;">
+                                            <div class="pf-v5-c-slider__main">
+                                              <div class="pf-v5-c-slider__rail">
+                                                <div class="pf-v5-c-slider__rail-track"></div>
+                                              </div>
+                                              <div class="pf-v5-c-slider__steps" aria-hidden="true">
+                                                <div
+                                                  class="pf-v5-c-slider__step pf-m-active"
+                                                  style="--pf-v5-c-slider__step--Left: 0%;"
+                                                >
+                                                  <div class="pf-v5-c-slider__step-tick"></div>
+                                                  <div class="pf-v5-c-slider__step-label">0</div>
+                                                </div>
+                                                <div class="pf-v5-c-slider__step pf-m-active" style="--pf-v5-c-slider__step--Left: 12.5%;">
+                                                  <div class="pf-v5-c-slider__step-tick"></div>
+                                                </div>
+                                                <div class="pf-v5-c-slider__step pf-m-active" style="--pf-v5-c-slider__step--Left: 25%;">
+                                                  <div class="pf-v5-c-slider__step-tick"></div>
+                                                  <div class="pf-v5-c-slider__step-label">2</div>
+                                                </div>
+                                                <div class="pf-v5-c-slider__step pf-m-active" style="--pf-v5-c-slider__step--Left: 37.5%;">
+                                                  <div class="pf-v5-c-slider__step-tick"></div>
+                                                </div>
+                                                <div
+                                                  class="pf-v5-c-slider__step pf-m-active"
+                                                  style="--pf-v5-c-slider__step--Left: 50%;"
+                                                >
+                                                  <div class="pf-v5-c-slider__step-tick"></div>
+                                                  <div class="pf-v5-c-slider__step-label">4</div>
+                                                </div>
+                                                <div
+                                                  class="pf-v5-c-slider__step pf-m-active"
+                                                  style="--pf-v5-c-slider__step--Left: 62.5%;"
+                                                >
+                                                  <div class="pf-v5-c-slider__step-tick"></div>
+                                                </div>
+                                                <div
+                                                  class="pf-v5-c-slider__step"
+                                                  style="--pf-v5-c-slider__step--Left: 75%;"
+                                                >
+                                                  <div class="pf-v5-c-slider__step-tick"></div>
+                                                  <div class="pf-v5-c-slider__step-label">6</div>
+                                                </div>
+                                                <div
+                                                  class="pf-v5-c-slider__step"
+                                                  style="--pf-v5-c-slider__step--Left: 87.5%;"
+                                                >
+                                                  <div class="pf-v5-c-slider__step-tick"></div>
+                                                </div>
+                                                <div
+                                                  class="pf-v5-c-slider__step"
+                                                  style="--pf-v5-c-slider__step--Left: 100%;"
+                                                >
+                                                  <div class="pf-v5-c-slider__step-tick"></div>
+                                                  <div class="pf-v5-c-slider__step-label">8</div>
+                                                </div>
+                                              </div>
+                                              <div
+                                                class="pf-v5-c-slider__thumb"
+                                                role="slider"
+                                                aria-valuemin="0"
+                                                aria-valuemax="8"
+                                                aria-valuenow="5"
+                                                aria-label="Value"
+                                                tabindex="0"
+                                              ></div>
+                                            </div>
+                                          </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                    </table>
                 </section>
             </main>
         </div>
