@@ -1,4 +1,3 @@
-import React from 'react';
 import Layout from '../layout';
 import { PageSection } from '@patternfly/react-core';
 

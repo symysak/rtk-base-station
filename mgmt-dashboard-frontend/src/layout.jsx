@@ -19,11 +19,7 @@ import {
 import BarsIcon from '@patternfly/react-icons/dist/esm/icons/bars-icon';
 import { Link } from 'react-router-dom';
 
-type LayoutProps = {
-    children: React.ReactNode;
-};
-
-function Layout(props: LayoutProps) {
+function Layout(props) {
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
     

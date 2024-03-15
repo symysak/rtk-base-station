@@ -1,4 +1,7 @@
 import React from 'react'
+import { useEffect } from 'react';
+import cockpit from '../cockpit/pkg/lib/cockpit';
+
 
 import {
     Alert,
@@ -28,36 +31,195 @@ import Layout from '../layout';
 function SateliteSelection() {
 
     // ここからConfig関連のstate
-    const [saveConfig, setSaveConfig] = React.useState(false);
+    const [saveConfig, setSaveConfig] = React.useState(undefined);
 
-    const [GpsEnabled, setGpsEnabled] = React.useState(false);
-    const [GpsL1caEnabled, setGpsL1caEnabled] = React.useState(false);
-    const [GpsL2cEnabled, setGpsL2cEnabled] = React.useState(false);
+    const [GpsEnabled, setGpsEnabled] = React.useState(undefined);
 
-    const [SbasEnabled, setSbasEnabled] = React.useState(false);
-    const [SbasL1caEnabled, setSbasL1caEnabled] = React.useState(false);
+    const [GpsL1caEnabled, setGpsL1caEnabled] = React.useState(undefined);
+    const [GpsL2cEnabled, setGpsL2cEnabled] = React.useState(undefined);
 
-    const [GalileoEnabled, setGalileoEnabled] = React.useState(false);
-    const [GalileoE1Enabled, setGalileoE1Enabled] = React.useState(false);
-    const [GalileoE5bEnabled, setGalileoE5bEnabled] = React.useState(false);
+    const [SbasEnabled, setSbasEnabled] = React.useState(undefined);
+    const [SbasL1caEnabled, setSbasL1caEnabled] = React.useState(undefined);
 
-    const [BeidoEnabled, setBeidoEnabled] = React.useState(false);
-    const [BeidoB1Enabled, setBeidoB1Enabled] = React.useState(false);
-    const [BeidoB2Enabled, setBeidoB2Enabled] = React.useState(false);
+    const [GalileoEnabled, setGalileoEnabled] = React.useState(undefined);
+    const [GalileoE1Enabled, setGalileoE1Enabled] = React.useState(undefined);
+    const [GalileoE5bEnabled, setGalileoE5bEnabled] = React.useState(undefined);
 
-    const [QzssEnabled, setQzssEnabled] = React.useState(false);
-    const [QzssL1caEnabled, setQzssL1caEnabled] = React.useState(false);
-    const [QzssL1sEnabled, setQzssL1sEnabled] = React.useState(false);
-    const [QzssL2cEnabled, setQzssL2cEnabled] = React.useState(false);
+    const [BeidoEnabled, setBeidoEnabled] = React.useState(undefined);
+    const [BeidoB1Enabled, setBeidoB1Enabled] = React.useState(undefined);
+    const [BeidoB2Enabled, setBeidoB2Enabled] = React.useState(undefined);
 
-    const [GlonassEnabled, setGlonassEnabled] = React.useState(false);
-    const [GlonassL1Enabled, setGlonassL1Enabled] = React.useState(false);
-    const [GlonassL2Enabled, setGlonassL2Enabled] = React.useState(false);
+    const [QzssEnabled, setQzssEnabled] = React.useState(undefined);
+    const [QzssL1caEnabled, setQzssL1caEnabled] = React.useState(undefined);
+    const [QzssL1sEnabled, setQzssL1sEnabled] = React.useState(undefined);
+    const [QzssL2cEnabled, setQzssL2cEnabled] = React.useState(undefined);
+
+    const [GlonassEnabled, setGlonassEnabled] = React.useState(undefined);
+    const [GlonassL1Enabled, setGlonassL1Enabled] = React.useState(undefined);
+    const [GlonassL2Enabled, setGlonassL2Enabled] = React.useState(undefined);
     // ここまでConfig関連のstate
 
-    const [isGetCommandComplete, setIsGetCommandComplete] = React.useState(!false);
+    const [setButtonColor, setSetButtonColor] = React.useState('primary');
+    const [isSetButtonDisabled, setIsSetButtonDisabled] = React.useState(false);
+    const [setCommandProgress, setSetCommandProgress] = React.useState(0);
+    const [sentSetCommandCount, setSentSetCommandCount] = React.useState(0);
+    const [isGetCommandComplete, setIsGetCommandComplete] = React.useState(false);
     const [resultOfCompareCommand, setResultOfCompareCommand] = React.useState('差分を表示ボタンを押してください');
     const [resultOfCommitCommand, setResultOfCommitCommand] = React.useState('設定を適用ボタンを押してください');
+
+
+    const cliPath = "~/rtk-base-station/mgmt-cli/mgmt-cli";
+    const configPath = "~/rtk-base-station/config/";
+
+    const sendGetCommand = async (key) => {
+        let res = undefined;
+        await cockpit.script(`${cliPath} -c ${configPath} get ${key}`)
+            .then(data => {
+                if (data.includes("true")) {
+                    res = true;
+                }
+                else if (data.includes("false")) {
+                    res = false;
+                }
+            }).catch(exception => {
+                console.error(`Failed to get ${key}`);
+                console.error(exception);
+            });
+        return res;
+    };
+    useEffect(() => {
+        (async () => {
+            setSaveConfig(await sendGetCommand("UbloxReceiver.SaveConfig"));
+
+            setGpsEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.GPS.ENA"));
+            setGpsL1caEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.GPS.L1CA_ENA"));
+            setGpsL2cEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.GPS.L2C_ENA"));
+
+            setSbasEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.SBAS.ENA"));
+            setSbasL1caEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.SBAS.L1CA_ENA"));
+
+            setGalileoEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.GAL.ENA"));
+            setGalileoE1Enabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.GAL.E1_ENA"));
+            setGalileoE5bEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.GAL.E5B_ENA"));
+
+            setBeidoEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.BDS.ENA"));
+            setBeidoB1Enabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.BDS.B1_ENA"));
+            setBeidoB2Enabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.BDS.B2_ENA"));
+
+            setQzssEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.ENA"));
+            setQzssL1caEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.L1CA_ENA"));
+            setQzssL1sEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.L1S_ENA"));
+            setQzssL2cEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.L2C_ENA"));
+
+            setGlonassEnabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.GLO.ENA"));
+            setGlonassL1Enabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.GLO.L1_ENA"));
+            setGlonassL2Enabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.GLO.L2_ENA"));
+
+            setIsGetCommandComplete(true);
+        })();
+
+    }, []);
+
+    const sendSetCommand = async (key, value) => {
+        await cockpit.script(`${cliPath} -c ${configPath} set ${key} ${value}`)
+            .then(data => {
+                console.log(data);
+            }).catch(exception => {
+                console.error(`Failed to set ${key} ${value}`);
+                console.error(exception);
+            });
+    }
+
+
+    // setするアイテムの数
+    const itemCount = 19;
+    useEffect(() => {
+        setSetCommandProgress(Math.floor(sentSetCommandCount / itemCount * 100));
+    }, sentSetCommandCount);
+    const setButtonHandler = async () => {
+
+        setIsSetButtonDisabled(true);
+        if (saveConfig == undefined
+
+            || GpsEnabled == undefined
+            || GpsL1caEnabled == undefined
+            || GpsL2cEnabled == undefined
+
+            || SbasEnabled == undefined
+            || SbasL1caEnabled == undefined
+
+            || GalileoEnabled == undefined
+            || GalileoE1Enabled == undefined
+            || GalileoE5bEnabled == undefined
+
+            || BeidoEnabled == undefined
+            || BeidoB1Enabled == undefined
+            || BeidoB2Enabled == undefined
+
+            || QzssEnabled == undefined
+            || QzssL1caEnabled == undefined
+            || QzssL1sEnabled == undefined
+            || QzssL2cEnabled == undefined
+
+            || GlonassEnabled == undefined
+            || GlonassL1Enabled == undefined
+            || GlonassL2Enabled == undefined
+
+        ) {
+            console.log("getコマンドが失敗しているkeyがあります");
+            setSetButtonColor("danger");
+            setIsSetButtonDisabled(false);
+            return;
+        }
+
+        await sendSetCommand("UbloxReceiver.SaveConfig", saveConfig);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GPS.ENA", GpsEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GPS.L1CA_ENA", GpsL1caEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GPS.L2C_ENA", GpsL2cEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.SBAS.ENA", SbasEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.SBAS.L1CA_ENA", SbasL1caEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GAL.ENA", GalileoEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GAL.E1_ENA", GalileoE1Enabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GAL.E5B_ENA", GalileoE5bEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.BDS.ENA", BeidoEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.BDS.B1_ENA", BeidoB1Enabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.BDS.B2_ENA", BeidoB2Enabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.ENA", QzssEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.L1CA_ENA", QzssL1caEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.L1S_ENA", QzssL1sEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.L2C_ENA", QzssL2cEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GLO.ENA", GlonassEnabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GLO.L1_ENA", GlonassL1Enabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+        await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GLO.L2_ENA", GlonassL2Enabled);
+        setSentSetCommandCount(sentSetCommandCount + 1);
+
+        setSetButtonColor("success");
+        setIsSetButtonDisabled(false);
+    }
 
     return (
         <Layout>
@@ -69,9 +231,10 @@ function SateliteSelection() {
                             <CardBody>
                                 <Switch
                                     label="設定を再起動後も保存する"
-                                    isChecked={saveConfig}
+                                    isChecked={saveConfig == undefined ? false : saveConfig}
                                     onChange={() => setSaveConfig(!saveConfig)}
                                     ouiaId="BasicSwitch"
+                                    isDisabled={saveConfig == undefined ? true : false}
                                 />
                             </CardBody>
                         </Card>
@@ -88,9 +251,10 @@ function SateliteSelection() {
                                     <PanelHeader>
                                         <Switch
                                             label="GPSを使用する"
-                                            isChecked={GpsEnabled}
+                                            isChecked={GpsEnabled == undefined ? false : GpsEnabled}
                                             onChange={() => setGpsEnabled(!GpsEnabled)}
                                             ouiaId="BasicSwitch"
+                                            isDisabled={GpsEnabled == undefined ? true : false}
                                         />
                                     </PanelHeader>
                                     <Divider />
@@ -98,16 +262,18 @@ function SateliteSelection() {
                                         <PanelMainBody>
                                             <Switch
                                                 label="L1CA"
-                                                isChecked={GpsL1caEnabled}
+                                                isChecked={GpsL1caEnabled == undefined ? false : GpsL1caEnabled}
                                                 onChange={() => setGpsL1caEnabled(!GpsL1caEnabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={GpsL1caEnabled == undefined ? true : false}
                                             />
                                             <br />
                                             <Switch
                                                 label="L2C"
-                                                isChecked={GpsL2cEnabled}
+                                                isChecked={GpsL2cEnabled == undefined ? false : GpsL2cEnabled}
                                                 onChange={() => setGpsL2cEnabled(!GpsL2cEnabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={GpsL2cEnabled == undefined ? true : false}
                                             />
                                         </PanelMainBody>
                                     </PanelMain>
@@ -119,9 +285,10 @@ function SateliteSelection() {
                                     <PanelHeader>
                                         <Switch
                                             label="SBASを使用する"
-                                            isChecked={SbasEnabled}
+                                            isChecked={SbasEnabled == undefined ? false : SbasEnabled}
                                             onChange={() => setSbasEnabled(!SbasEnabled)}
                                             ouiaId="BasicSwitch"
+                                            isDisabled={SbasEnabled == undefined ? true : false}
                                         />
                                     </PanelHeader>
                                     <Divider />
@@ -129,9 +296,10 @@ function SateliteSelection() {
                                         <PanelMainBody>
                                             <Switch
                                                 label="L1CA"
-                                                isChecked={SbasL1caEnabled}
+                                                isChecked={SbasL1caEnabled == undefined ? false : SbasL1caEnabled}
                                                 onChange={() => setSbasL1caEnabled(!SbasL1caEnabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={SbasL1caEnabled == undefined ? true : false}
                                             />
                                         </PanelMainBody>
                                     </PanelMain>
@@ -143,9 +311,10 @@ function SateliteSelection() {
                                     <PanelHeader>
                                         <Switch
                                             label="Galileoを使用する"
-                                            isChecked={GalileoEnabled}
+                                            isChecked={GalileoEnabled == undefined ? false : GalileoEnabled}
                                             onChange={() => setGalileoEnabled(!GalileoEnabled)}
                                             ouiaId="BasicSwitch"
+                                            isDisabled={GalileoEnabled == undefined ? true : false}
                                         />
                                     </PanelHeader>
                                     <Divider />
@@ -153,16 +322,18 @@ function SateliteSelection() {
                                         <PanelMainBody>
                                             <Switch
                                                 label="E1"
-                                                isChecked={GalileoE1Enabled}
+                                                isChecked={GalileoE1Enabled == undefined ? false : GalileoE1Enabled}
                                                 onChange={() => setGalileoE1Enabled(!GalileoE1Enabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={GalileoE1Enabled == undefined ? true : false}
                                             />
                                             <br />
                                             <Switch
                                                 label="E5b"
-                                                isChecked={GalileoE5bEnabled}
+                                                isChecked={GalileoE5bEnabled == undefined ? false : GalileoE5bEnabled}
                                                 onChange={() => setGalileoE5bEnabled(!GalileoE5bEnabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={GalileoE5bEnabled == undefined ? true : false}
                                             />
                                         </PanelMainBody>
                                     </PanelMain>
@@ -174,9 +345,10 @@ function SateliteSelection() {
                                     <PanelHeader>
                                         <Switch
                                             label="BeiDoを使用する"
-                                            isChecked={BeidoEnabled}
+                                            isChecked={BeidoEnabled == undefined ? false : BeidoEnabled}
                                             onChange={() => setBeidoEnabled(!BeidoEnabled)}
                                             ouiaId="BasicSwitch"
+                                            isDisabled={BeidoEnabled == undefined ? true : false}
                                         />
                                     </PanelHeader>
                                     <Divider />
@@ -184,16 +356,18 @@ function SateliteSelection() {
                                         <PanelMainBody>
                                             <Switch
                                                 label="B1"
-                                                isChecked={BeidoB1Enabled}
+                                                isChecked={BeidoB1Enabled == undefined ? false : BeidoB1Enabled}
                                                 onChange={() => setBeidoB1Enabled(!BeidoB1Enabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={BeidoB1Enabled == undefined ? true : false}
                                             />
                                             <br />
                                             <Switch
                                                 label="B2"
-                                                isChecked={BeidoB2Enabled}
+                                                isChecked={BeidoB2Enabled == undefined ? false : BeidoB2Enabled}
                                                 onChange={() => setBeidoB2Enabled(!BeidoB2Enabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={BeidoB2Enabled == undefined ? true : false}
                                             />
                                         </PanelMainBody>
                                     </PanelMain>
@@ -205,9 +379,10 @@ function SateliteSelection() {
                                     <PanelHeader>
                                         <Switch
                                             label="QZSSを使用する"
-                                            isChecked={QzssEnabled}
+                                            isChecked={QzssEnabled == undefined ? false : QzssEnabled}
                                             onChange={() => setQzssEnabled(!QzssEnabled)}
                                             ouiaId="BasicSwitch"
+                                            isDisabled={QzssEnabled == undefined ? true : false}
                                         />
                                     </PanelHeader>
                                     <Divider />
@@ -215,23 +390,26 @@ function SateliteSelection() {
                                         <PanelMainBody>
                                             <Switch
                                                 label="L1CA"
-                                                isChecked={QzssL1caEnabled}
+                                                isChecked={QzssL1caEnabled == undefined ? false : QzssL1caEnabled}
                                                 onChange={() => setQzssL1caEnabled(!QzssL1caEnabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={QzssL1caEnabled == undefined ? true : false}
                                             />
                                             <br />
                                             <Switch
                                                 label="L1S"
-                                                isChecked={QzssL1sEnabled}
+                                                isChecked={QzssL1sEnabled == undefined ? false : QzssL1sEnabled}
                                                 onChange={() => setQzssL1sEnabled(!QzssL1sEnabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={QzssL1sEnabled == undefined ? true : false}
                                             />
                                             <br />
                                             <Switch
                                                 label="L2C"
-                                                isChecked={QzssL2cEnabled}
+                                                isChecked={QzssL2cEnabled == undefined ? false : QzssL2cEnabled}
                                                 onChange={() => setQzssL2cEnabled(!QzssL2cEnabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={QzssL2cEnabled == undefined ? true : false}
                                             />
                                         </PanelMainBody>
                                     </PanelMain>
@@ -243,9 +421,10 @@ function SateliteSelection() {
                                     <PanelHeader>
                                         <Switch
                                             label="GLONASSを使用する"
-                                            isChecked={GlonassEnabled}
+                                            isChecked={GlonassEnabled == undefined ? false : GlonassEnabled}
                                             onChange={() => setGlonassEnabled(!GlonassEnabled)}
                                             ouiaId="BasicSwitch"
+                                            isDisabled={GlonassEnabled == undefined ? true : false}
                                         />
                                     </PanelHeader>
                                     <Divider />
@@ -253,16 +432,18 @@ function SateliteSelection() {
                                         <PanelMainBody>
                                             <Switch
                                                 label="L1"
-                                                isChecked={GlonassL1Enabled}
+                                                isChecked={GlonassL1Enabled == undefined ? false : GlonassL1Enabled}
                                                 onChange={() => setGlonassL1Enabled(!GlonassL1Enabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={GlonassL1Enabled == undefined ? true : false}
                                             />
                                             <br />
                                             <Switch
                                                 label="L2"
-                                                isChecked={GlonassL2Enabled}
+                                                isChecked={GlonassL2Enabled == undefined ? false : GlonassL2Enabled}
                                                 onChange={() => setGlonassL2Enabled(!GlonassL2Enabled)}
                                                 ouiaId="BasicSwitch"
+                                                isDisabled={GlonassL2Enabled == undefined ? true : false}
                                             />
                                         </PanelMainBody>
                                     </PanelMain>
@@ -287,14 +468,16 @@ function SateliteSelection() {
                                         <Divider />
                                         <br />
                                         <Button
-                                            variant="primary"
+                                            variant={setButtonColor}
+                                            isDisabled={isSetButtonDisabled}
+                                            onClick={() => setButtonHandler()}
                                         >
                                             設定を保存
                                         </Button>
                                         <Progress
-                                            value={33}
+                                            value={setCommandProgress}
                                             measureLocation={ProgressMeasureLocation.outside}
-                                            variant={ProgressVariant.success}
+                                            variant={setButtonColor}
                                         />
                                         <br />
                                         <Divider />
