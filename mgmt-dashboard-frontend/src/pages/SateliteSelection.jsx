@@ -59,12 +59,15 @@ function SateliteSelection() {
     const [GlonassL2Enabled, setGlonassL2Enabled] = React.useState(undefined);
     // ここまでConfig関連のstate
 
-    const [setButtonColor, setSetButtonColor] = React.useState('primary');
-    const [isSetButtonDisabled, setIsSetButtonDisabled] = React.useState(false);
-    const [setCommandProgress, setSetCommandProgress] = React.useState(0);
-    const [sentSetCommandCount, setSentSetCommandCount] = React.useState(0);
-    const [isGetCommandComplete, setIsGetCommandComplete] = React.useState(false);
+    const [progressColor, setProgressColor] = React.useState('primary');
+
+    const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
+
+    const [SETcommandProgress, setSETcommandProgress] = React.useState(0);
+    const [isGETcommandComplete, setIsGETcommandComplete] = React.useState(false);
+
     const [resultOfCompareCommand, setResultOfCompareCommand] = React.useState('差分を表示ボタンを押してください');
+
     const [resultOfCommitCommand, setResultOfCommitCommand] = React.useState('設定を適用ボタンを押してください');
 
 
@@ -85,6 +88,7 @@ function SateliteSelection() {
                 console.error(`Failed to get ${key}`);
                 console.error(exception);
             });
+        console.log(`[GET] ${key}: ${res}`);
         return res;
     };
     useEffect(() => {
@@ -115,30 +119,34 @@ function SateliteSelection() {
             setGlonassL1Enabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.GLO.L1_ENA"));
             setGlonassL2Enabled(await sendGetCommand("UbloxReceiver.CFG.SIGNAL.GLO.L2_ENA"));
 
-            setIsGetCommandComplete(true);
+            setIsGETcommandComplete(true);
         })();
 
     }, []);
 
-    const sendSetCommand = async (key, value) => {
-        await cockpit.script(`${cliPath} -c ${configPath} set ${key} ${value}`)
-            .then(data => {
-                console.log(data);
-            }).catch(exception => {
-                console.error(`Failed to set ${key} ${value}`);
-                console.error(exception);
-            });
-    }
+    
+
 
 
     // setするアイテムの数
     const itemCount = 19;
-    useEffect(() => {
-        setSetCommandProgress(Math.floor(sentSetCommandCount / itemCount * 100));
-    }, sentSetCommandCount);
+    // setしたアイテムの数
+    let SETcommandCount = 0;
+    const sendSetCommand = async (key, value) => {
+        await cockpit.script(`${cliPath} -c ${configPath} set ${key} ${value}`)
+            .then(data => {
+                console.log("[SET] " + data);
+            }).catch(exception => {
+                console.error(`Failed to set ${key} ${value}`);
+                console.error(exception);
+            });
+        SETcommandCount++;
+        setSETcommandProgress(Math.floor(SETcommandCount / itemCount * 100));
+    }
     const setButtonHandler = async () => {
 
-        setIsSetButtonDisabled(true);
+        setIsButtonDisabled(true);
+        setProgressColor("primary");
         if (saveConfig == undefined
 
             || GpsEnabled == undefined
@@ -167,59 +175,75 @@ function SateliteSelection() {
 
         ) {
             console.log("getコマンドが失敗しているkeyがあります");
-            setSetButtonColor("danger");
-            setIsSetButtonDisabled(false);
+            setProgressColor("danger");
+            setIsButtonDisabled(false);
             return;
         }
 
+        SETcommandCount = 0;
         await sendSetCommand("UbloxReceiver.SaveConfig", saveConfig);
-        setSentSetCommandCount(sentSetCommandCount + 1);
 
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GPS.ENA", GpsEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GPS.L1CA_ENA", GpsL1caEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GPS.L2C_ENA", GpsL2cEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
-
+    
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.SBAS.ENA", SbasEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.SBAS.L1CA_ENA", SbasL1caEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
 
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GAL.ENA", GalileoEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GAL.E1_ENA", GalileoE1Enabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GAL.E5B_ENA", GalileoE5bEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
 
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.BDS.ENA", BeidoEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.BDS.B1_ENA", BeidoB1Enabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.BDS.B2_ENA", BeidoB2Enabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
 
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.ENA", QzssEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.L1CA_ENA", QzssL1caEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.L1S_ENA", QzssL1sEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.QZSS.L2C_ENA", QzssL2cEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
 
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GLO.ENA", GlonassEnabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GLO.L1_ENA", GlonassL1Enabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
         await sendSetCommand("UbloxReceiver.CFG.SIGNAL.GLO.L2_ENA", GlonassL2Enabled);
-        setSentSetCommandCount(sentSetCommandCount + 1);
 
-        setSetButtonColor("success");
-        setIsSetButtonDisabled(false);
+        setProgressColor("success");
+        setIsButtonDisabled(false);
+
+        return;
     }
+
+    const sendCompareCommand = async () => {
+        setIsButtonDisabled(true);
+        await cockpit.script(`${cliPath} -c ${configPath} compare`)
+            .then(data => {
+                setResultOfCompareCommand(data);
+                setIsButtonDisabled(false);
+            }).catch(exception => {
+                console.error(`Failed to compare`);
+                console.error(exception);
+                setIsButtonDisabled(false);
+            });
+    };
+
+    const str2strPath = "~/rtk-base-station/str2str/";
+    const ntripcasterPath = "~/rtk-base-station/ntrip-caster/"
+    const sendCommitCommand = async () => {
+        setIsButtonDisabled(true);
+        setResultOfCommitCommand("");
+        
+        await cockpit.script(`${cliPath} -c ${configPath} commit -s ${str2strPath} -n ${ntripcasterPath}`)
+            .stream(data => {
+                setResultOfCommitCommand(resultOfCommitCommand => resultOfCommitCommand + data);
+            })
+            .then(data => {
+                setIsButtonDisabled(false);
+            }).catch(exception => {
+                console.error(`Failed to commit`);
+                console.error(exception);
+                setIsButtonDisabled(false);
+            });
+    };
 
     return (
         <Layout>
@@ -457,7 +481,7 @@ function SateliteSelection() {
 
                     <StackItem>
                         <Card>
-                            {isGetCommandComplete ? (
+                            {isGETcommandComplete ? (
                                 <>
                                     <CardTitle>
                                         操作
@@ -468,22 +492,24 @@ function SateliteSelection() {
                                         <Divider />
                                         <br />
                                         <Button
-                                            variant={setButtonColor}
-                                            isDisabled={isSetButtonDisabled}
+                                            variant="primary"
+                                            isDisabled={isButtonDisabled}
                                             onClick={() => setButtonHandler()}
                                         >
                                             設定を保存
                                         </Button>
                                         <Progress
-                                            value={setCommandProgress}
+                                            value={SETcommandProgress}
                                             measureLocation={ProgressMeasureLocation.outside}
-                                            variant={setButtonColor}
+                                            variant={progressColor}
                                         />
                                         <br />
                                         <Divider />
                                         <br />
                                         <Button
                                             variant="primary"
+                                            onClick={() => sendCompareCommand()}
+                                            isDisabled={isButtonDisabled}
                                         >
                                             差分を表示
                                         </Button>
@@ -497,9 +523,12 @@ function SateliteSelection() {
                                         <br />
                                         <Button
                                             variant="primary"
+                                            onClick={() => sendCommitCommand()}
+                                            isDisabled={isButtonDisabled}
                                         >
                                             設定を適用
                                         </Button>
+                                        <p>設定の適用に数十秒かかります。この画面のまま「Commit Completed」と表示されるまでお待ちください。</p>
                                         <CodeBlock>
                                             <CodeBlockCode>
                                                 {resultOfCommitCommand}
@@ -508,7 +537,7 @@ function SateliteSelection() {
                                     </CardBody>
                                 </>
                             ) : (
-                                <Skeleton height='300px' screenreaderText='loading contents' />
+                                <Skeleton height='549px' screenreaderText='loading contents' />
                             )
                             }
                         </Card>
