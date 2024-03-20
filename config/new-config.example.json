@@ -1,7 +1,7 @@
 {
   "ntripcaster": {
-    "username": "",
-    "password": "",
+    "username": "use",
+    "password": "user",
     "port": 2101,
     "mountpoint": "main",
     "sourcetable": {
