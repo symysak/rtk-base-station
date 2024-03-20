@@ -147,7 +147,7 @@
           "L2C_ENA": true
         },
         "GLO": {
-          "ENA": false,
+          "ENA": true,
           "L1_ENA": true,
           "L2_ENA": true
         }
