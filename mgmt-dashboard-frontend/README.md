@@ -5,6 +5,7 @@ WSLでの参考コマンド
 ```
 git clone https://github.com/symysak/rtk-base-station
 cd rtk-base-station
+git submodule update
 cd mgmt-dashboard-frontend
 
 mkdir dist
