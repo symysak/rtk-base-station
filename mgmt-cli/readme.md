@@ -35,6 +35,11 @@ rtk-base-stationはこのCLIツールですべての設定行う。
 
 ex: `<実行ファイル名> <コマンド名> -h`
 
+コマンドは以下の順番で実行する
+1. discardコマンド(必要であれば)
+2. set, delete, getコマンド
+3. commitコマンド
+
 追加で説明しておく必要があることについて、以下に説明する。
 ### 設定の保存場所
 実際の設定の保存場所は、rtk-base-station/config直下にあるrunning-config.jsonとnew-config.jsonである。ここで２つの設定ファイルの違いについて説明する。
