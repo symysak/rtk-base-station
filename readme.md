@@ -97,12 +97,13 @@ wget https://go.dev/dl/go1.22.0.linux-arm64.tar.gz -P ~/
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf ~/go1.22.0.linux-arm64.tar.gz
 /usr/local/go/bin/go version
 # mgmt-cliの依存関係をインストール
-sudo apt install gpsd gpsd-clients
+sudo apt install gpsd gpsd-clients -y
 
 cd mgmt-cli
 /usr/local/go/bin/go build -o mgmt-cli
 sudo chmod +x mgmt-cli
 cd ..
+mgmt-cli/mgmt-cli -c config/ commit -s str2str/ -n ntrip-caster/ 
 
 # configファイルの設定
 cp config/new-config.example.json config/new-config.json
