@@ -18,6 +18,7 @@ import {
 } from "@patternfly/react-core";
 import BarsIcon from '@patternfly/react-icons/dist/esm/icons/bars-icon';
 import { Link } from 'react-router-dom';
+import './cockpit/pkg/lib/cockpit-dark-theme';
 
 function Layout(props) {
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
