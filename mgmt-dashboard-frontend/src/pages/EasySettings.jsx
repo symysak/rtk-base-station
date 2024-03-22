@@ -5,12 +5,15 @@ import {
     CardBody,
     Stack,
     StackItem,
+    Form,
     FormGroup,
     FormHelperText,
     HelperText,
     HelperTextItem,
     Modal,
     Spinner,
+    Grid,
+    GridItem,
 
     PageSection,
     TextInput
@@ -24,10 +27,15 @@ function EasySettings() {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [mountpoint, setMountpoint] = useState('');
+    const [latitude, setLatitude] = useState("");
+    const [longitude, setLongitude] = useState("");
+    const [height, setHeight] = useState("");
 
     const cliPath = "~/rtk-base-station/mgmt-cli/mgmt-cli";
     const configPath = "~/rtk-base-station/config/";
     const sendGetCommand = async (key) => {
+        setIsGetCommnadFinished(false);
         let res = undefined;
         await cockpit.script(`${cliPath} -c ${configPath} get ${key}`)
             .then(data => {
@@ -46,6 +54,10 @@ function EasySettings() {
         (async () => {
             setUsername(await sendGetCommand("Ntripcaster.Username"));
             setPassword(await sendGetCommand("Ntripcaster.Password"));
+            setMountpoint(await sendGetCommand("Ntripcaster.Mountpoint"));
+            setLatitude(await sendGetCommand("Ntripcaster.Latitude"));
+            setLongitude(await sendGetCommand("Ntripcaster.Longitude"));
+            setHeight(await sendGetCommand("Ntripcaster.Height"));
         })()
     }, [])
 
@@ -63,28 +75,77 @@ function EasySettings() {
                     <StackItem>
                         <Card>
                             <CardBody>
-                                <FormGroup label="接続用ユーザ名">
-                                    <TextInput
-                                        value={username}
-                                        onChange={(_, value) => setUsername(value)}
-                                    />
-                                    <FormHelperText>
-                                        <HelperText>
-                                            <HelperTextItem>空欄の場合、設定なしです。</HelperTextItem>
-                                        </HelperText>
-                                    </FormHelperText>
-                                </FormGroup>
-                                <FormGroup label="接続用パスワード">
-                                    <TextInput
-                                        value={password}
-                                        onChange={(_, value) => setUsername(value)}
-                                    />
-                                    <FormHelperText>
-                                        <HelperText>
-                                            <HelperTextItem>空欄の場合、設定なしです。</HelperTextItem>
-                                        </HelperText>
-                                    </FormHelperText>
-                                </FormGroup>
+                                <Form>
+                                    <FormGroup label="接続用ユーザ名">
+                                        <TextInput
+                                            value={username}
+                                            onChange={(_, value) => setUsername(value)}
+                                        />
+                                        <FormHelperText>
+                                            <HelperText>
+                                                <HelperTextItem>空欄の場合、設定なしです。</HelperTextItem>
+                                            </HelperText>
+                                        </FormHelperText>
+                                    </FormGroup>
+                                    <FormGroup label="接続用パスワード">
+                                        <TextInput
+                                            value={password}
+                                            onChange={(_, value) => setUsername(value)}
+                                        />
+                                        <FormHelperText>
+                                            <HelperText>
+                                                <HelperTextItem>空欄の場合、設定なしです。</HelperTextItem>
+                                            </HelperText>
+                                        </FormHelperText>
+                                    </FormGroup>
+                                    <FormGroup label="マウントポイント名">
+                                        <TextInput
+                                            value={mountpoint}
+                                            onChange={(_, value) => setMountpoint(value)}
+                                        />
+                                    </FormGroup>
+                                    <Grid hasGutter>
+                                        <GridItem span={4}>
+                                            <FormGroup label="緯度">
+                                                <TextInput
+                                                    value={latitude}
+                                                    onChange={(_, value) => setLatitude(value)}
+                                                />
+                                                <FormHelperText>
+                                                    <HelperText>
+                                                        <HelperTextItem>小数第8位程度での入力をお勧めします。</HelperTextItem>
+                                                    </HelperText>
+                                                </FormHelperText>
+                                            </FormGroup>
+                                        </GridItem>
+                                        <GridItem span={4}>
+                                            <FormGroup label="経度">
+                                                <TextInput
+                                                    value={longitude}
+                                                    onChange={(_, value) => setLongitude(value)}
+                                                />
+                                                <FormHelperText>
+                                                    <HelperText>
+                                                        <HelperTextItem>小数第8位程度での入力をお勧めします。</HelperTextItem>
+                                                    </HelperText>
+                                                </FormHelperText>
+                                            </FormGroup>
+                                        </GridItem>
+                                        <GridItem span={4}>
+                                            <FormGroup label="高度">
+                                                <TextInput
+                                                    value={height}
+                                                    onChange={(_, value) => setHeight(value)}
+                                                />
+                                                <FormHelperText>
+                                                    <HelperText>
+                                                        <HelperTextItem>小数第4位程度での入力をお勧めします。</HelperTextItem>
+                                                    </HelperText>
+                                                </FormHelperText>
+                                            </FormGroup>
+                                        </GridItem>
+                                    </Grid>
+                                </Form>
                             </CardBody>
                         </Card>
                     </StackItem>
