@@ -16,21 +16,21 @@ var discardCmd = &cobra.Command{
 
 		running_config, err := os.Open(configDir + "running-config.json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		defer running_config.Close()
 
 		new_config, err := os.Create(configDir + "new-config.json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		defer new_config.Close()
 
 		_, err = io.Copy(new_config, running_config)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 
