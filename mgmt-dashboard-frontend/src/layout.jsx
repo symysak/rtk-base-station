@@ -31,7 +31,7 @@ function Layout(props) {
     const headerToolbar = (
         <Toolbar id="vertical-toolbar">
             <ToolbarContent>
-                {/* <ToolbarItem> </ToolbarItem> */}
+                RTK-GNSS基準局 設定画面
             </ToolbarContent>
         </Toolbar>
     );
@@ -49,9 +49,6 @@ function Layout(props) {
                     <BarsIcon />
                 </PageToggleButton>
             </MastheadToggle>
-            <MastheadMain>
-                <MastheadBrand>RTK-GNSS基準局 設定画面</MastheadBrand>
-            </MastheadMain>
             <MastheadContent>{headerToolbar}</MastheadContent>
         </Masthead>
     );
