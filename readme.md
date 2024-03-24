@@ -284,6 +284,9 @@ releaseも開発にキリが付いたら行う
 git tag -a v2.2.0 -m "v2.2.0"
 git push origin v2.2.0
 
+// tagの削除
+git tag -d v2.2.0
+git push origin --delete v2.2.0
 ```
 ### wireguard config
 ```
