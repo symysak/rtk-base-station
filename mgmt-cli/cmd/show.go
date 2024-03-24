@@ -14,11 +14,9 @@ var showCmd = &cobra.Command{
 	Short: "Command to show running configuration",
 	Long:  `Command to show running configuration`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		fmt.Println("show called")
-
 		raw_running_config, err := os.ReadFile(configDir + "running-config.json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		var running_config models.Config
@@ -26,7 +24,7 @@ var showCmd = &cobra.Command{
 
 		bytes, err := json.MarshalIndent(running_config, "", "    ")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		fmt.Println(string(bytes))

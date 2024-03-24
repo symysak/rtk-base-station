@@ -1,0 +1,4 @@
+[submodule "mgmt-dashboard-frontend/src/cockpit"]
+	path = mgmt-dashboard-frontend/src/cockpit
+	url = https://github.com/cockpit-project/cockpit
+	branch = main

@@ -19,14 +19,16 @@ var setCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		if len(args) < 2 {
-			return fmt.Errorf("Too few arguments")
+			fmt.Fprintln(os.Stderr, "Too few arguments")
+			os.Exit(1)
 		} else if len(args) > 2 {
-			return fmt.Errorf("Too many arguments")
+			fmt.Fprintln(os.Stderr, "Too many arguments")
+			os.Exit(1)
 		}
 
 		raw_new_config, err := os.ReadFile(configDir + "new-config.json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		var new_config models.Config
@@ -36,7 +38,7 @@ var setCmd = &cobra.Command{
 		for _, name := range strings.Split(args[0], ".") {
 			v = v.FieldByName(name)
 			if v.Kind() == reflect.Invalid {
-				fmt.Println("Key not found")
+				fmt.Fprintln(os.Stderr, "Key not found")
 				os.Exit(1)
 			}
 		}
@@ -54,7 +56,7 @@ var setCmd = &cobra.Command{
 			n, _ := strconv.ParseBool(args[1])
 			v.SetBool(n)
 		default:
-			fmt.Println("Invalid type")
+			fmt.Fprintln(os.Stderr, "Invalid type")
 			os.Exit(1)
 		}
 
@@ -63,14 +65,14 @@ var setCmd = &cobra.Command{
 
 		new_new_config, err := os.Create(configDir + "new-config.json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		defer new_new_config.Close()
 		encoder := json.NewEncoder(new_new_config)
 		encoder.SetIndent("", "  ")
 		if err := encoder.Encode(new_config); err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 

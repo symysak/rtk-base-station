@@ -1,7 +1,7 @@
 {
   "ntripcaster": {
-    "username": "",
-    "password": "",
+    "username": "user",
+    "password": "user",
     "port": 2101,
     "mountpoint": "main",
     "sourcetable": {
@@ -147,7 +147,7 @@
           "L2C_ENA": true
         },
         "GLO": {
-          "ENA": true,
+          "ENA": false,
           "L1_ENA": true,
           "L2_ENA": true
         }

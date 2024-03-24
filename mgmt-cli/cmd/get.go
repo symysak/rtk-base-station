@@ -17,14 +17,16 @@ var getCmd = &cobra.Command{
 	Long:  "Command to get a value from key",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
-			return fmt.Errorf("No key specified")
+			fmt.Fprintln(os.Stderr, "No key specified")
+			os.Exit(1)
 		} else if len(args) > 1 {
-			return fmt.Errorf("Too many arguments")
+			fmt.Fprintln(os.Stderr, "Too many arguments")
+			os.Exit(1)
 		}
 
 		raw_running_config, err := os.ReadFile(configDir + "running-config.json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 
@@ -35,7 +37,7 @@ var getCmd = &cobra.Command{
 		for _, name := range strings.Split(args[0], ".") {
 			v = reflect.Indirect(v).FieldByName(name)
 			if v.Kind() == reflect.Invalid {
-				fmt.Println("Key not found")
+				fmt.Fprintln(os.Stderr, "Key not found")
 				os.Exit(1)
 			}
 		}
@@ -50,10 +52,9 @@ var getCmd = &cobra.Command{
 		case reflect.Bool:
 			fmt.Println(v.Bool())
 		default:
-			fmt.Println("Invalid Key")
+			fmt.Fprintln(os.Stderr, "Invalid Key")
 			os.Exit(1)
 		}
-
 
 		return nil
 	},
