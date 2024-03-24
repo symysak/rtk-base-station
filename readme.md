@@ -279,6 +279,12 @@ str2strをNTRIP Casterとして動作させています。
 ## メモ
 git flowに従う
 releaseも開発にキリが付いたら行う
+### releaseの時のコマンド
+```
+git tag -a v2.2.0 -m "v2.2.0"
+git push origin v2.2.0
+
+```
 ### wireguard config
 ```
 [Interface]
