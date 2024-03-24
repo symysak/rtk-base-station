@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@patternfly/react-core": "^5.2.1",
+    "@patternfly/react-core": "^5.2.3",
     "install": "^0.13.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
