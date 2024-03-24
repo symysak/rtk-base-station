@@ -103,7 +103,6 @@ cd mgmt-cli
 /usr/local/go/bin/go build -o mgmt-cli
 sudo chmod +x mgmt-cli
 cd ..
-mgmt-cli/mgmt-cli -c config/ commit -s str2str/ -n ntrip-caster/ 
 
 # configファイルの設定
 cp config/new-config.example.json config/new-config.json
@@ -184,6 +183,23 @@ sudo firewall-cmd --reload
 
 sudo firewall-cmd --remove-service={cockpit,ssh,dhcpv6-client} --permanent
 sudo firewall-cmd --reload
+
+# web guiのインストール
+git config --global http.postBuffer 524288000
+git config --global core.compression 0
+git submodule update -i
+cd mgmt-dashboard-frontend
+mkdir dist
+mkdir -p ~/.local/share/cockpit
+ln -s `pwd`/dist ~/.local/share/cockpit/rtk-dashboard
+sudo apt install nodejs npm -y
+sudo npm install n -g
+sudo n lts
+sudo apt purge nodejs npm -y
+npm install
+npm run build
+cd ..
+mgmt-cli/mgmt-cli -c config/ commit -s str2str/ -n ntrip-caster/
 
 sudo reboot
 
