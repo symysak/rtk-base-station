@@ -1,3 +1,5 @@
+//@ts-check
+
 import React from 'react';
 import {
     Masthead,
@@ -59,7 +61,10 @@ function Layout(props) {
                 <Nav aria-label="Nav">
                     <NavList>
                         <NavItem>
-                            <Link to="/">簡単設定</Link>
+                            <Link to="/">ホーム</Link>
+                        </NavItem>
+                        <NavItem>
+                            <Link to="/easy-settings">簡単設定</Link>
                         </NavItem>
                     </NavList>
                     <NavGroup

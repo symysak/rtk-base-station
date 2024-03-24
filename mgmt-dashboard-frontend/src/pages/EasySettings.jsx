@@ -1,13 +1,9 @@
+//@ts-check
 import Layout from '../layout';
 import {
-    Alert,
     Button,
     Card,
     CardBody,
-    CardTitle,
-    CodeBlock,
-    CodeBlockCode,
-    Divider,
     Stack,
     StackItem,
     Form,
@@ -16,119 +12,93 @@ import {
     HelperText,
     HelperTextItem,
     Modal,
-    Progress,
-    ProgressMeasureLocation,
     Spinner,
     Grid,
     GridItem,
 
     PageSection,
     TextInput,
-    WizardStep
 } from '@patternfly/react-core';
-import { useEffect, useState, useReducer } from 'react';
-import cockpit from '../cockpit/pkg/lib/cockpit';
+import { useEffect, useState } from 'react';
+import {
+    sendDiscardCommand,
+    sendGetCommand,
+    sendSetCommand,
+    sendCompareCommand,
+    sendCommitCommand
+} from '../utils/commands';
+import { OperationPanel } from '../components/operationPanel';
+import React from 'react';
 
 function EasySettings() {
-    const [any, forceUpdate] = useReducer(num => num + 1, 0);
 
     const [numOfFinishedGetCommand, setnumOfFinishedGetCommand] = useState(0);
-    const [numOfFinishedSetCommand, setNumOfFinishedSetCommand] = useState(0);
 
-    const [username, setUsername] = useState(undefined);
-    const [password, setPassword] = useState(undefined);
-    const [mountpoint, setMountpoint] = useState(undefined);
-    const [latitude, setLatitude] = useState(undefined);
-    const [longitude, setLongitude] = useState(undefined);
-    const [height, setHeight] = useState(undefined);
+    const [username, setUsername] = useState(
+        /**
+         * @type {string | undefined}
+         */
+        (undefined));;
+    const [password, setPassword] = useState(
+        /**
+         * @type {string | undefined}
+         */
+        (undefined));
+    const [mountpoint, setMountpoint] = useState(
+        /**
+         * @type {string | undefined}
+         */
+        (undefined));
+    const [latitude, setLatitude] = useState(
+        /**
+         * @type {string | undefined}
+         */
+        (undefined));
+    const [longitude, setLongitude] = useState(
+        /**
+         * @type {string | undefined}
+         */
+        (undefined));
+    const [height, setHeight] = useState(
+        /**
+         * @type {string | undefined}
+         */
+        (undefined));
+    const [identifier, setIdentifier] = useState(
+        /**
+         * @type {string | undefined}
+         */
+        (undefined));
 
 
-    const [progressColor, setProgressColor] = useState('primary');
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-    const [sendingSetCommandNow, setSendingSetCommandNow] = useState(false);
+    const [buttonColor, setButtonColor] = useState(
+        /**
+         * @type {"primary" | "danger" | "link" | "tertiary" | "secondary" | "warning" | "plain" | "control" | undefined}
+         */
+        ('primary'));
+    const [sendingCommandName, setSendingCommandName] = useState(
+        /**
+         * @type {"set" | "compare" | "commit" | "none"}
+         */
+        ("none"));
     const [resultOfSetCommand, setResultOfSetCommand] = useState('設定を保存ボタンを押してください');
     const [resultOfCompareCommand, setResultOfCompareCommand] = useState('差分を表示ボタンを押してください');
     const [resultOfCommitCommand, setResultOfCommitCommand] = useState('設定を適用ボタンを押してください');
 
 
-    const cliPath = "~/rtk-base-station/mgmt-cli/mgmt-cli";
-    const configPath = "~/rtk-base-station/config/";
-    const sendDiscardCommand = async () => {
-        await cockpit.script(`${cliPath} -c ${configPath} discard`)
-            .then(data => {
-                console.log("[DISCARD] " + data);
-                setnumOfFinishedGetCommand(numOfFinishedGetCommand => numOfFinishedGetCommand + 1);
-            }).catch(exception => {
-                console.error(`Failed to discard`);
-                console.error(exception);
-            });
-    };
 
-    const sendGetCommand = async (key) => {
-        let res = undefined;
-        await cockpit.script(`${cliPath} -c ${configPath} get ${key}`)
-            .then(data => {
-                res = data.slice(0, -1);
-                setnumOfFinishedGetCommand(numOfFinishedGetCommand => numOfFinishedGetCommand + 1);
-                console.log(`[GET] ${key}: "${res}"`);
-            }).catch(exception => {
-                console.error(`Failed to get ${key}`);
-                console.error(exception);
-            });
-        return res;
-    };
 
-    const sendSetCommand = async (key, value) => {
-        let res = undefined;
-        await cockpit.script(`${cliPath} -c ${configPath} set ${key} "${value}"`)
-            .then(data => {
-                console.log("[SET] " + data);
-                res = null;
-            }).catch(exception => {
-                console.error(`Failed to set ${key} ${value}`);
-                res = exception;
-            });
-        return res;
-    }
-
-    const sendCompareCommand = async () => {
-        setIsButtonDisabled(true);
-        await cockpit.script(`${cliPath} -c ${configPath} compare`)
-            .then(data => {
-                setResultOfCompareCommand(data);
-                setIsButtonDisabled(false);
-            }).catch(exception => {
-                console.error(`Failed to compare`);
-                console.error(exception);
-                setIsButtonDisabled(false);
-            });
-    };
-
-    const str2strPath = "~/rtk-base-station/str2str/";
-    const ntripcasterPath = "~/rtk-base-station/ntrip-caster/"
-    const sendCommitCommand = async () => {
-        setIsButtonDisabled(true);
-        setResultOfCommitCommand("");
-        
-        await cockpit.script(`${cliPath} -c ${configPath} commit -s ${str2strPath} -n ${ntripcasterPath}`)
-            .stream(data => {
-                setResultOfCommitCommand(resultOfCommitCommand => resultOfCommitCommand + data);
-            })
-            .then(data => {
-                setIsButtonDisabled(false);
-            }).catch(exception => {
-                console.error(`Failed to commit`);
-                console.error(exception);
-                setResultOfCommitCommand(resultOfCommitCommand => resultOfCommitCommand + "エラーが発生しました: " + exception);
-                setIsButtonDisabled(false);
-            });
-    };
-
+    /*
+        ハンドラーの処理で考慮すべきこと
+        1. command実行中は、多重実行を避けるためにボタンをdisabledにすること。
+        2. command実行中は、ボタンの色を以下のように変更すること。
+            1. ハンドラーが呼ばれたら、primary
+            2. commandが成功したら、success
+            3. commandが失敗したら、primary
+    */
     const setButtonHandler = async () => {
-        setSendingSetCommandNow(true);
-        setNumOfFinishedSetCommand(0);
-        setIsButtonDisabled(true);
-        setProgressColor("primary");
+        setSendingCommandName("set");
+        setButtonColor("primary");
         if (
 
             username == undefined
@@ -137,12 +107,13 @@ function EasySettings() {
             || latitude == undefined
             || longitude == undefined
             || height == undefined
+            || identifier == undefined
 
         ) {
             console.log("getコマンドが失敗しているkeyがあります");
             setResultOfSetCommand("設定の保存に失敗しました。")
-            setIsButtonDisabled(false);
-            setSendingSetCommandNow(false);
+            setSendingCommandName("none");
+            setButtonColor("danger");
         } else {
             const commandList = [
                 await sendSetCommand("Ntripcaster.Username", username),
@@ -151,6 +122,7 @@ function EasySettings() {
                 await sendSetCommand("Ntripcaster.Latitude", latitude),
                 await sendSetCommand("Ntripcaster.Longitude", longitude),
                 await sendSetCommand("Ntripcaster.Height", height),
+                await sendSetCommand("Ntripcaster.Sourcetable.Identifier", identifier),
             ];
     
             let failed = false;
@@ -158,34 +130,86 @@ function EasySettings() {
                 const res = commandList[i];
                 if(res != null){
                     failed = true;
-                    setProgressColor("danger");
-                    setIsButtonDisabled(false);
-                    setSendingSetCommandNow(false);
+                    setButtonColor("danger");
+                    setSendingCommandName("none");
                     setResultOfSetCommand("エラーが発生しました: " + res.message);
                     break;
                 }
-                setNumOfFinishedSetCommand(numOfFinishedSetCommand => numOfFinishedSetCommand + 1);
             }
     
             if(!failed){
-                setIsButtonDisabled(false);
-                setSendingSetCommandNow(false);
+                setSendingCommandName("none");
+                setButtonColor("primary");
                 setResultOfSetCommand("設定を保存しました。");
             }
         }
     }
 
-    // getしたりsetしたりするKeyの数
-    const numOfItems = 7;
-    useState(() => {
+    const compareButtonHandlar = async () => {
+        setSendingCommandName("compare");
+        setButtonColor("primary");
+        const res = await sendCompareCommand();
+        if (res === undefined) {
+            // あり得ない
+        } else if (res instanceof Error) {
+            setResultOfCompareCommand("エラーが発生しました: " + res.message);
+            setSendingCommandName("none");
+            setButtonColor("danger");
+        } else {
+            setResultOfCompareCommand(res);
+            setSendingCommandName("none");
+            setButtonColor("primary");
+        }
+    };
+
+    const commitButtonHandlar = async () => {
+        setSendingCommandName("commit");
+        setResultOfCommitCommand("");
+        setButtonColor("primary");
+        const res = await sendCommitCommand(setResultOfCommitCommand);
+        if(res == null){
+            setSendingCommandName("none");
+            setButtonColor("primary");
+        } else {
+            setResultOfCommitCommand(resultOfCommitCommand => resultOfCommitCommand + "エラーが発生しました: " + res.message);
+            setSendingCommandName("none");
+            setButtonColor("danger");
+        }
+
+    };
+
+    // 下のuseEffectで実行するコマンド数
+    const numOfItems = 8;
+    useEffect(() => {
         (async () => {
-            await sendDiscardCommand();
-            setUsername(await sendGetCommand("Ntripcaster.Username"));
-            setPassword(await sendGetCommand("Ntripcaster.Password"));
-            setMountpoint(await sendGetCommand("Ntripcaster.Mountpoint"));
-            setLatitude(await sendGetCommand("Ntripcaster.Latitude"));
-            setLongitude(await sendGetCommand("Ntripcaster.Longitude"));
-            setHeight(await sendGetCommand("Ntripcaster.Height"));
+            // running-configとweb設定画面の同期を取るために、最初にdiscardを実行する
+            // setコマンドを実行しただけだと、new-configにしか反映されず、running-configを使用するgetコマンドを実行した際に画面に差異が生じる
+            await sendDiscardCommand()
+            setnumOfFinishedGetCommand(numOfFinishedGetCommand => numOfFinishedGetCommand + 1);
+            /**
+             * @type {Array<[React.Dispatch<any>, any]>}
+             */
+            const commands = [
+                [setUsername, await sendGetCommand("Ntripcaster.Username")],
+                [setPassword, await sendGetCommand("Ntripcaster.Password")],
+                [setMountpoint, await sendGetCommand("Ntripcaster.Mountpoint")],
+                [setLatitude, await sendGetCommand("Ntripcaster.Latitude")],
+                [setLongitude, await sendGetCommand("Ntripcaster.Longitude")],
+                [setHeight, await sendGetCommand("Ntripcaster.Height")],
+                [setIdentifier, await sendGetCommand("Ntripcaster.Sourcetable.Identifier")],
+            ];
+            for(let i = 0; i < commands.length; i++){
+                const res = commands[i][1];
+                if(res === Error){
+                    console.error("getコマンドが失敗しているkeyがあります");
+                    break;
+                } else if (res === undefined){
+                    // あり得ない
+                } else {
+                    commands[i][0](res);
+                    setnumOfFinishedGetCommand(numOfFinishedGetCommand => numOfFinishedGetCommand + 1);
+                }
+            }
         })()
     }, [])
 
@@ -197,6 +221,7 @@ function EasySettings() {
                     isOpen={numOfFinishedGetCommand != numOfItems}
                     showClose={false}
                     width="70%"
+                    aria-label='Loading...'
                 >
                     <Button variant="tertiary"><Spinner /></Button>
                     <br />
@@ -211,6 +236,7 @@ function EasySettings() {
                                         <TextInput
                                             value={username}
                                             onChange={(_, value) => setUsername(value)}
+                                            id="username"
                                         />
                                         <FormHelperText>
                                             <HelperText>
@@ -222,6 +248,7 @@ function EasySettings() {
                                         <TextInput
                                             value={password}
                                             onChange={(_, value) => setPassword(value)}
+                                            id="password"
                                         />
                                         <FormHelperText>
                                             <HelperText>
@@ -233,6 +260,7 @@ function EasySettings() {
                                         <TextInput
                                             value={mountpoint}
                                             onChange={(_, value) => setMountpoint(value)}
+                                            id="mountpoint"
                                         />
                                     </FormGroup>
                                     <Grid hasGutter>
@@ -241,10 +269,11 @@ function EasySettings() {
                                                 <TextInput
                                                     value={latitude}
                                                     onChange={(_, value) => setLatitude(value)}
+                                                    id="latitude"
                                                 />
                                                 <FormHelperText>
                                                     <HelperText>
-                                                        <HelperTextItem>小数第8位程度での入力をお勧めします。</HelperTextItem>
+                                                        <HelperTextItem>小数第8位程度まで入力することをお勧めします。</HelperTextItem>
                                                     </HelperText>
                                                 </FormHelperText>
                                             </FormGroup>
@@ -254,10 +283,11 @@ function EasySettings() {
                                                 <TextInput
                                                     value={longitude}
                                                     onChange={(_, value) => setLongitude(value)}
+                                                    id="longitude"
                                                 />
                                                 <FormHelperText>
                                                     <HelperText>
-                                                        <HelperTextItem>小数第8位程度での入力をお勧めします。</HelperTextItem>
+                                                        <HelperTextItem>小数第8位程度まで入力することをお勧めします。</HelperTextItem>
                                                     </HelperText>
                                                 </FormHelperText>
                                             </FormGroup>
@@ -267,83 +297,44 @@ function EasySettings() {
                                                 <TextInput
                                                     value={height}
                                                     onChange={(_, value) => setHeight(value)}
+                                                    id="height"
                                                 />
                                                 <FormHelperText>
                                                     <HelperText>
-                                                        <HelperTextItem>小数第4位程度での入力をお勧めします。</HelperTextItem>
+                                                        <HelperTextItem>小数第4位程度まで入力することをお勧めします。</HelperTextItem>
                                                     </HelperText>
                                                 </FormHelperText>
                                             </FormGroup>
                                         </GridItem>
                                     </Grid>
+                                    <FormGroup label="Identifier">
+                                        <TextInput
+                                            value={identifier}
+                                            onChange={(_, value) => setIdentifier(value)}
+                                            id="identifier"
+                                        />
+                                        <FormHelperText>
+                                            <HelperText>
+                                                <HelperTextItem>都市名を英語で設定するのが慣習です。</HelperTextItem>
+                                            </HelperText>
+                                        </FormHelperText>
+                                    </FormGroup>
                                 </Form>
                             </CardBody>
                         </Card>
                         <br />
-                        <Card>
-                            <CardTitle>
-                                操作
-                            </CardTitle>
-                            <CardBody>
-                                <Alert variant="warning" title="操作は順番に行ってください。" />
-                                <br />
-                                <Divider />
-                                <br />
-                                <Button
-                                    variant="primary"
-                                    isDisabled={isButtonDisabled}
-                                    onClick={() => setButtonHandler()}
-                                >
-                                    設定を保存
-                                </Button>
-                                <CodeBlock>
-                                    <CodeBlockCode>
-                                        {resultOfSetCommand}
-                                    </CodeBlockCode>
-                                </CodeBlock>
-                                <Modal
-                                    isOpen={sendingSetCommandNow}
-                                    showClose={false}
-                                    width="70%"
-                                >
-                                    <Button variant="tertiary"><Spinner /></Button>
-                                </Modal>
-                                <br />
-                                <Divider />
-                                <br />
-                                <Button
-                                    variant="primary"
-                                    onClick={() => sendCompareCommand()}
-                                    isDisabled={isButtonDisabled}
-                                >
-                                    差分を表示
-                                </Button>
-                                <CodeBlock>
-                                    <CodeBlockCode>
-                                        {resultOfCompareCommand}
-                                    </CodeBlockCode>
-                                </CodeBlock>
-                                <br />
-                                <Divider />
-                                <br />
-                                <Button
-                                    variant="primary"
-                                    onClick={() => sendCommitCommand()}
-                                    isDisabled={isButtonDisabled}
-                                >
-                                    設定を適用
-                                </Button>
-                                <p>設定の適用に数十秒かかります。この画面のまま「Commit Completed」と表示されるまでお待ちください。</p>
-                                <CodeBlock>
-                                    <CodeBlockCode>
-                                        {resultOfCommitCommand}
-                                    </CodeBlockCode>
-                                </CodeBlock>
-                            </CardBody>
-                        </Card>
+                        <OperationPanel
+                            buttonColor={buttonColor}
+                            sendingCommandName={sendingCommandName}
+                            setButtonHandler={setButtonHandler}
+                            resultOfSetCommand={resultOfSetCommand}
+                            compareButtonHandlar={compareButtonHandlar}
+                            resultOfCompareCommand={resultOfCompareCommand}
+                            commitButtonHandlar={commitButtonHandlar}
+                            resultOfCommitCommand={resultOfCommitCommand}
+                        />
                     </StackItem>
                 </Stack>
-
             </PageSection>
         </Layout>
     );

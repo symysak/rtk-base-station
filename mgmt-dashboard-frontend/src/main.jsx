@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import Status from './pages/Status.jsx'
 import EasySettings from './pages/EasySettings.jsx'
 import SateliteSelection from './pages/SateliteSelection.jsx'
 import {
@@ -10,6 +11,10 @@ import {
 const routes = [
     {
         path: "/",
+        element: <Status />,
+    },
+    {
+        path: "/easy-settings",
         element: <EasySettings />,
     },
     {
