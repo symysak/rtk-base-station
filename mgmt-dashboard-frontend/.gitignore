@@ -1,35 +1,24 @@
-# Please keep this file sorted (LC_COLLATE=C.UTF-8),
-# grouped into the 3 categories below:
-#  - general patterns (match in all directories)
-#  - patterns to match files at the toplevel
-#  - patterns to match files in subdirs
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# general patterns
-*.pyc
-*.rpm
+node_modules
+dist
+dist-ssr
+*.local
 
-# toplevel (/...)
-/Test*.html
-/Test*.json
-/Test*.log
-/Test*.log.gz
-/Test*.png
-/*.whl
-/bots
-/cockpit-*.tar.xz
-/cockpit-navigator.spec
-/dist/
-/package-lock.json
-/pkg/
-/node_modules/
-/tmp/
-/tools/
- 
-# subdirs (/subdir/...)
-/packaging/arch/PKGBUILD
-/packaging/debian/changelog
-/po/*.pot
- /po/LINGUAS
-/test/common/
-/test/images/
-/test/static-code
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

@@ -20,7 +20,7 @@ var compareCmd = &cobra.Command{
 		// running-configとnew-configを読み込む
 		raw_running_config, err := os.ReadFile(configDir + "running-config.json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		var running_config models.Config
@@ -28,7 +28,7 @@ var compareCmd = &cobra.Command{
 
 		raw_new_config, err := os.ReadFile(configDir + "new-config.json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		var new_config models.Config

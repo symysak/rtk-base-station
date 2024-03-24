@@ -44,7 +44,7 @@ var commitCmd = &cobra.Command{
 		// running-configとnew-configを読み込む
 		raw_running_config, err := os.ReadFile(configDir + "running-config.json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		var running_config models.Config
@@ -52,7 +52,7 @@ var commitCmd = &cobra.Command{
 
 		raw_new_config, err := os.ReadFile(configDir + "new-config.json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		var new_config models.Config
@@ -63,18 +63,18 @@ var commitCmd = &cobra.Command{
 		// navsystemというカスタムバリデーションを登録
 		err = validate.RegisterValidation("navsystem", validateNavSystem)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		// generatorというカスタムバリデーションを登録
 		err = validate.RegisterValidation("generator", validateGenerator)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		err = validate.Struct(new_config)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 
@@ -88,7 +88,7 @@ var commitCmd = &cobra.Command{
 				ok2 = true
 			}
 			if ok1 != ok2 {
-				fmt.Println("Username and Password must be set together")
+				fmt.Fprintln(os.Stderr, "Username and Password must be set together")
 				os.Exit(1)
 			}
 		}
@@ -120,14 +120,14 @@ var commitCmd = &cobra.Command{
 		// コミットが終わったのでconfigDir + running-config.jsonを書き換える
 		new_running_config, err := os.Create(configDir + "running-config.json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		defer new_running_config.Close()
 		encoder2 := json.NewEncoder(new_running_config)
 		encoder2.SetIndent("", "  ")
 		if err := encoder2.Encode(new_config); err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 
@@ -136,14 +136,14 @@ var commitCmd = &cobra.Command{
 		fmt.Println("config backed up: " + configDir + "running-config." + date + ".json")
 		running_config_bak, err := os.Create(configDir + "running-config." + date + ".json")
 		if err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 		defer running_config_bak.Close()
 		encoder3 := json.NewEncoder(running_config_bak)
 		encoder3.SetIndent("", "  ")
 		if err := encoder3.Encode(running_config); err != nil {
-			fmt.Println(err)
+			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
 
@@ -203,13 +203,13 @@ func checkNtripCaster() {
 	// ntripcasterDirの存在確認
 	f, err := os.Stat(ntripcasterDir)
 	if os.IsNotExist(err) || !f.IsDir() {
-		fmt.Println(ntripcasterDir + " is not exist or not directory")
+		fmt.Fprintln(os.Stderr, ntripcasterDir + " is not exist or not directory")
 		os.Exit(1)
 	}
 	// ntripcasterのconfigが存在するか確認
 	f, err = os.Stat(ntripcasterDir + "entrypoint.sh")
 	if os.IsNotExist(err) || f.IsDir() {
-		fmt.Println(ntripcasterDir + "entrypoint.sh is not exist or directory")
+		fmt.Fprintln(os.Stderr, ntripcasterDir + "entrypoint.sh is not exist or directory")
 		os.Exit(1)
 	}
 }
@@ -219,13 +219,13 @@ func checkStr2Str() {
 	// str2strDirの存在確認
 	f, err := os.Stat(str2strDir)
 	if os.IsNotExist(err) || !f.IsDir() {
-		fmt.Println(str2strDir + " is not exist or not directory")
+		fmt.Fprintln(os.Stderr, str2strDir + " is not exist or not directory")
 		os.Exit(1)
 	}
 	// str2strのconfigが存在するか確認
 	f, err = os.Stat(str2strDir + "entrypoint.sh")
 	if os.IsNotExist(err) || f.IsDir() {
-		fmt.Println(str2strDir + "entrypoint.sh is not exist or directory")
+		fmt.Fprintln(os.Stderr, str2strDir + "entrypoint.sh is not exist or directory")
 		os.Exit(1)
 	}
 }
@@ -332,7 +332,7 @@ out="`
 
 	f, err := os.Create(ntripcasterDir + "entrypoint.sh")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 	defer f.Close()
@@ -348,8 +348,8 @@ out="`
 	err = cmd.Run()
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println(stderr.String())
+		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, stderr.String())
 		os.Exit(1)
 	}
 	fmt.Println(stdout.String())
@@ -369,7 +369,7 @@ func commitStr2str(new_config models.Config) {
 
 	f, err := os.Create(str2strDir + "entrypoint.sh")
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 	defer f.Close()
@@ -385,8 +385,8 @@ func commitStr2str(new_config models.Config) {
 	err = cmd.Run()
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println(stderr.String())
+		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, stderr.String())
 		os.Exit(1)
 	}
 	fmt.Println(stdout.String())
@@ -404,8 +404,8 @@ func commitUbloxReceiver(new_config models.Config) {
 	cmd.Stderr = &stderr
 	err := cmd.Run()
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println(stderr.String())
+		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, stderr.String())
 		os.Exit(1)
 	}
 	// "extention PROTVER=XX.XX"という形式で出力されるので、XX.XXの部分だけ取り出す
@@ -421,8 +421,8 @@ func commitUbloxReceiver(new_config models.Config) {
 	cmd.Stderr = &stderr
 	err = cmd.Run()
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println(stderr.String())
+		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, stderr.String())
 		os.Exit(1)
 	}
 
@@ -588,8 +588,8 @@ func commitUbloxReceiver(new_config models.Config) {
 	cmd.Stderr = &stderr
 	err = cmd.Run()
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println(stderr.String())
+		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, stderr.String())
 		os.Exit(1)
 	}
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
@@ -599,8 +599,8 @@ func commitUbloxReceiver(new_config models.Config) {
 	cmd.Stderr = &stderr
 	err = cmd.Run()
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println(stderr.String())
+		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, stderr.String())
 		os.Exit(1)
 	}
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
@@ -619,8 +619,8 @@ func commitUbloxReceiver(new_config models.Config) {
 		cmd.Stderr = &stderr
 		err := cmd.Run()
 		if err != nil {
-			fmt.Println(err)
-			fmt.Println(stderr.String())
+			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintln(os.Stderr, stderr.String())
 			os.Exit(1)
 		}
 	}
@@ -631,8 +631,8 @@ func commitUbloxReceiver(new_config models.Config) {
 	cmd.Stderr = &stderr
 	err = cmd.Run()
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println(stderr.String())
+		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, stderr.String())
 		os.Exit(1)
 	}
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
@@ -642,8 +642,8 @@ func commitUbloxReceiver(new_config models.Config) {
 	cmd.Stderr = &stderr
 	err = cmd.Run()
 	if err != nil {
-		fmt.Println(err)
-		fmt.Println(stderr.String())
+		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, stderr.String())
 		os.Exit(1)
 	}
 	fmt.Println(".") // ちゃんと処理してますよ感を出す

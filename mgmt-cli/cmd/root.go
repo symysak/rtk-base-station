@@ -16,7 +16,7 @@ var rootCmd = &cobra.Command{
 		// configDirの存在確認
 		f, err := os.Stat(configDir)
 		if os.IsNotExist(err) || !f.IsDir() {
-			fmt.Println(configDir + " is not exist or not directory")
+			fmt.Fprintln(os.Stderr, configDir + " is not exist or not directory")
 			os.Exit(1)
 		}
 	},
