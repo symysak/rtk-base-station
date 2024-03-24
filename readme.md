@@ -271,6 +271,12 @@ cd ..
 cp config/new-config.example.json config/new-config.json
 cp config/running-config.example.json config/running-config.json
 
+cd mgmt-dashboard-frontend
+npm install
+npm run build
+cd ..
+mgmt-cli/mgmt-cli -c config/ commit -s str2str/ -n ntrip-caster/
+
 ```
 ### ZED-F9Pの設定
 #### 
