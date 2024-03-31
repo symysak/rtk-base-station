@@ -1,0 +1,10 @@
+{
+  "menu": {
+    "rtk-dashboard": {
+        "label": "RTK-GNSS基地局 管理ページ",
+        "order": 0,
+        "path": "index.html"
+     }
+  },
+  "content-security-policy": "default-src 'self' 'unsafe-inline'"
+}
