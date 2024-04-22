@@ -61,7 +61,7 @@ function Layout(props) {
                 <Nav aria-label="Nav">
                     <NavList>
                         <NavItem>
-                            <Link to="/">ホーム</Link>
+                            <Link to="/">ホーム画面</Link>
                         </NavItem>
                         <NavItem>
                             <Link to="/easy-settings">簡単設定</Link>
