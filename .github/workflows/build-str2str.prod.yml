@@ -17,6 +17,8 @@ name: (PROD) str2str Docker Build and Push
 
 jobs:
     publish_docker_image:
+      permissions:
+        packages: write
       runs-on: ubuntu-latest
       steps:
         - name: Checkout
