@@ -5,7 +5,7 @@ go 1.21.6
 require (
 	github.com/go-playground/validator/v10 v10.21.0
 	github.com/google/go-cmp v0.6.0
-	github.com/spf13/cobra v1.8.0
+	github.com/spf13/cobra v1.8.1
 )
 
 require (
