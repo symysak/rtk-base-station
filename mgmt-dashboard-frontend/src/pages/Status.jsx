@@ -8,7 +8,7 @@ const Status = () => {
     return (
         <Layout>
             <PageSection>
-                <p>将来的には正常に動作しているかなどを表示するページにする</p>
+                <p>将来的には正常に動作しているかなどを表示するページにする予定</p>
             </PageSection>
         </Layout>
     );

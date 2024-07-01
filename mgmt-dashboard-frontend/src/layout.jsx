@@ -66,6 +66,9 @@ function Layout(props) {
                         <NavItem>
                             <Link to="/easy-settings">簡単設定</Link>
                         </NavItem>
+                        <NavItem>
+                            <Link to="/test-page">試験的実装用</Link>
+                        </NavItem>
                     </NavList>
                     <NavGroup
                         title="受信機設定"
