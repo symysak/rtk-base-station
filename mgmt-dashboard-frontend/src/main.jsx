@@ -21,6 +21,10 @@ const routes = [
         path: "satelite",
         element: <SateliteSelection />,
     },
+    {
+        path: "/test-page",
+        element: <Setting_exam />,
+    },
 ];
 
 const router = createHashRouter(routes,

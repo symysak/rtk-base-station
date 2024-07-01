@@ -64,7 +64,7 @@ function Layout(props) {
                             <Link to="/">ホーム画面</Link>
                         </NavItem>
                         <NavItem>
-                            <Link to="/easy-settings">設定</Link>
+                            <Link to="/easy-settings">簡単設定</Link>
                         </NavItem>
                     </NavList>
                     <NavGroup
