@@ -35,7 +35,7 @@ function Status() {
 
     const [buttonColor, setButtonColor] = useState(
         /**
-         * @type {"primary" | "danger" | "link" | "tertiary" | "secondary" | "warning" | "plain" | "control" | undefined}
+          @type {"primary" | "danger" | "link" | "tertiary" | "secondary" | "warning" | "plain" | "control" | undefined}
          */
         ('primary'));
     const [sendingCommandName, setSendingCommandName] = useState(
