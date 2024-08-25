@@ -12,25 +12,43 @@ const Status = () => {
 
   //ここからドロップダウン用State
     const [isOpen, setIsOpen] = React.useState(false);
+    const [isOpen1, setIsOpen1] = React.useState(false);
     const [selected, setSelected] = React.useState(
-        /**
-          @type {"Satelite1" | "Satelite2" | "Satelite3" | "undefined"}
-         */
-        ('undefined'));
+      /**
+        @type {"Satelite1" | "Satelite2" | "Satelite3" | "undefined"}
+      */
+      ('undefined'));
+    const [selected1, setSelected1] = React.useState(
+      /**
+        @type {"Satelite1" | "Satelite2" | "Satelite3" | "undefined"}
+      */
+      ('Satelite1'));
     const [isDisabled, setIsDisabled] = React.useState(false);
+    const [isDisabled1, setIsDisabled1] = React.useState(false);
     const onToggleClick = () => {
-        setIsOpen(!isOpen);
+      setIsOpen(!isOpen);
     };
+    const onToggleClick1 = () => {
+      setIsOpen(!isOpen1);
+  };
     const onSelect = (_event, value) => {
         console.log('selected', value);
         setSelected(value);
         setIsOpen(false);
     };
+    const onSelect1 = (_event, value) => {
+      console.log('selected', value);
+      setSelected1(value);
+      setIsOpen1(false);
+  };
     const toggle = toggleRef => <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isDisabled={isDisabled} style={{
         width: '200px'
     }}>
         {selected}
         </MenuToggle>;
+    const toggle1 = toggleRef => <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen1} isDisabled={isDisabled} style={{
+        width: '500px'
+    }}>{selected1}</MenuToggle>;
     //ここまでドロップダウン用State
 
     //ここからスライダー用State
@@ -112,10 +130,21 @@ const Status = () => {
         setValueDiscrete(newValue);
       };
       //ここまでスライダー用State
+      /*
+      <Alert title="DropDown">
+            <Select id="single-select" isOpen={isOpen} selected={selected} onSelect={onSelect} onOpenChange={isOpen => setIsOpen(isOpen)} toggle={toggle} shouldFocusToggleOnSelect>
+            <SelectList>
+            <SelectOption value="Satelite1">Satelite1</SelectOption>
+            <SelectOption value="Satelite2">Satelite2</SelectOption>
+            <SelectOption value="Satelite3">Satelite3</SelectOption>
+            </SelectList>
+            </Select>
+            </Alert>
+      */
     return(
         <Layout>
           <PageSection>
-            <Alert title="DropDown">
+          <Alert title="DropDown">
             <Select id="single-select" isOpen={isOpen} selected={selected} onSelect={onSelect} onOpenChange={isOpen => setIsOpen(isOpen)} toggle={toggle} shouldFocusToggleOnSelect>
             <SelectList>
             <SelectOption value="Satelite1">Satelite1</SelectOption>
@@ -125,7 +154,7 @@ const Status = () => {
             </Select>
             </Alert>
             <Alert title="DropDown1">
-            <Select id="single-select" isOpen={isOpen} selected={selected} onSelect={onSelect} onOpenChange={isOpen => setIsOpen(isOpen)} toggle={toggle} shouldFocusToggleOnSelect>
+            <Select id="single-slect1" isOpen={isOpen1} selected={selected1} onSelect={onSelect1} onOpenChange={isOpen1 => setIsOpen1(isOpen1)} toggle={toggle1} shouldFocusToggleOnSelect>
             <SelectList>
             <SelectOption value="Satelite1">Satelite1</SelectOption>
             <SelectOption value="Satelite2">Satelite2</SelectOption>
@@ -135,7 +164,6 @@ const Status = () => {
             </Alert>
           </PageSection>
           <br />
-          
           <PageSection>
             <Alert title="Slider">
             <Slider value={valueDiscrete} isInputVisible inputValue={inputValueDiscrete} customSteps={stepsDiscrete} onChange={onChangeDiscrete} />
