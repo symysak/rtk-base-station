@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import Status from './pages/Status.jsx'
 import EasySettings from './pages/EasySettings.jsx'
 import SateliteSelection from './pages/SateliteSelection.jsx'
-import Setting_exam from './pages/Setting_exam.jsx'
+import Setting_exam from './pages/test.jsx'
 import {
     createHashRouter,
     RouterProvider,

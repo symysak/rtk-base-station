@@ -19,6 +19,8 @@ import {
     Spinner,
     Title,
     TextContent,
+    Slider,
+    TextVariants,
 } from '@patternfly/react-core';
 import '@patternfly/react-core/dist/styles/base.css';
 import Layout from '../layout';
@@ -30,6 +32,7 @@ import {
     sendCompareCommand,
     sendCommitCommand
 } from '../utils/commands';
+
 
 function Status() {
 
@@ -352,7 +355,9 @@ function Status() {
             }
         })()
     }, []);
+    
 
+    
     return (
         <Layout>
             <PageSection>
@@ -375,6 +380,18 @@ function Status() {
                                 本実装時には本コードおよびそれにかかわるプログラム等はすべて削除しておくこと
                                 </p>
                             </CardBody>
+                        </Card>
+                    </StackItem>
+
+                    <br />
+
+                    <StackItem>
+                        <Card>
+                            <CardBody>
+                                <CardTitle>Command Test Area</CardTitle>
+                                
+                            </CardBody>
+                            
                         </Card>
                     </StackItem>
 
