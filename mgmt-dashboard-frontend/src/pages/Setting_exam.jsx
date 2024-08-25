@@ -18,6 +18,7 @@ import {
     Button,
     Spinner,
     Title,
+    Select, SelectOption, SelectList, MenuToggle,
     TextContent,
     Slider,
     TextVariants,
@@ -166,6 +167,27 @@ function Status() {
          * @type {boolean | undefined}
          */
         (undefined));
+
+        const [isOpen, setIsOpen] = React.useState(false);
+        const [selected, setSelected] = React.useState(
+            /**
+              @type {"Satelite1" | "Satelite2" | "Satelite3" | "undefined"}
+             */
+            ('undefined'));
+        const [isDisabled, setIsDisabled] = React.useState(false);
+        const onToggleClick = () => {
+            setIsOpen(!isOpen);
+        };
+        const onSelect = (_event, value) => {
+            console.log('selected', value);
+            setSelected(value);
+            setIsOpen(false);
+        };
+        const toggle = toggleRef => <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} isDisabled={isDisabled} style={{
+            width: '200px'
+        }}>
+            {selected}
+            </MenuToggle>;
 
     // ここまでConfig関連のstate
 
@@ -389,7 +411,13 @@ function Status() {
                         <Card>
                             <CardBody>
                                 <CardTitle>Command Test Area</CardTitle>
-                                
+                                <Select id="single-select" isOpen={isOpen} selected={selected} onSelect={onSelect} onOpenChange={isOpen => setIsOpen(isOpen)} toggle={toggle} shouldFocusToggleOnSelect>
+                                <SelectList>
+                                <SelectOption value="Satelite1">Satelite1</SelectOption>
+                                <SelectOption value="Satelite2">Satelite2</SelectOption>
+                                <SelectOption value="Satelite3">Satelite3</SelectOption>
+                                </SelectList>
+                                </Select>
                             </CardBody>
                             
                         </Card>
