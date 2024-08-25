@@ -18,6 +18,7 @@ import {
     Button,
     Spinner,
     Title,
+    Alert,
     Select, SelectOption, SelectList, MenuToggle,
     TextContent,
     Slider,
@@ -397,10 +398,11 @@ function Status() {
                     <StackItem>
                         <Card>
                             <CardBody>
-                            <Title headingLevel='h1' style={{color:"red"}}>試験的実装ページ</Title>
-                                <p style={{color:"red"}}>主に、試験的に試してみたいプログラムコード置き場
+                            <Alert variant="danger" title="試験的実装ページ" ouiaId="main" >
+                                <p style={{color:"red"}}>主に、試験的に試してみたいプログラムコード置き場<br />
                                 本実装時には本コードおよびそれにかかわるプログラム等はすべて削除しておくこと
                                 </p>
+                            </Alert>
                             </CardBody>
                         </Card>
                     </StackItem>
@@ -411,13 +413,18 @@ function Status() {
                         <Card>
                             <CardBody>
                                 <CardTitle>Command Test Area</CardTitle>
-                                <Select id="single-select" isOpen={isOpen} selected={selected} onSelect={onSelect} onOpenChange={isOpen => setIsOpen(isOpen)} toggle={toggle} shouldFocusToggleOnSelect>
+                                <Alert title="SelectList" ouiaId="Selection">
+                                <Select aria-label='Test' id="single-select" isOpen={isOpen} selected={selected} onSelect={onSelect} onOpenChange={isOpen => setIsOpen(isOpen)} toggle={toggle} shouldFocusToggleOnSelect>
                                 <SelectList>
                                 <SelectOption value="Satelite1">Satelite1</SelectOption>
                                 <SelectOption value="Satelite2">Satelite2</SelectOption>
                                 <SelectOption value="Satelite3">Satelite3</SelectOption>
                                 </SelectList>
                                 </Select>
+                                </Alert>
+                                <Alert title="Slider" ouiaId="Slider">
+                                    
+                                </Alert>
                             </CardBody>
                             
                         </Card>
