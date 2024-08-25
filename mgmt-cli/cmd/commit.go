@@ -203,13 +203,13 @@ func checkNtripCaster() {
 	// ntripcasterDirの存在確認
 	f, err := os.Stat(ntripcasterDir)
 	if os.IsNotExist(err) || !f.IsDir() {
-		fmt.Fprintln(os.Stderr, ntripcasterDir + " is not exist or not directory")
+		fmt.Fprintln(os.Stderr, ntripcasterDir+" is not exist or not directory")
 		os.Exit(1)
 	}
 	// ntripcasterのconfigが存在するか確認
 	f, err = os.Stat(ntripcasterDir + "entrypoint.sh")
 	if os.IsNotExist(err) || f.IsDir() {
-		fmt.Fprintln(os.Stderr, ntripcasterDir + "entrypoint.sh is not exist or directory")
+		fmt.Fprintln(os.Stderr, ntripcasterDir+"entrypoint.sh is not exist or directory")
 		os.Exit(1)
 	}
 }
@@ -219,13 +219,13 @@ func checkStr2Str() {
 	// str2strDirの存在確認
 	f, err := os.Stat(str2strDir)
 	if os.IsNotExist(err) || !f.IsDir() {
-		fmt.Fprintln(os.Stderr, str2strDir + " is not exist or not directory")
+		fmt.Fprintln(os.Stderr, str2strDir+" is not exist or not directory")
 		os.Exit(1)
 	}
 	// str2strのconfigが存在するか確認
 	f, err = os.Stat(str2strDir + "entrypoint.sh")
 	if os.IsNotExist(err) || f.IsDir() {
-		fmt.Fprintln(os.Stderr, str2strDir + "entrypoint.sh is not exist or directory")
+		fmt.Fprintln(os.Stderr, str2strDir+"entrypoint.sh is not exist or directory")
 		os.Exit(1)
 	}
 }
@@ -233,55 +233,65 @@ func checkStr2Str() {
 // ntrip-casterのcommit処理を行う関数
 func commitNtripCaster(new_config models.Config) {
 	// ntrip-casterのコンテナのentrypoint.shを書き換える
-	var text string
-	text += `#!/bin/bash
+	var outBase0 string
+	outBase0 += `#!/bin/bash
 
-out="`
+outBase0="`
 
 	if new_config.Ntripcaster.Username != "" && new_config.Ntripcaster.Password != "" {
-		text += "ntripc://"
-		text += new_config.Ntripcaster.Username
-		text += ":"
-		text += new_config.Ntripcaster.Password
-		text += "@:2101"
+		outBase0 += "ntripc://"
+		outBase0 += new_config.Ntripcaster.Username
+		outBase0 += ":"
+		outBase0 += new_config.Ntripcaster.Password
+		outBase0 += "@:"
 	} else {
-		text += "ntripc://:2101"
+		outBase0 += "ntripc://:"
 	}
 
-	text += "/"
+	// port number
 
-	text += new_config.Ntripcaster.Mountpoint + ":"
-	text += new_config.Ntripcaster.Sourcetable.Identifier + ";"
-	text += new_config.Ntripcaster.Sourcetable.Format + ";"
+	var outBase1 string
+	outBase1 += "/"
 
-	var tmp []string
-	// 0の場合は何もしない
-	tmp = append(tmp, "1005("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1005)+")")
+	outBase1 += new_config.Ntripcaster.Mountpoint + ":"
+	outBase1 += new_config.Ntripcaster.Sourcetable.Identifier + ";"
+	outBase1 += new_config.Ntripcaster.Sourcetable.Format + ";"
 
+	Msg1005 := "1005(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1005) + ")"
+
+	Msg1008 := ""
 	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1008 != 0 {
-		tmp = append(tmp, "1008("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1008)+")")
+		Msg1008 = "1008(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1008) + ")"
 	}
+	Msg1077 := ""
 	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1077 != 0 {
-		tmp = append(tmp, "1077("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1077)+")")
+		Msg1077 = "1077(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1077) + ")"
 	}
+	Msg1087 := ""
 	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1087 != 0 {
-		tmp = append(tmp, "1087("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1087)+")")
+		Msg1087 = "1087(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1087) + ")"
 	}
+	Msg1097 := ""
 	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1097 != 0 {
-		tmp = append(tmp, "1097("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1097)+")")
+		Msg1097 = "1097(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1097) + ")"
 	}
+	Msg1107 := ""
 	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1107 != 0 {
-		tmp = append(tmp, "1107("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1107)+")")
+		Msg1107 = "1107(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1107) + ")"
 	}
+	Msg1117 := ""
 	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1117 != 0 {
-		tmp = append(tmp, "1117("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1117)+")")
+		Msg1117 = "1117(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1117) + ")"
 	}
+	Msg1127 := ""
 	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1127 != 0 {
-		tmp = append(tmp, "1127("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1127)+")")
+		Msg1127 = "1127(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1127) + ")"
 	}
+	Msg1230 := ""
 	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1230 != 0 {
-		tmp = append(tmp, "1230("+strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1230)+")")
+		Msg1230 = "1230(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1230) + ")"
 	}
+
 	var msg string
 	for i := 0; i < len(tmp); i++ {
 		if i == len(tmp)-1 {
@@ -291,6 +301,10 @@ out="`
 			msg += ","
 		}
 	}
+	rtcm30 := 
+	rtcm31 :=
+	rtcm32 :=
+
 	text += msg
 
 	text += ";"
