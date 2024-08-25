@@ -37,8 +37,7 @@ function EasySettings() {
     const [username, setUsername] = useState(
         /**
          * @type {string | undefined}
-         */
-        (undefined));;
+         */(undefined));;
     const [password, setPassword] = useState(
         /**
          * @type {string | undefined}
