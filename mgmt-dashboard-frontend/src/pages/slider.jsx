@@ -9,33 +9,35 @@ const Status = () => {
     value: 0,
     label: '0'
   }, {
-    value: 12.5,
+    value: 10,
     label: '1',
-    isLabelHidden: true
   }, {
-    value: 25,
+    value: 20,
     label: '2'
   }, {
-    value: 37.5,
+    value: 30,
     label: '3',
-    isLabelHidden: true
   }, {
-    value: 50,
+    value: 40,
     label: '4'
+  },{
+    value: 50,
+    label: '5'
   }, {
-    value: 62.5,
-    label: '5',
-    isLabelHidden: true
+    value: 60,
+    label: '6',
   }, {
-    value: 75,
-    label: '6'
+    value: 70,
+    label: '7'
   }, {
-    value: 87.5,
-    label: '7',
-    isLabelHidden: true
+    value: 80,
+    label: '8',
   }, {
+    value: 90,
+    label: '9'
+  },{
     value: 100,
-    label: '8'
+    label: '10'
   }];
   const stepsPercent = [{
     value: 0,
