@@ -35,11 +35,6 @@ const Status = () => {
         </SelectList>
         </Select>
         </PageSection>
-        <PageSection>
-          <Alert>
-            
-          </Alert>
-        </PageSection>
     </Layout>
   )
 };
