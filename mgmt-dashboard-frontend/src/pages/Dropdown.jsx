@@ -35,6 +35,20 @@ const Status = () => {
         </SelectList>
         </Select>
         </PageSection>
+        <PageSection>
+        <Select id="option-variations-select" isOpen={isOpen1} selected={selected1} onSelect={onSelect} onOpenChange={isOpen1 => setIsOpen1(isOpen1)} toggle={toggle1} shouldFocusToggleOnSelect>
+        <SelectList>
+        <SelectOption value="Basic option">Basic option</SelectOption>
+        <SelectOption value="Option with description" description="This is a description">
+          Option with description
+        </SelectOption>
+        <SelectOption value="Disabled option" isDisabled>
+          Disabled option
+        </SelectOption>
+        <SelectOption value="See Menu for additional variations!">See Menu for additional variations!</SelectOption>
+        </SelectList>
+        </Select>
+        </PageSection>
     </Layout>
   )
 };
