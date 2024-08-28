@@ -6,23 +6,38 @@ import Layout from '../layout';
 const Status = () => {
   const [isOpen1, setIsOpen1] = React.useState(false);
   const [selected1, setSelected1] = React.useState('Select a value');
-  const onToggleClick = () => {
+  const onToggleClick1 = () => {
     setIsOpen1(!isOpen1);
   };
-  const onSelect = (_event, value) => {
+  const onSelect1 = (_event, value) => {
     console.log('selected', value);
     setSelected1(value);
     setIsOpen1(false);
   };
-  const toggle1 = toggleRef => <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen1} style={{
+  const toggle1 = toggleRef => <MenuToggle ref={toggleRef} onClick={onToggleClick1} isExpanded={isOpen1} style={{
     width: '200px'
   }}>
       {selected1}
     </MenuToggle>;
+    const [isOpen, setIsOpen] = React.useState(false);
+    const [selected, setSelected] = React.useState('Select a value');
+    const onToggleClick = () => {
+      setIsOpen(!isOpen);
+    };
+    const onSelect = (_event, value) => {
+      console.log('selected', value);
+      setSelected(value);
+      setIsOpen(false);
+    };
+    const toggle = toggleRef => <MenuToggle ref={toggleRef} onClick={onToggleClick} isExpanded={isOpen} style={{
+      width: '200px'
+    }}>
+        {selected}
+      </MenuToggle>;
   return (
     <Layout>
         <PageSection>
-        <Select id="option-variations-select" isOpen={isOpen1} selected={selected1} onSelect={onSelect} onOpenChange={isOpen1 => setIsOpen1(isOpen1)} toggle={toggle1} shouldFocusToggleOnSelect>
+        <Select id="option-variations-select" isOpen={isOpen} selected={selected} onSelect={onSelect} onOpenChange={isOpen => setIsOpen(isOpen)} toggle={toggle} shouldFocusToggleOnSelect>
         <SelectList>
         <SelectOption value="Basic option">Basic option</SelectOption>
         <SelectOption value="Option with description" description="This is a description">
@@ -36,11 +51,11 @@ const Status = () => {
         </Select>
         </PageSection>
         <PageSection>
-        <Select id="option-variations-select" isOpen={isOpen1} selected={selected1} onSelect={onSelect} onOpenChange={isOpen1 => setIsOpen1(isOpen1)} toggle={toggle1} shouldFocusToggleOnSelect>
+        <Select id="option-variations-select" isOpen={isOpen1} selected={selected1} onSelect={onSelect1} onOpenChange={isOpen1 => setIsOpen1(isOpen1)} toggle={toggle1} shouldFocusToggleOnSelect>
         <SelectList>
-        <SelectOption value="Basic option">Basic option</SelectOption>
-        <SelectOption value="Option with description" description="This is a description">
-          Option with description
+        <SelectOption value="Single">Single</SelectOption>
+        <SelectOption value="Double" description="Recomend">
+          Double
         </SelectOption>
         <SelectOption value="Disabled option" isDisabled>
           Disabled option
