@@ -39,24 +39,6 @@ const Status = () => {
     value: 100,
     label: '10'
   }];
-  const stepsPercent = [{
-    value: 0,
-    label: '0%'
-  }, {
-    value: 25,
-    label: '25%',
-    isLabelHidden: true
-  }, {
-    value: 50,
-    label: '50%'
-  }, {
-    value: 75,
-    label: '75%',
-    isLabelHidden: true
-  }, {
-    value: 100,
-    label: '100%'
-  }];
   const onChangeDiscrete = (_event, value, inputValue, setLocalInputValue) => {
     let newValue;
     let newInputValue;
