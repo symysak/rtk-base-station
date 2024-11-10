@@ -1,10 +1,38 @@
 import React from 'react';
-import {Slider, SliderOnChangeEvent} from '@patternfly/react-core';
+import {Alert, AlertProps, AlertGroup, AlertActionCloseButton, AlertVariant, InputGroup, InputGroupItem,Select, Slider, SliderOnChangeEvent} from '@patternfly/react-core';
 import Layout from '../layout';
-import { Alert, PageSection } from '@patternfly/react-core';
+import buttonStyles from '@patternfly/react-styles/css/components/Button/button';
+import { Button, PageSection } from '@patternfly/react-core';
 const Status = () => {
-  const [valueDiscrete, setValueDiscrete] = React.useState(60);
-  const [inputValueDiscrete, setInputValueDiscrete] = React.useState(6);
+
+
+  const [alerts, setAlerts] = React.useState([]);
+  const maxDisplayed = 1;
+  const addAlert = (title, variant, key) => {
+    removeAlert(1);
+    setAlerts(prevAlerts => [...prevAlerts, {
+      title,
+      variant,
+      key
+    }]);
+  };
+  const removeAlert = key => {
+    const newAlerts = alerts.filter(alert => alert.key !== key);
+    setAlerts(newAlerts);
+  };
+  const addDangerAlert_Min = () => {
+    addAlert('Danger alert : Over Min Value', 'danger', 1);
+  };
+  const addDangerAlert_Max = () => {
+    addAlert('Danger alert : Over Max Value', 'danger', 1);
+  };
+  const onOverflowClick = () => {
+    console.log('Overflow message clicked');
+  };
+
+
+  const [valueDiscrete, setValueDiscrete] = React.useState(62.5);
+  const [inputValueDiscrete, setInputValueDiscrete] = React.useState(5);
   const stepsDiscrete = [{
     value: 0,
     label: '0'
@@ -53,12 +81,14 @@ const Status = () => {
         newValue = Number(stepsDiscrete[stepsDiscrete.length - 1].value);
         newInputValue = maxValue;
         setLocalInputValue(maxValue);
+        addDangerAlert_Max();
       } else {
         const minValue = Number(stepsDiscrete[0].label);
         if (inputValue < minValue) {
           newValue = Number(stepsDiscrete[0].value);
           newInputValue = minValue;
           setLocalInputValue(minValue);
+          addDangerAlert_Min();
         } else {
           const stepIndex = stepsDiscrete.findIndex(step => Number(step.label) >= inputValue);
           if (Number(stepsDiscrete[stepIndex].label) === inputValue) {
@@ -83,6 +113,9 @@ const Status = () => {
   return (
     <Layout>
         <PageSection>
+      <AlertGroup isLiveRegion  >
+        {alerts.slice(0, maxDisplayed).map(({key, variant, title}) => <Alert isInline variant={AlertVariant[variant]} title={title} actionClose={<AlertActionCloseButton title={title} variantLabel={`${variant} alert`} onClose={() => removeAlert(key)} />} key={key} />)}
+      </AlertGroup>
         <Slider value={valueDiscrete} isInputVisible inputValue={inputValueDiscrete} customSteps={stepsDiscrete} onChange={onChangeDiscrete} />
         </PageSection>
         </Layout>
