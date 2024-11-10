@@ -3,8 +3,8 @@ import {Slider, SliderOnChangeEvent} from '@patternfly/react-core';
 import Layout from '../layout';
 import { Alert, PageSection } from '@patternfly/react-core';
 const Status = () => {
-  const [valueDiscrete, setValueDiscrete] = React.useState(62.5);
-  const [inputValueDiscrete, setInputValueDiscrete] = React.useState(5);
+  const [valueDiscrete, setValueDiscrete] = React.useState(60);
+  const [inputValueDiscrete, setInputValueDiscrete] = React.useState(6);
   const stepsDiscrete = [{
     value: 0,
     label: '0'
