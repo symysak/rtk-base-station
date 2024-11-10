@@ -7,6 +7,7 @@ const Status = () => {
 
 
   const [alerts, setAlerts] = React.useState([]);
+  const [alerts1, setAlerts1] = React.useState([]);
   const maxDisplayed = 1;
   const addAlert = (title, variant, key) => {
     removeAlert(1);
@@ -26,13 +27,10 @@ const Status = () => {
   const addDangerAlert_Max = () => {
     addAlert('Danger alert : Over Max Value', 'danger', 1);
   };
-  const onOverflowClick = () => {
-    console.log('Overflow message clicked');
-  };
 
 
-  const [valueDiscrete, setValueDiscrete] = React.useState(62.5);
-  const [inputValueDiscrete, setInputValueDiscrete] = React.useState(5);
+  const [valueDiscrete, setValueDiscrete] = React.useState(60);
+  const [inputValueDiscrete, setInputValueDiscrete] = React.useState(6);
   const stepsDiscrete = [{
     value: 0,
     label: '0'
@@ -90,6 +88,7 @@ const Status = () => {
           setLocalInputValue(minValue);
           addDangerAlert_Min();
         } else {
+          removeAlert(1);
           const stepIndex = stepsDiscrete.findIndex(step => Number(step.label) >= inputValue);
           if (Number(stepsDiscrete[stepIndex].label) === inputValue) {
             newValue = stepsDiscrete[stepIndex].value;
@@ -117,6 +116,9 @@ const Status = () => {
         {alerts.slice(0, maxDisplayed).map(({key, variant, title}) => <Alert isInline variant={AlertVariant[variant]} title={title} actionClose={<AlertActionCloseButton title={title} variantLabel={`${variant} alert`} onClose={() => removeAlert(key)} />} key={key} />)}
       </AlertGroup>
         <Slider value={valueDiscrete} isInputVisible inputValue={inputValueDiscrete} customSteps={stepsDiscrete} onChange={onChangeDiscrete} />
+        <AlertGroup isLiveRegion  >
+        {alerts1.slice(0, maxDisplayed).map(({key, variant, title}) => <Alert isInline variant={AlertVariant[variant]} title={title} actionClose={<AlertActionCloseButton title={title} variantLabel={`${variant} alert`} onClose={() => removeAlert(key)} />} key={key} />)}
+      </AlertGroup>
         </PageSection>
         </Layout>
     )
