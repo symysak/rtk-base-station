@@ -1,0 +1,307 @@
+- name: Install rtk-base-station
+  hosts: localhost
+  gather_facts: false
+  vars_prompt:
+    - name: username
+      prompt: "Enter the user name"
+      private: false
+    - name: password
+      prompt: "Enter the user password"
+      private: false
+  tasks:
+
+    - name: Create user
+      ansible.builtin.user:
+        name: "{{ username }}"
+        state: present
+        password: "{{ password }}"
+      become: true
+
+    - name: Ensure lingering enabled
+      ansible.builtin.command:
+        cmd: "loginctl enable-linger {{ username }}"
+        creates: /var/lib/systemd/linger/{{ username }}
+      become: true
+
+    - name: Install packages
+      ansible.builtin.dnf:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - glibc-langpack-ja
+        - cockpit
+        - podman
+        - cockpit-podman
+        - git
+        - gpsd
+        - gpsd-clients
+      become: true
+
+    - name: Check the system locale
+      ansible.builtin.command:
+        cmd: localectl status
+      register: localectl_result
+      check_mode: false
+      changed_when: false
+
+    - name: Change the system locale
+      ansible.builtin.command:
+        cmd: localectl set-locale LANG=ja_JP.utf8
+      when: "'LANG=ja_JP.utf8' not in localectl_result.stdout"
+      changed_when: "'LANG=ja_JP.utf8' not in localectl_result.stdout"
+      become: true
+
+    - name: Enable units
+      ansible.builtin.systemd_service:
+        name: "{{ item }}"
+        enabled: true
+        masked: false
+        state: started
+      with_items:
+        - cockpit.socket
+
+    - name: Configure git config
+      ansible.builtin.command:
+        cmd:
+          - git config --global http.postBuffer 524288000
+          - git config --global core.compression 0
+      become: true
+      become_user: "{{ username }}"
+
+    - name: Git clone
+      ansible.builtin.git:
+        repo: https://github.com/symysak/rtk-base-station.git
+        dest: /home/{{ username }}/rtk-base-station
+        recursive: yes
+      become: true
+      become_user: "{{ username }}"
+
+    - name: Copy udev rules
+      ansible.builtin.copy:
+        src: /home/{{ username }}/rtk-base-station/99-zed-f9p.rules
+        dest: /etc/udev/rules.d/
+      become: true
+
+    - name: Set serial port speed
+      ansible.builtin.command:
+        cmd: stty -F /dev/ttyACM0 230400
+      become: true
+
+    - name: Copy files
+      block:
+        - name: Copy ntrip-caster entrypoint
+          ansible.builtin.copy:
+            src: /home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.example.sh
+            dest: /home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.sh
+            mode: '0755'
+            owner: "{{ username }}"
+
+        - name: Copy str2str entrypoint
+          ansible.builtin.copy:
+            src: /home/{{ username }}/rtk-base-station/str2str/entrypoint.example.sh
+            dest: /home/{{ username }}/rtk-base-station/str2str/entrypoint.sh
+            mode: '0755'
+            owner: "{{ username }}"
+
+    - name: Run containers
+      block:
+        - name: Run str2str container
+          containers.podman.podman_container:
+            name: str2str
+            platform: linux/arm64
+            labels:
+              io.containers.autoupdate=registry
+              PODMAN_SYSTEMD_UNIT=container-str2str.service
+            group_add: keep-groups
+            device: /dev/ttyACM0:/dev/ttyACM0
+            net: host
+            healthcheck: /app/healthcheck.sh
+            healthcheck_retries: 2
+            healthcheck_interval: 4s
+            healthcheck_failure_action: kill
+            mount:
+              - type: bind
+                source: /home/{{ username }}/rtk-base-station/str2str/entrypoint.sh
+                destination: /config/entrypoint.sh
+                options: ro
+            image: ghcr.io/symysak/str2str:main
+            generate_systemd:
+              restart_policy: always
+              new: true
+              path: /home/{{ username }}/.config/systemd/user/
+              restart_sec: 1s
+
+        - name: Run ntrip-caster container
+          containers.podman.podman_container:
+            name: ntrip-caster
+            platform: linux/arm64
+            labels:
+              io.containers.autoupdate=registry
+              PODMAN_SYSTEMD_UNIT=container-ntrip-caster.service
+            net: host
+            healthcheck: curl --http0.9 127.0.0.1:2101
+            healthcheck_retries: 2
+            healthcheck_interval: 4s
+            healthcheck_failure_action: kill
+            mount:
+              - type: bind
+                source: /home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.sh
+                destination: /config/entrypoint.sh
+                options: ro
+            image: ghcr.io/symysak/ntrip-caster:main
+            generate_systemd:
+              restart_policy: always
+              new: true
+              path: /home/{{ username }}/.config/systemd/user/
+              restart_sec: 1s
+
+    - name: Start containers
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        daemon_reload: true
+        enabled: true
+        state: started
+      with_items:
+        - container-str2str
+        - container-ntrip-caster
+      become: true
+      become_user: "{{ username }}"
+
+    - name: Build mgmt-cli
+      block:
+        - name: Install go
+          ansible.builtin.get_url:
+            url: https://go.dev/dl/go1.22.0.linux-arm64.tar.gz
+            dest: /tmp/go1.22.0.linux-arm64.tar.gz
+
+        - name: Extract go
+          ansible.builtin.unarchive:
+            src: /tmp/go1.22.0.linux-arm64.tar.gz
+            dest: /usr/local
+            remote_src: true
+            creates: /usr/local/go
+
+        - name: Check go version
+          ansible.builtin.command:
+            cmd: /usr/local/go/bin/go version
+          changed_when: false
+
+        - name: Build
+          ansible.builtin.command:
+            cmd:
+              - cd /home/{{ username }}/rtk-base-station/mgmt-cli
+              - /usr/local/go/bin/go build -o mgmt-cli
+      
+    - name: Copy config files
+      block:
+        - name: Copy new-config.json
+          ansible.builtin.copy:
+            src: /home/{{ username }}/rtk-base-station/config/new-config.example.json
+            dest: /home/{{ username }}/rtk-base-station/config/new-config.json
+            owner: "{{ username }}"
+            mode: '0644'
+
+        - name: Copy running-config.json
+          ansible.builtin.copy:
+            src: /home/{{ username }}/rtk-base-station/config/running-config.example.json
+            dest: /home/{{ username }}/rtk-base-station/config/running-config.json
+            owner: "{{ username }}"
+            mode: '0644'
+
+    - name: Enable firewalld
+      ansible.builtin.systemd:
+        name: firewalld
+        enabled: true
+        state: started
+      become: true
+
+    - name: Firewalld setting
+      block:
+
+      - name: service settinng
+        ansible.posix.firewalld_zone:
+          service: "{{ item }}"
+          parmanent: true
+          state: enabled
+        with_items:
+          - cockpit
+          - ssh
+      - name: port setting
+        ansible.posix.firewalld_zone:
+          port: "{{ item }}"
+          parmanent: true
+          state: enabled
+        with_items:
+          - 2101/tcp
+          - 2102/tcp
+
+    - name: Install web gui
+      block:
+        - name: Make directories
+          ansible.builtin.file:
+            path: "{{ item }}"
+            state: directory
+          with_items:
+            - /home/{{ username }}/rtk-base-station/mgmt-dashboard-frontend/dist
+            - /home/{{ username }}/.local/share/cockpit
+          become: true
+          become_user: "{{ username }}"
+
+        - name: Create symlink
+          ansible.builtin.file:
+            src: /home/{{ username }}/rtk-base-station/mgmt-dashboard-frontend/dist
+            dest: /home/{{ username }}/.local/share/cockpit/rtk-dashboard
+            state: link
+          become: true
+          become_user: "{{ username }}"
+
+        - name: Install nodejs
+          ansible.builtin.dnf:
+            name: nodejs npm
+            state: present
+          become: true
+
+        - name: Install n
+          ansible.builtin.command:
+            cmd: npm install n -g
+          become: true
+
+        - name: Install lts
+          ansible.builtin.command:
+            cmd: n lts
+          become: true
+
+        - name: Uninstall nodejs npm
+          ansible.builtin.dnf:
+            name: nodejs npm
+            state: absent
+          become: true
+
+        - name: Install npm
+          ansible.builtin.command:
+            cmd: npm install
+          args:
+            chdir: /home/{{ username }}/rtk-base-station/mgmt-dashboard-frontend
+          become: true
+          become_user: "{{ username }}"
+          
+        - name: Build
+          ansible.builtin.command:
+            cmd: npm run build
+          args:
+            chdir: /home/{{ username }}/rtk-base-station/mgmt-dashboard-frontend
+          become: true
+          become_user: "{{ username }}"
+
+    - name: Commit
+      ansible.builtin.command:
+        cmd: /home/{{ username }}/rtk-base-station/mgmt-cli/mgmt-cli -c /home/{{ username }}/rtk-base-station/config/ commit -s /home/{{ username }}/rtk-base-station/str2str/ -n /home/{{ username }}/rtk-base-station/ntrip-caster/
+      become: true
+      become_user: "{{ username }}"
+
+    - name: Do dnf update
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+        update_cache: true
+      become: true
