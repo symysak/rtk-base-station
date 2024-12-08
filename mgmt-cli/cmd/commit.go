@@ -257,100 +257,117 @@ outBase0="`
 	outBase1 += new_config.Ntripcaster.Sourcetable.Identifier + ";"
 	outBase1 += new_config.Ntripcaster.Sourcetable.Format + ";"
 
-	Msg1005 := "1005(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1005) + ")"
-
-	Msg1008 := ""
-	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1008 != 0 {
-		Msg1008 = "1008(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1008) + ")"
-	}
-	Msg1077 := ""
-	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1077 != 0 {
-		Msg1077 = "1077(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1077) + ")"
-	}
-	Msg1087 := ""
-	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1087 != 0 {
-		Msg1087 = "1087(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1087) + ")"
-	}
-	Msg1097 := ""
-	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1097 != 0 {
-		Msg1097 = "1097(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1097) + ")"
-	}
-	Msg1107 := ""
-	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1107 != 0 {
-		Msg1107 = "1107(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1107) + ")"
-	}
-	Msg1117 := ""
-	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1117 != 0 {
-		Msg1117 = "1117(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1117) + ")"
-	}
-	Msg1127 := ""
-	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1127 != 0 {
-		Msg1127 = "1127(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1127) + ")"
-	}
-	Msg1230 := ""
-	if new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1230 != 0 {
-		Msg1230 = "1230(" + strconv.Itoa(new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1230) + ")"
-	}
-
-	var msg string
-	for i := 0; i < len(tmp); i++ {
-		if i == len(tmp)-1 {
-			msg += tmp[i]
+	func genMsg(id int, interval int, isLast? bool) string {
+		if interval == 0 {
+			return ""
 		} else {
-			msg += tmp[i]
-			msg += ","
+			if isLast {
+				return strconv.Itoa(id) + "(" + strconv.Itoa(interval) + ")"
+			} else {
+				return strconv.Itoa(id) + "(" + strconv.Itoa(interval) + ")" + ","
+			}
 		}
 	}
-	rtcm30 := 
-	rtcm31 :=
-	rtcm32 :=
 
-	text += msg
+	defaultMsg := genMsg(1005, new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1005)
+		+ genMsg(1008, new_config.Ntripcaster.Sourcetable.FormatDetails.Msg1008)
 
-	text += ";"
+	rtcm30 := defaultMsg
+		+ genMsg(1004 , new_config.Ntripcaster.Sourcetable.FormatDetails.Gps)
+		+ genMsg(1012 , new_config.Ntripcaster.Sourcetable.FormatDetails.Glonass, true)
+	rtcm31 := defaultMsg
+		+ genMsg(1004, new_config.Ntripcaster.Sourcetable.FormatDetails.Gps)
+		+ genMsg(1012, new_config.Ntripcaster.Sourcetable.FormatDetails.Glonass, true)
+	rtcm32msm5 := defaultMsg
+		+ genMsg(1075, new_config.Ntripcaster.Sourcetable.FormatDetails.Gps)
+		+ genMsg(1085, new_config.Ntripcaster.Sourcetable.FormatDetails.Glonass)
+		+ genMsg(1095, new_config.Ntripcaster.Sourcetable.FormatDetails.Galileo)
+		+ genMsg(1105, new_config.Ntripcaster.Sourcetable.FormatDetails.Sbas)
+		+ genMsg(1115, new_config.Ntripcaster.Sourcetable.FormatDetails.Qzss)
+		+ genMsg(1125, new_config.Ntripcaster.Sourcetable.FormatDetails.Beidou)
+		+ genMsg(1230, new_config.Ntripcaster.Sourcetable.FormatDetails.Glonass, true)
+	rtcm32msm7 := defaultMsg
+		+ genMsg(1077, new_config.Ntripcaster.Sourcetable.FormatDetails.Gps)
+		+ genMsg(1087, new_config.Ntripcaster.Sourcetable.FormatDetails.Glonass)
+		+ genMsg(1097, new_config.Ntripcaster.Sourcetable.FormatDetails.Galileo)
+		+ genMsg(1107, new_config.Ntripcaster.Sourcetable.FormatDetails.Sbas)
+		+ genMsg(1117, new_config.Ntripcaster.Sourcetable.FormatDetails.Qzss)
+		+ genMsg(1127, new_config.Ntripcaster.Sourcetable.FormatDetails.Beidou)
+		+ genMsg(1230, new_config.Ntripcaster.Sourcetable.FormatDetails.Glonass, true)
 
-	text += strconv.Itoa(new_config.Ntripcaster.Sourcetable.Carrer) + ";"
-	text += new_config.Ntripcaster.Sourcetable.NavSystem + ";"
-	text += new_config.Ntripcaster.Sourcetable.Network + ";"
-	text += new_config.Ntripcaster.Sourcetable.Country + ";"
-	text += strconv.FormatFloat(new_config.Ntripcaster.Latitude, 'f', 2, 64) + ";"
-	text += strconv.FormatFloat(new_config.Ntripcaster.Longitude, 'f', 2, 64) + ";"
-	text += strconv.Itoa(new_config.Ntripcaster.Sourcetable.Nmea) + ";"
-	text += strconv.Itoa(new_config.Ntripcaster.Sourcetable.Solution) + ";"
-	text += new_config.Ntripcaster.Sourcetable.Generator + ";"
-	text += new_config.Ntripcaster.Sourcetable.ComprEncryp + ";"
+	// rtcm msg
+
+	outBase2 := ";"
+
+	outBase2 += strconv.Itoa(new_config.Ntripcaster.Sourcetable.Carrer) + ";"
+	outBase2 += new_config.Ntripcaster.Sourcetable.NavSystem + ";"
+	outBase2 += new_config.Ntripcaster.Sourcetable.Network + ";"
+	outBase2 += new_config.Ntripcaster.Sourcetable.Country + ";"
+	outBase2 += strconv.FormatFloat(new_config.Ntripcaster.Latitude, 'f', 2, 64) + ";"
+	outBase2 += strconv.FormatFloat(new_config.Ntripcaster.Longitude, 'f', 2, 64) + ";"
+	outBase2 += strconv.Itoa(new_config.Ntripcaster.Sourcetable.Nmea) + ";"
+	outBase2 += strconv.Itoa(new_config.Ntripcaster.Sourcetable.Solution) + ";"
+	outBase2 += new_config.Ntripcaster.Sourcetable.Generator + ";"
+	outBase2 += new_config.Ntripcaster.Sourcetable.ComprEncryp + ";"
 	if new_config.Ntripcaster.Username != "" && new_config.Ntripcaster.Password != "" {
-		text += "B" + ";"
+		outBase2 += "B" + ";"
 	} else {
-		text += "N" + ";"
+		outBase2 += "N" + ";"
 	}
-	text += new_config.Ntripcaster.Sourcetable.Fee + ";"
-	text += new_config.Ntripcaster.Sourcetable.Bitrate + ";"
-	text += new_config.Ntripcaster.Sourcetable.Misc
+	outBase2 += new_config.Ntripcaster.Sourcetable.Fee + ";"
+	outBase2 += new_config.Ntripcaster.Sourcetable.Bitrate + ";"
+	outBase2 += new_config.Ntripcaster.Sourcetable.Misc
 
-	text += `#rtcm3"`
-	text += `
+	outBase2 += `#rtcm3"`
+	outBase2 += `
 `
-	text += `exec /app/str2str -in tcpcli://localhost:2102#ubx -out "${out}"`
-	text += " -p "
-	text += strconv.FormatFloat(new_config.Ntripcaster.Latitude, 'f', 8, 64) + " "
-	text += strconv.FormatFloat(new_config.Ntripcaster.Longitude, 'f', 8, 64) + " "
-	text += strconv.FormatFloat(new_config.Ntripcaster.Height, 'f', 4, 64) + " "
+	outBase2 += `exec /app/str2str -in tcpcli://localhost:2102#ubx -out "${out}"`
+	outBase2 += " -p "
+	outBase2 += strconv.FormatFloat(new_config.Ntripcaster.Latitude, 'f', 8, 64) + " "
+	outBase2 += strconv.FormatFloat(new_config.Ntripcaster.Longitude, 'f', 8, 64) + " "
+	outBase2 += strconv.FormatFloat(new_config.Ntripcaster.Height, 'f', 4, 64) + " "
 
-	text += `-msg "`
-	text += msg
-	text += `" -opt -TADJ=1`
+	outBase2 += `-msg "`
+
+	// rtcm msg
+
+	outBase2 += `" -opt -TADJ=1`
 	if !new_config.Debug {
-		text += " 2> /dev/null"
+		outBase2 += " 2> /dev/null"
 	}
 
-	f, err := os.Create(ntripcasterDir + "entrypoint.sh")
+	f, err := os.Create(ntripcasterDir + "rtcm30-entrypoint.sh")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 	defer f.Close()
-	f.Write(([]byte)(text))
+	f.Write(([]byte)(outBase0 + "3000" + outBase1 + rtcm30 + outBase2))
+
+	f, err = os.Create(ntripcasterDir + "rtcm31-entrypoint.sh")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	defer f.Close()
+	f.Write(([]byte)(outBase0 + "3001" + outBase1 + rtcm31 + outBase2))
+	
+	f, err = os.Create(ntripcasterDir + "rtcm32msm5-entrypoint.sh")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	defer f.Close()
+	f.Write(([]byte)(outBase0 + "3002" + outBase1 + rtcm32msm5 + outBase2))
+
+	f, err = os.Create(ntripcasterDir + "rtcm32msm7-entrypoint.sh")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	defer f.Close()
+	f.Write(([]byte)(outBase0 + "3003" + outBase1 + rtcm32msm7 + outBase2))
+
 
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	// ntrip-casterのコンテナを再起動する
@@ -372,13 +389,13 @@ outBase0="`
 // str2strのcommit処理を行う関数
 func commitStr2str(new_config models.Config) {
 	// str2strのentrypoint.shを書き換える
-	var text string
-	text = ""
-	text += `#!/bin/bash
+	var outBase2 string
+	outBase2 = ""
+	outBase2 += `#!/bin/bash
 `
-	text += "exec /app/str2str -in serial://ttyACM0:230400 -out tcpsvr://:2102 -b 1"
+	outBase2 += "exec /app/str2str -in serial://ttyACM0:230400 -out tcpsvr://:2102 -b 1"
 	if !new_config.Debug {
-		text += " 2> /dev/null"
+		outBase2 += " 2> /dev/null"
 	}
 
 	f, err := os.Create(str2strDir + "entrypoint.sh")
@@ -387,7 +404,7 @@ func commitStr2str(new_config models.Config) {
 		os.Exit(1)
 	}
 	defer f.Close()
-	f.Write(([]byte)(text))
+	f.Write(([]byte)(outBase2))
 
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	// str2strのコンテナを再起動する
