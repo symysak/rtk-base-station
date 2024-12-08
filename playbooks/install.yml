@@ -7,14 +7,14 @@
       private: false
     - name: password
       prompt: "Enter the user password"
-      private: false
+      private: true
   tasks:
 
     - name: Create user
       ansible.builtin.user:
         name: "{{ username }}"
         state: present
-        password: "{{ password }}"
+        password: "{{ password | password_hash('sha512') }}"
       become: true
 
     - name: Ensure lingering enabled
@@ -33,8 +33,9 @@
         - podman
         - cockpit-podman
         - git
-        - gpsd
-        - gpsd-clients
+        - scons
+        - gcc
+        - python3-pyserial
       become: true
 
     - name: Check the system locale
@@ -43,7 +44,7 @@
       register: localectl_result
       check_mode: false
       changed_when: false
-
+  
     - name: Change the system locale
       ansible.builtin.command:
         cmd: localectl set-locale LANG=ja_JP.utf8
@@ -59,12 +60,13 @@
         state: started
       with_items:
         - cockpit.socket
+      become: true
 
     - name: Configure git config
-      ansible.builtin.command:
-        cmd:
-          - git config --global http.postBuffer 524288000
-          - git config --global core.compression 0
+      ansible.builtin.shell:
+        cmd: |
+          git config --global http.postBuffer 524288000 &&
+          git config --global core.compression 0
       become: true
       become_user: "{{ username }}"
 
@@ -80,6 +82,7 @@
       ansible.builtin.copy:
         src: /home/{{ username }}/rtk-base-station/99-zed-f9p.rules
         dest: /etc/udev/rules.d/
+        remote_src: true
       become: true
 
     - name: Set serial port speed
@@ -94,72 +97,70 @@
             src: /home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.example.sh
             dest: /home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.sh
             mode: '0755'
-            owner: "{{ username }}"
+            remote_src: true
+          become: true
+          become_user: "{{ username }}"
 
         - name: Copy str2str entrypoint
           ansible.builtin.copy:
             src: /home/{{ username }}/rtk-base-station/str2str/entrypoint.example.sh
             dest: /home/{{ username }}/rtk-base-station/str2str/entrypoint.sh
             mode: '0755'
-            owner: "{{ username }}"
+            remote_src: true
+          become: true
+          become_user: "{{ username }}"
 
-    - name: Run containers
-      block:
-        - name: Run str2str container
-          containers.podman.podman_container:
-            name: str2str
-            platform: linux/arm64
-            labels:
-              io.containers.autoupdate=registry
-              PODMAN_SYSTEMD_UNIT=container-str2str.service
-            group_add: keep-groups
-            device: /dev/ttyACM0:/dev/ttyACM0
-            net: host
-            healthcheck: /app/healthcheck.sh
-            healthcheck_retries: 2
-            healthcheck_interval: 4s
-            healthcheck_failure_action: kill
-            mount:
-              - type: bind
-                source: /home/{{ username }}/rtk-base-station/str2str/entrypoint.sh
-                destination: /config/entrypoint.sh
-                options: ro
-            image: ghcr.io/symysak/str2str:main
-            generate_systemd:
-              restart_policy: always
-              new: true
-              path: /home/{{ username }}/.config/systemd/user/
-              restart_sec: 1s
+    - name: Run str2str
+      ansible.builtin.command:
+        cmd: podman run -d --replace --name str2str --platform linux/arm64 -l io.containers.autoupdate=registry -l PODMAN_SYSTEMD_UNIT=container-str2str.service --group-add keep-groups --device /dev/ttyACM0:/dev/ttyACM0 --net=host --health-cmd="/app/healthcheck.sh" --health-retries=2 --health-interval=4s --mount type=bind,source="/home/{{ username }}/rtk-base-station/str2str/entrypoint.sh",target=/config/entrypoint.sh ghcr.io/symysak/str2str:main
+      become: true
+      become_user: "{{ username }}"
 
-        - name: Run ntrip-caster container
-          containers.podman.podman_container:
-            name: ntrip-caster
-            platform: linux/arm64
-            labels:
-              io.containers.autoupdate=registry
-              PODMAN_SYSTEMD_UNIT=container-ntrip-caster.service
-            net: host
-            healthcheck: curl --http0.9 127.0.0.1:2101
-            healthcheck_retries: 2
-            healthcheck_interval: 4s
-            healthcheck_failure_action: kill
-            mount:
-              - type: bind
-                source: /home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.sh
-                destination: /config/entrypoint.sh
-                options: ro
-            image: ghcr.io/symysak/ntrip-caster:main
-            generate_systemd:
-              restart_policy: always
-              new: true
-              path: /home/{{ username }}/.config/systemd/user/
-              restart_sec: 1s
+    - name: Run ntrip-caster container
+      ansible.builtin.command:
+        cmd: podman run -d --replace --name ntrip-caster --platform linux/arm64 -l io.containers.autoupdate=registry -l PODMAN_SYSTEMD_UNIT=container-ntrip-caster.service --net=host --health-cmd="curl --http0.9 127.0.0.1:2101" --health-retries=2 --health-interval=4s --mount type=bind,source="/home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.sh",target=/config/entrypoint.sh ghcr.io/symysak/ntrip-caster:main
+      become: true
+      become_user: "{{ username }}"
+
+    - name: register to systemd
+      ansible.builtin.shell:
+        cmd: |
+          podman generate systemd -f --new --restart-policy always --name str2str
+          podman generate systemd -f --new --restart-policy always --name ntrip-caster
+          mkdir -p ~/.config/systemd/user
+          mv container-str2str.service ~/.config/systemd/user/
+          mv container-ntrip-caster.service ~/.config/systemd/user/
+
+          sed -i '/\[Unit\]/{a\
+          StartLimitInterval=10s
+          a\
+          StartLimitBurst=20
+          }' ~/.config/systemd/user/container-str2str.service
+
+          sed -i '/\[Service\]/{a\
+          RestartSec=1s
+          }' ~/.config/systemd/user/container-str2str.service
+
+
+          sed -i '/\[Unit\]/{a\
+          StartLimitInterval=10s
+          a\
+          StartLimitBurst=20
+          }' ~/.config/systemd/user/container-ntrip-caster.service
+
+          sed -i '/\[Service\]/{a\
+          RestartSec=1s
+          }' ~/.config/systemd/user/container-ntrip-caster.service
+        chdir: /home/{{ username }}/rtk-base-station
+      become: true
+      become_user: "{{ username }}"
 
     - name: Start containers
       ansible.builtin.systemd:
         name: "{{ item }}"
         daemon_reload: true
         enabled: true
+        scope: user
         state: started
       with_items:
         - container-str2str
@@ -180,6 +181,7 @@
             dest: /usr/local
             remote_src: true
             creates: /usr/local/go
+          become: true
 
         - name: Check go version
           ansible.builtin.command:
@@ -188,25 +190,27 @@
 
         - name: Build
           ansible.builtin.command:
-            cmd:
-              - cd /home/{{ username }}/rtk-base-station/mgmt-cli
-              - /usr/local/go/bin/go build -o mgmt-cli
+            cmd: /usr/local/go/bin/go build -o mgmt-cli
+            chdir: /home/{{ username }}/rtk-base-station/mgmt-cli
+          become: true
+          become_user: "{{ username }}"
       
     - name: Copy config files
+      become: true
+      become_user: "{{ username }}"
       block:
+        
         - name: Copy new-config.json
           ansible.builtin.copy:
             src: /home/{{ username }}/rtk-base-station/config/new-config.example.json
             dest: /home/{{ username }}/rtk-base-station/config/new-config.json
-            owner: "{{ username }}"
-            mode: '0644'
+            remote_src: true
 
         - name: Copy running-config.json
           ansible.builtin.copy:
             src: /home/{{ username }}/rtk-base-station/config/running-config.example.json
             dest: /home/{{ username }}/rtk-base-station/config/running-config.json
-            owner: "{{ username }}"
-            mode: '0644'
+            remote_src: true
 
     - name: Enable firewalld
       ansible.builtin.systemd:
@@ -219,21 +223,24 @@
       block:
 
       - name: service settinng
-        ansible.posix.firewalld_zone:
+        ansible.posix.firewalld:
           service: "{{ item }}"
-          parmanent: true
+          permanent: true
           state: enabled
         with_items:
           - cockpit
           - ssh
+        become: true
+
       - name: port setting
-        ansible.posix.firewalld_zone:
+        ansible.posix.firewalld:
           port: "{{ item }}"
-          parmanent: true
+          permanent: true
           state: enabled
         with_items:
           - 2101/tcp
           - 2102/tcp
+        become: true
 
     - name: Install web gui
       block:
@@ -298,6 +305,28 @@
         cmd: /home/{{ username }}/rtk-base-station/mgmt-cli/mgmt-cli -c /home/{{ username }}/rtk-base-station/config/ commit -s /home/{{ username }}/rtk-base-station/str2str/ -n /home/{{ username }}/rtk-base-station/ntrip-caster/
       become: true
       become_user: "{{ username }}"
+
+    - name: Build gpsd
+      block:
+        - name: Download
+          ansible.builtin.get_url:
+            url: https://download.savannah.gnu.org/releases/gpsd/gpsd-3.25.tar.gz
+            dest: /tmp/gpsd-3.25.tar.gz
+        - name: Extract
+          ansible.builtin.unarchive:
+            src: /tmp/gpsd-3.25.tar.gz
+            dest: /tmp
+            remote_src: true
+            creates: /tmp/gpsd-3.25
+
+        - name: Build
+          ansible.builtin.shell:
+            cmd: |
+              /usr/bin/scons target_python=python3 &&
+              /usr/bin/scons check target_python=python3 &&
+              /usr/bin/scons udev-install target_python=python3
+            chdir: /tmp/gpsd-3.25
+          become: true
 
     - name: Do dnf update
       ansible.builtin.dnf:
