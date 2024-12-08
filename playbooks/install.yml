@@ -112,13 +112,13 @@
 
     - name: Run str2str
       ansible.builtin.command:
-        cmd: podman run -d --replace --name str2str --platform linux/arm64 -l io.containers.autoupdate=registry -l PODMAN_SYSTEMD_UNIT=container-str2str.service --group-add keep-groups --device /dev/ttyACM0:/dev/ttyACM0 --net=host --health-cmd="/app/healthcheck.sh" --health-retries=2 --health-interval=4s --mount type=bind,source="/home/{{ username }}/rtk-base-station/str2str/entrypoint.sh",target=/config/entrypoint.sh ghcr.io/symysak/str2str:main
+        cmd: podman run -d --name str2str --platform linux/arm64 -l io.containers.autoupdate=registry -l PODMAN_SYSTEMD_UNIT=container-str2str.service --group-add keep-groups --device /dev/ttyACM0:/dev/ttyACM0 --net=host --health-cmd="/app/healthcheck.sh" --health-retries=2 --health-interval=4s --mount type=bind,source="/home/{{ username }}/rtk-base-station/str2str/entrypoint.sh",target=/config/entrypoint.sh ghcr.io/symysak/str2str:main
       become: true
       become_user: "{{ username }}"
 
     - name: Run ntrip-caster container
       ansible.builtin.command:
-        cmd: podman run -d --replace --name ntrip-caster --platform linux/arm64 -l io.containers.autoupdate=registry -l PODMAN_SYSTEMD_UNIT=container-ntrip-caster.service --net=host --health-cmd="curl --http0.9 127.0.0.1:2101" --health-retries=2 --health-interval=4s --mount type=bind,source="/home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.sh",target=/config/entrypoint.sh ghcr.io/symysak/ntrip-caster:main
+        cmd: podman run -d --name ntrip-caster --platform linux/arm64 -l io.containers.autoupdate=registry -l PODMAN_SYSTEMD_UNIT=container-ntrip-caster.service --net=host --health-cmd="curl --http0.9 127.0.0.1:2101" --health-retries=2 --health-interval=4s --mount type=bind,source="/home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.sh",target=/config/entrypoint.sh ghcr.io/symysak/ntrip-caster:main
       become: true
       become_user: "{{ username }}"
 
@@ -264,8 +264,11 @@
 
         - name: Install nodejs
           ansible.builtin.dnf:
-            name: nodejs npm
+            name: "{{ item }}"
             state: present
+          with_items:
+            - nodejs
+            - npm
           become: true
 
         - name: Install n
@@ -275,19 +278,35 @@
 
         - name: Install lts
           ansible.builtin.command:
-            cmd: n lts
+            cmd: /usr/local/bin/n lts
           become: true
 
         - name: Uninstall nodejs npm
           ansible.builtin.dnf:
-            name: nodejs npm
+            name: "{{ item }}"
             state: absent
+          with_items:
+            - nodejs
+            - npm
+          become: true
+
+        - name: Create node symlink
+          ansible.builtin.file:
+            src: /usr/local/bin/node
+            dest: /usr/bin/node
+            state: link
+          become: true
+        
+        - name: Create npm symlink
+          ansible.builtin.file:
+            src: /usr/local/bin/npm
+            dest: /usr/bin/npm
+            state: link
           become: true
 
         - name: Install npm
           ansible.builtin.command:
             cmd: npm install
-          args:
             chdir: /home/{{ username }}/rtk-base-station/mgmt-dashboard-frontend
           become: true
           become_user: "{{ username }}"
@@ -295,16 +314,9 @@
         - name: Build
           ansible.builtin.command:
             cmd: npm run build
-          args:
             chdir: /home/{{ username }}/rtk-base-station/mgmt-dashboard-frontend
           become: true
           become_user: "{{ username }}"
-
-    - name: Commit
-      ansible.builtin.command:
-        cmd: /home/{{ username }}/rtk-base-station/mgmt-cli/mgmt-cli -c /home/{{ username }}/rtk-base-station/config/ commit -s /home/{{ username }}/rtk-base-station/str2str/ -n /home/{{ username }}/rtk-base-station/ntrip-caster/
-      become: true
-      become_user: "{{ username }}"
 
     - name: Build gpsd
       block:
@@ -327,6 +339,31 @@
               /usr/bin/scons udev-install target_python=python3
             chdir: /tmp/gpsd-3.25
           become: true
+
+        - name: Create symlink
+          ansible.builtin.file:
+            src: /usr/local/bin/ubxtool
+            dest: /usr/bin/ubxtool
+            state: link
+          become: true
+
+    - name: Get uid
+      ansible.builtin.command:
+        cmd: id -u {{ username }}
+      register: uid
+      become: true
+
+    - name: Change permission of receiver
+      ansible.builtin.file:
+        path: /dev/ttyACM0
+        mode: '0666'
+      become: true
+
+    - name: Commit
+      ansible.builtin.shell:
+        cmd: XDG_RUNTIME_DIR=/run/user/{{ uid.stdout }} /home/{{ username }}/rtk-base-station/mgmt-cli/mgmt-cli -c /home/{{ username }}/rtk-base-station/config/ commit -s /home/{{ username }}/rtk-base-station/str2str/ -n /home/{{ username }}/rtk-base-station/ntrip-caster/
+      become: true
+      become_user: "{{ username }}"
 
     - name: Do dnf update
       ansible.builtin.dnf:
