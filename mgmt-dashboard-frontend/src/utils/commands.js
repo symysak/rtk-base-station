@@ -75,7 +75,6 @@ export const sendCompareCommand = async () => {
 };
 
 const str2strPath = "~/rtk-base-station/str2str/";
-const ntripcasterPath = "~/rtk-base-station/ntrip-caster/"
 /**
  * commitコマンドを送信する関数です。
  * @param {React.SetStateAction<any>} setResultOfCommitCommand - コマンドの実行結果を格納するのに使うstateのsetterを指定。
@@ -83,7 +82,7 @@ const ntripcasterPath = "~/rtk-base-station/ntrip-caster/"
  */
 export const sendCommitCommand = async (setResultOfCommitCommand) => {
     let res = undefined;
-    await cockpit.script(`${cliPath} -c ${configPath} commit -s ${str2strPath} -n ${ntripcasterPath}`)
+    await cockpit.script(`${cliPath} -c ${configPath} commit -s ${str2strPath}`)
         .stream(data => {
             setResultOfCommitCommand(resultOfCommitCommand => resultOfCommitCommand + data);
         })
