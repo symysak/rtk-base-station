@@ -8,4 +8,6 @@ config/
 !/config/running-config.example.json
 !/config/new-config.example.json
 
+mgmt-cli
+
 entrypoint.sh
