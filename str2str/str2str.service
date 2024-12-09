@@ -1,0 +1,16 @@
+[Unit]
+Description=rtk-base-station str2str
+Wants=network-online.target
+After=network-online.target
+Conflicts=shutdown.target
+
+StartLimitInterval=10s
+StartLimitBurst=20
+
+[Service]
+Restart=always
+RestartSec=1s
+ExecStart=<chenge me>
+
+[Install]
+WantedBy=default.target

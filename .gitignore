@@ -8,4 +8,8 @@ config/
 !/config/running-config.example.json
 !/config/new-config.example.json
 
-entrypoint.sh
+mgmt-cli/mgmt-cli
+
+str2str.sh
+
+!/rtklib/**/*
