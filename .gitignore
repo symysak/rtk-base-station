@@ -11,3 +11,5 @@ config/
 mgmt-cli/mgmt-cli
 
 str2str.sh
+
+!/rtklib/**/*
