@@ -17,11 +17,10 @@ import (
 
 var validate *validator.Validate
 
-// ntrip-casterのディレクトリのパス
-var ntripcasterDir string
-
 // str2strのディレクトリのパス
 var str2strDir string
+
+var debug = os.Getenv("DEBUG") == "true"
 
 // commitCmd represents the commit command
 var commitCmd = &cobra.Command{
@@ -34,9 +33,6 @@ var commitCmd = &cobra.Command{
 		// コミット前のチェック
 		//
 		fmt.Println("Checking...")
-
-		// ntrip-caster関連のチェック
-		checkNtripCaster()
 
 		// str2str関連のチェック
 		checkStr2Str()
@@ -103,9 +99,6 @@ var commitCmd = &cobra.Command{
 		//
 		fmt.Println("Committing...")
 
-		// ntrip-casterのcommit処理
-		commitNtripCaster(new_config)
-
 		// str2strのcommit処理
 		commitStr2str(new_config)
 
@@ -154,8 +147,6 @@ var commitCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(commitCmd)
 
-	commitCmd.Flags().StringVarP(&ntripcasterDir, "ntripcaster-dir", "n", "", "ntripcaster directory ex: ../ntrip-caster/")
-	commitCmd.MarkFlagRequired("ntripcaster-dir")
 	commitCmd.Flags().StringVarP(&str2strDir, "str2str-dir", "s", "", "str2str directory ex: ../str2str/")
 	commitCmd.MarkFlagRequired("str2str-dir")
 }
@@ -192,26 +183,8 @@ func validateGenerator(fl validator.FieldLevel) bool {
 	// 英字と/と-と.のみで構成されているか
 
 	var ValueCheck = regexp.MustCompile("^[0-9a-zA-Z./-]+$").MatchString
-	if !ValueCheck(fl.Field().String()) {
-		return false
-	}
-	return true
-}
+	return ValueCheck(fl.Field().String())
 
-// ntrip-caster関連のチェックを行う関数
-func checkNtripCaster() {
-	// ntripcasterDirの存在確認
-	f, err := os.Stat(ntripcasterDir)
-	if os.IsNotExist(err) || !f.IsDir() {
-		fmt.Fprintln(os.Stderr, ntripcasterDir + " is not exist or not directory")
-		os.Exit(1)
-	}
-	// ntripcasterのconfigが存在するか確認
-	f, err = os.Stat(ntripcasterDir + "entrypoint.sh")
-	if os.IsNotExist(err) || f.IsDir() {
-		fmt.Fprintln(os.Stderr, ntripcasterDir + "entrypoint.sh is not exist or directory")
-		os.Exit(1)
-	}
 }
 
 // str2str関連のチェックを行う関数
@@ -219,20 +192,19 @@ func checkStr2Str() {
 	// str2strDirの存在確認
 	f, err := os.Stat(str2strDir)
 	if os.IsNotExist(err) || !f.IsDir() {
-		fmt.Fprintln(os.Stderr, str2strDir + " is not exist or not directory")
+		fmt.Fprintln(os.Stderr, str2strDir+" is not exist or not directory")
 		os.Exit(1)
 	}
 	// str2strのconfigが存在するか確認
-	f, err = os.Stat(str2strDir + "entrypoint.sh")
+	f, err = os.Stat(str2strDir + "str2str.sh")
 	if os.IsNotExist(err) || f.IsDir() {
-		fmt.Fprintln(os.Stderr, str2strDir + "entrypoint.sh is not exist or directory")
+		fmt.Fprintln(os.Stderr, str2strDir+"str2str.sh is not exist or directory")
 		os.Exit(1)
 	}
 }
 
-// ntrip-casterのcommit処理を行う関数
-func commitNtripCaster(new_config models.Config) {
-	// ntrip-casterのコンテナのentrypoint.shを書き換える
+// str2strのcommit処理を行う関数
+func commitStr2str(new_config models.Config) {
 	var text string
 	text += `#!/bin/bash
 
@@ -317,7 +289,7 @@ out="`
 	text += `#rtcm3"`
 	text += `
 `
-	text += `exec /app/str2str -in tcpcli://localhost:2102#ubx -out "${out}"`
+	text += `exec /usr/local/bin/str2str -in serial://ttyACM0:230400#ubx -out "${out}" -out tcpsvr://:2102 -b 1`
 	text += " -p "
 	text += strconv.FormatFloat(new_config.Ntripcaster.Latitude, 'f', 8, 64) + " "
 	text += strconv.FormatFloat(new_config.Ntripcaster.Longitude, 'f', 8, 64) + " "
@@ -330,7 +302,7 @@ out="`
 		text += " 2> /dev/null"
 	}
 
-	f, err := os.Create(ntripcasterDir + "entrypoint.sh")
+	f, err := os.Create(str2strDir + "str2str.sh")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -339,75 +311,49 @@ out="`
 	f.Write(([]byte)(text))
 
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
-	// ntrip-casterのコンテナを再起動する
+	// str2strを再起動する
+
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
-	cmd := exec.Command("systemctl", "--user", "restart", "container-ntrip-caster.service")
+	cmd := exec.Command("systemctl", "--user", "restart", "str2str.service")
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
-	err = cmd.Run()
-	fmt.Print(".") // ちゃんと処理してますよ感を出す
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintln(os.Stderr, stderr.String())
-		os.Exit(1)
+	if !debug {
+		err = cmd.Run()
+		fmt.Print(".") // ちゃんと処理してますよ感を出す
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintln(os.Stderr, stderr.String())
+			os.Exit(1)
+		}
+		fmt.Println(stdout.String())
+	} else {
+		fmt.Println("[DEBUG]: skipped: systemctl --user restart str2str.service")
 	}
-	fmt.Println(stdout.String())
-}
-
-// str2strのcommit処理を行う関数
-func commitStr2str(new_config models.Config) {
-	// str2strのentrypoint.shを書き換える
-	var text string
-	text = ""
-	text += `#!/bin/bash
-`
-	text += "exec /app/str2str -in serial://ttyACM0:230400 -out tcpsvr://:2102 -b 1"
-	if !new_config.Debug {
-		text += " 2> /dev/null"
-	}
-
-	f, err := os.Create(str2strDir + "entrypoint.sh")
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-	defer f.Close()
-	f.Write(([]byte)(text))
-
-	fmt.Print(".") // ちゃんと処理してますよ感を出す
-	// str2strのコンテナを再起動する
-	var stdout bytes.Buffer
-	var stderr bytes.Buffer
-	cmd := exec.Command("systemctl", "--user", "restart", "container-str2str.service")
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	err = cmd.Run()
-	fmt.Print(".") // ちゃんと処理してますよ感を出す
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintln(os.Stderr, stderr.String())
-		os.Exit(1)
-	}
-	fmt.Println(stdout.String())
 }
 
 // UbloxReceiverのcommit処理を行う関数
 func commitUbloxReceiver(new_config models.Config) {
 
 	// receiverのPROTVERを取得
+
 	arg := "ubxtool -f /dev/ttyACM0 -p MON-VER | grep PROTVER"
 	cmd := exec.Command("bash", "-c", arg)
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
-	err := cmd.Run()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintln(os.Stderr, stderr.String())
-		os.Exit(1)
+	if !debug {
+		err := cmd.Run()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintln(os.Stderr, stderr.String())
+			os.Exit(1)
+		}
+	} else {
+		fmt.Println("[DEBUG]: skipped: ubxtool -f /dev/ttyACM0 -p MON-VER | grep PROTVER")
 	}
+
 	// "extention PROTVER=XX.XX"という形式で出力されるので、XX.XXの部分だけ取り出す
 	var protVer string
 	for i := 20; i < len(stdout.String())-1; i++ {
@@ -419,11 +365,15 @@ func commitUbloxReceiver(new_config models.Config) {
 	cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-p", "RESET")
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
-	err = cmd.Run()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintln(os.Stderr, stderr.String())
-		os.Exit(1)
+	if !debug {
+		err := cmd.Run()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintln(os.Stderr, stderr.String())
+			os.Exit(1)
+		}
+	} else {
+		fmt.Println("[DEBUG]: skipped: ubxtool -f /dev/ttyACM0 -w 1 -P " + protVer + " -p RESET")
 	}
 
 	/*
@@ -582,31 +532,26 @@ func commitUbloxReceiver(new_config models.Config) {
 
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	// 作成した配列をforで回して、ubxtoolで設定を行う
-	// /dev/ttyACM0はstr2strのdockerによって使用されいているので、一旦停止する
-	cmd = exec.Command("systemctl", "--user", "stop", "container-str2str.service")
+	// /dev/ttyACM0はstr2strによって使用されいているので、一旦停止する
+
+	cmd = exec.Command("systemctl", "--user", "stop", "str2str.service")
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
-	err = cmd.Run()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintln(os.Stderr, stderr.String())
-		os.Exit(1)
+	if !debug {
+		err := cmd.Run()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintln(os.Stderr, stderr.String())
+			os.Exit(1)
+		}
+	} else {
+		fmt.Println("[DEBUG]: skipped: systemctl --user stop str2str.service")
 	}
-	fmt.Print(".") // ちゃんと処理してますよ感を出す
-	// ntrip-casterのdockerがstr2strに依存しているので、一旦停止する
-	cmd = exec.Command("systemctl", "--user", "stop", "container-ntrip-caster.service")
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	err = cmd.Run()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintln(os.Stderr, stderr.String())
-		os.Exit(1)
-	}
+
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
 
 	for i := 0; i < len(commands); i++ {
-		fmt.Print(".") // ちゃんと処理してますよ感を出す
+
 		var cmd *exec.Cmd
 		if new_config.UbloxReceiver.SaveConfig {
 			cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1])
@@ -617,36 +562,36 @@ func commitUbloxReceiver(new_config models.Config) {
 		var stderr bytes.Buffer
 		cmd.Stdout = &stdout
 		cmd.Stderr = &stderr
+		if !debug {
+			err := cmd.Run()
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintln(os.Stderr, stderr.String())
+				os.Exit(1)
+			}
+			fmt.Print(".") // ちゃんと処理してますよ感を出す
+		} else {
+			fmt.Println("[DEBUG]: skipped: ubxtool -f /dev/ttyACM0 -w 1 -P " + protVer + " -z " + commands[i][0] + "," + commands[i][1])
+		}
+
+	}
+
+	// str2strを再起動する
+
+	cmd = exec.Command("systemctl", "--user", "start", "str2str.service")
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	if !debug {
 		err := cmd.Run()
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			fmt.Fprintln(os.Stderr, stderr.String())
 			os.Exit(1)
 		}
-	}
-
-	// str2strのコンテナを再起動する
-	cmd = exec.Command("systemctl", "--user", "start", "container-str2str.service")
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	err = cmd.Run()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintln(os.Stderr, stderr.String())
-		os.Exit(1)
+	} else {
+		fmt.Println("[DEBUG]: skipped: systemctl --user start str2str.service")
 	}
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
-	// ntrip-casterのコンテナを再起動する
-	cmd = exec.Command("systemctl", "--user", "start", "container-ntrip-caster.service")
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	err = cmd.Run()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		fmt.Fprintln(os.Stderr, stderr.String())
-		os.Exit(1)
-	}
-	fmt.Println(".") // ちゃんと処理してますよ感を出す
 
 	// デフォルトで設定をflashに保存するので、trueにしておく
 	new_config.UbloxReceiver.SaveConfig = true

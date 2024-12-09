@@ -30,8 +30,6 @@
       with_items:
         - glibc-langpack-ja
         - cockpit
-        - podman
-        - cockpit-podman
         - git
         - scons
         - gcc
@@ -90,72 +88,45 @@
         cmd: stty -F /dev/ttyACM0 230400
       become: true
 
-    - name: Copy files
+    - name: Build str2str
       block:
-        - name: Copy ntrip-caster entrypoint
-          ansible.builtin.copy:
-            src: /home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.example.sh
-            dest: /home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.sh
-            mode: '0755'
-            remote_src: true
+        - name: Build str2str
+          ansible.builtin.command:
+            cmd: make
+            chdir: /home/{{ username }}/rtk-base-station/rtklib/app/consapp/str2str/gcc
           become: true
           become_user: "{{ username }}"
-
-        - name: Copy str2str entrypoint
-          ansible.builtin.copy:
-            src: /home/{{ username }}/rtk-base-station/str2str/entrypoint.example.sh
-            dest: /home/{{ username }}/rtk-base-station/str2str/entrypoint.sh
-            mode: '0755'
-            remote_src: true
+        - name: Create a symlink
+          ansible.builtin.file:
+            src: /home/{{ username }}/rtk-base-station/rtklib/app/consapp/str2str/gcc/str2str
+            dest: /usr/local/bin/str2str
+            state: link
           become: true
-          become_user: "{{ username }}"
 
-    - name: Run str2str
-      ansible.builtin.command:
-        cmd: podman run -d --name str2str --platform linux/arm64 -l io.containers.autoupdate=registry -l PODMAN_SYSTEMD_UNIT=container-str2str.service --group-add keep-groups --device /dev/ttyACM0:/dev/ttyACM0 --net=host --health-cmd="/app/healthcheck.sh" --health-retries=2 --health-interval=4s --mount type=bind,source="/home/{{ username }}/rtk-base-station/str2str/entrypoint.sh",target=/config/entrypoint.sh ghcr.io/symysak/str2str:main
+    - name: Copy str2str entrypoint
+      ansible.builtin.copy:
+        src: /home/{{ username }}/rtk-base-station/str2str/str2str.example.sh
+        dest: /home/{{ username }}/rtk-base-station/str2str/str2str.sh
+        mode: '0755'
+        remote_src: true
       become: true
       become_user: "{{ username }}"
 
-    - name: Run ntrip-caster container
-      ansible.builtin.command:
-        cmd: podman run -d --name ntrip-caster --platform linux/arm64 -l io.containers.autoupdate=registry -l PODMAN_SYSTEMD_UNIT=container-ntrip-caster.service --net=host --health-cmd="curl --http0.9 127.0.0.1:2101" --health-retries=2 --health-interval=4s --mount type=bind,source="/home/{{ username }}/rtk-base-station/ntrip-caster/entrypoint.sh",target=/config/entrypoint.sh ghcr.io/symysak/ntrip-caster:main
+    - name: Copy str2str systemd files
+      ansible.builtin.copy:
+        src: /home/{{ username }}/rtk-base-station/str2str/str2str.service
+        dest: /home/{{ username }}/.config/systemd/user/str2str.service
+        remote_src: true
       become: true
-      become_user: "{{ username }}"
+      become_user: "{{ username }}" 
 
-    - name: register to systemd
-      ansible.builtin.shell:
-        cmd: |
-          podman generate systemd -f --new --restart-policy always --name str2str
-          podman generate systemd -f --new --restart-policy always --name ntrip-caster
-          mkdir -p ~/.config/systemd/user
-          mv container-str2str.service ~/.config/systemd/user/
-          mv container-ntrip-caster.service ~/.config/systemd/user/
+    - name: Change permission of receiver
+      ansible.builtin.file:
+        path: /dev/ttyACM0
+        mode: '0666'
+      become: trues
 
-          sed -i '/\[Unit\]/{a\
-          StartLimitInterval=10s
-          a\
-          StartLimitBurst=20
-          }' ~/.config/systemd/user/container-str2str.service
-
-          sed -i '/\[Service\]/{a\
-          RestartSec=1s
-          }' ~/.config/systemd/user/container-str2str.service
-
-
-          sed -i '/\[Unit\]/{a\
-          StartLimitInterval=10s
-          a\
-          StartLimitBurst=20
-          }' ~/.config/systemd/user/container-ntrip-caster.service
-
-          sed -i '/\[Service\]/{a\
-          RestartSec=1s
-          }' ~/.config/systemd/user/container-ntrip-caster.service
-        chdir: /home/{{ username }}/rtk-base-station
-      become: true
-      become_user: "{{ username }}"
-
-    - name: Start containers
+    - name: Start str2str
       ansible.builtin.systemd:
         name: "{{ item }}"
         daemon_reload: true
@@ -163,8 +134,7 @@
         scope: user
         state: started
       with_items:
-        - container-str2str
-        - container-ntrip-caster
+        - str2str
       become: true
       become_user: "{{ username }}"
 
@@ -351,12 +321,6 @@
       ansible.builtin.command:
         cmd: id -u {{ username }}
       register: uid
-      become: true
-
-    - name: Change permission of receiver
-      ansible.builtin.file:
-        path: /dev/ttyACM0
-        mode: '0666'
       become: true
 
     - name: Commit
