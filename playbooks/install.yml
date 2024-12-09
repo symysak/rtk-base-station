@@ -112,7 +112,15 @@
       become: true
       become_user: "{{ username }}"
 
-    - name: Copy str2str systemd files
+    - name: Set directory to systemd file
+      ansible.builtin.replace:
+        path: /home/{{ username }}/rtk-base-station/str2str/str2str.service
+        regexp: 'ExecStart=.*'
+        replace: 'ExecStart=/home/{{ username }}/rtk-base-station/str2str/str2str.sh'
+      become: true
+      become_user: "{{ username }}"
+
+    - name: Copy str2str systemd file
       ansible.builtin.copy:
         src: /home/{{ username }}/rtk-base-station/str2str/str2str.service
         dest: /home/{{ username }}/.config/systemd/user/str2str.service
@@ -124,7 +132,7 @@
       ansible.builtin.file:
         path: /dev/ttyACM0
         mode: '0666'
-      become: trues
+      become: true
 
     - name: Start str2str
       ansible.builtin.systemd:
@@ -325,7 +333,7 @@
 
     - name: Commit
       ansible.builtin.shell:
-        cmd: XDG_RUNTIME_DIR=/run/user/{{ uid.stdout }} /home/{{ username }}/rtk-base-station/mgmt-cli/mgmt-cli -c /home/{{ username }}/rtk-base-station/config/ commit -s /home/{{ username }}/rtk-base-station/str2str/ -n /home/{{ username }}/rtk-base-station/ntrip-caster/
+        cmd: XDG_RUNTIME_DIR=/run/user/{{ uid.stdout }} /home/{{ username }}/rtk-base-station/mgmt-cli/mgmt-cli -c /home/{{ username }}/rtk-base-station/config/ commit -s /home/{{ username }}/rtk-base-station/str2str/
       become: true
       become_user: "{{ username }}"
 
