@@ -4,6 +4,7 @@ import Status from './pages/Status.jsx'
 import EasySettings from './pages/EasySettings.jsx'
 import SateliteSelection from './pages/SateliteSelection.jsx'
 import Test from './pages/slider.jsx'
+import Battery from './pages/Battery.jsx'
 import {
     createHashRouter,
     RouterProvider,
@@ -25,6 +26,10 @@ const routes = [
     {
         path: "/test-page",
         element: <Test />,
+    },
+    {
+        path: "/Battery",
+        element: <Battery />,
     },
 ];
 
