@@ -337,8 +337,9 @@ func commitUbloxReceiver(new_config models.Config) {
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
 	// 作成した配列をforで回して、ubxtoolで設定を行う
 	// /dev/ttyACM0はstr2strによって使用されいているので、一旦停止する
-
-	cmd = exec.Command("systemctl", "--user", "stop", "str2str.service")
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	cmd := exec.Command("systemctl", "--user", "stop", "str2str.service")
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	if !debug {
@@ -355,9 +356,7 @@ func commitUbloxReceiver(new_config models.Config) {
 	// receiverのPROTVERを取得
 
 	arg := "ubxtool -f /dev/ttyACM0 -p MON-VER | grep PROTVER"
-	cmd := exec.Command("bash", "-c", arg)
-	var stdout bytes.Buffer
-	var stderr bytes.Buffer
+	cmd = exec.Command("bash", "-c", arg)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	if !debug {
@@ -546,7 +545,6 @@ func commitUbloxReceiver(new_config models.Config) {
 	commands = append(commands, []string{tmp + name + "_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GLO.ENA)})
 	commands = append(commands, []string{tmp + name + "_L1_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GLO.L1_ENA)})
 	commands = append(commands, []string{tmp + name + "_L2_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GLO.L2_ENA)})
-
 
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
 
