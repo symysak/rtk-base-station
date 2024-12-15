@@ -34,6 +34,7 @@
         - scons
         - gcc
         - python3-pyserial
+        - tar
       become: true
 
     - name: Check the system locale
@@ -73,6 +74,7 @@
         repo: https://github.com/symysak/rtk-base-station.git
         dest: /home/{{ username }}/rtk-base-station
         recursive: yes
+        force: true
       become: true
       become_user: "{{ username }}"
 
