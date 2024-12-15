@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@patternfly/react-charts": "^8.0.0",
     "@patternfly/react-core": "^5.2.3",
     "install": "^0.13.0",
     "localforage": "^1.10.0",
@@ -29,6 +30,6 @@
     "vite": "^5.1.7"
   },
   "optionalDependencies": {
-   "@rollup/rollup-linux-x64-gnu": "4.6.1"
+    "@rollup/rollup-linux-x64-gnu": "4.6.1"
   }
 }
