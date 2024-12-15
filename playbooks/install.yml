@@ -120,6 +120,14 @@
       become: true
       become_user: "{{ username }}"
 
+    - name: Create local systemd folder
+      ansible.builtin.file:
+        path: /home/{{ username }}/.config/systemd/user/
+        state: directory
+        recurse: true
+      become: true
+      become_user: "{{ username }}"
+
     - name: Copy str2str systemd file
       ansible.builtin.copy:
         src: /home/{{ username }}/rtk-base-station/str2str/str2str.service
