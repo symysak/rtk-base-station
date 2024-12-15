@@ -203,13 +203,13 @@ func checkNtripCaster() {
 	// ntripcasterDirの存在確認
 	f, err := os.Stat(ntripcasterDir)
 	if os.IsNotExist(err) || !f.IsDir() {
-		fmt.Fprintln(os.Stderr, ntripcasterDir + " is not exist or not directory")
+		fmt.Fprintln(os.Stderr, ntripcasterDir+" is not exist or not directory")
 		os.Exit(1)
 	}
 	// ntripcasterのconfigが存在するか確認
 	f, err = os.Stat(ntripcasterDir + "entrypoint.sh")
 	if os.IsNotExist(err) || f.IsDir() {
-		fmt.Fprintln(os.Stderr, ntripcasterDir + "entrypoint.sh is not exist or directory")
+		fmt.Fprintln(os.Stderr, ntripcasterDir+"entrypoint.sh is not exist or directory")
 		os.Exit(1)
 	}
 }
@@ -219,13 +219,13 @@ func checkStr2Str() {
 	// str2strDirの存在確認
 	f, err := os.Stat(str2strDir)
 	if os.IsNotExist(err) || !f.IsDir() {
-		fmt.Fprintln(os.Stderr, str2strDir + " is not exist or not directory")
+		fmt.Fprintln(os.Stderr, str2strDir+" is not exist or not directory")
 		os.Exit(1)
 	}
 	// str2strのconfigが存在するか確認
 	f, err = os.Stat(str2strDir + "entrypoint.sh")
 	if os.IsNotExist(err) || f.IsDir() {
-		fmt.Fprintln(os.Stderr, str2strDir + "entrypoint.sh is not exist or directory")
+		fmt.Fprintln(os.Stderr, str2strDir+"entrypoint.sh is not exist or directory")
 		os.Exit(1)
 	}
 }
@@ -605,34 +605,29 @@ func commitUbloxReceiver(new_config models.Config) {
 	}
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
 
-        for i := 0; i < len(commands); i++ {
-                fmt.Print(".") // ちゃんと処理してますよ感を出す
-                success := false
-                for j := 0; j < 5; j++ {
-                        var cmd *exec.Cmd
-                        if new_config.UbloxReceiver.SaveConfig {
-                                cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1])
-                        } else {
-                                cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1]+","+"1")
-                        }
-                        var stdout bytes.Buffer
-                        var stderr bytes.Buffer
-                        cmd.Stdout = &stdout
-                        cmd.Stderr = &stderr
-                        err := cmd.Run()
-                        if err != nil {
-                                fmt.Fprintln(os.Stderr, err)
-                                fmt.Fprintln(os.Stderr, stderr.String())
-                        //      os.Exit(1)
-                        } else {
-                                success = true
-                                break;
-                        }
-                }
-                if !success {
-                        os.Exit(1)
-                }
-        }
+	for i := 0; i < len(commands); i++ {
+		fmt.Print(".") // ちゃんと処理してますよ感を出す
+		for {
+			var cmd *exec.Cmd
+			if new_config.UbloxReceiver.SaveConfig {
+				cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1])
+			} else {
+				cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1]+","+"1")
+			}
+			var stdout bytes.Buffer
+			var stderr bytes.Buffer
+			cmd.Stdout = &stdout
+			cmd.Stderr = &stderr
+			err := cmd.Run()
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				fmt.Fprintln(os.Stderr, stderr.String())
+				//      os.Exit(1)
+			} else {
+				break
+			}
+		}
+	}
 
 	// str2strのコンテナを再起動する
 	cmd = exec.Command("systemctl", "--user", "start", "container-str2str.service")
