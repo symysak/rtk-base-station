@@ -74,6 +74,7 @@
         repo: https://github.com/symysak/rtk-base-station.git
         dest: /home/{{ username }}/rtk-base-station
         recursive: yes
+        force: true
       become: true
       become_user: "{{ username }}"
 
