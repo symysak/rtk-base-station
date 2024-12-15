@@ -334,6 +334,23 @@ out="`
 
 // UbloxReceiverのcommit処理を行う関数
 func commitUbloxReceiver(new_config models.Config) {
+	fmt.Print(".") // ちゃんと処理してますよ感を出す
+	// 作成した配列をforで回して、ubxtoolで設定を行う
+	// /dev/ttyACM0はstr2strによって使用されいているので、一旦停止する
+
+	cmd = exec.Command("systemctl", "--user", "stop", "str2str.service")
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	if !debug {
+		err := cmd.Run()
+		if err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			fmt.Fprintln(os.Stderr, stderr.String())
+			os.Exit(1)
+		}
+	} else {
+		fmt.Println("[DEBUG]: skipped: systemctl --user stop str2str.service")
+	}
 
 	// receiverのPROTVERを取得
 
@@ -530,23 +547,6 @@ func commitUbloxReceiver(new_config models.Config) {
 	commands = append(commands, []string{tmp + name + "_L1_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GLO.L1_ENA)})
 	commands = append(commands, []string{tmp + name + "_L2_ENA", boolToString(new_config.UbloxReceiver.CFG.SIGNAL.GLO.L2_ENA)})
 
-	fmt.Print(".") // ちゃんと処理してますよ感を出す
-	// 作成した配列をforで回して、ubxtoolで設定を行う
-	// /dev/ttyACM0はstr2strによって使用されいているので、一旦停止する
-
-	cmd = exec.Command("systemctl", "--user", "stop", "str2str.service")
-	cmd.Stdout = &stdout
-	cmd.Stderr = &stderr
-	if !debug {
-		err := cmd.Run()
-		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			fmt.Fprintln(os.Stderr, stderr.String())
-			os.Exit(1)
-		}
-	} else {
-		fmt.Println("[DEBUG]: skipped: systemctl --user stop str2str.service")
-	}
 
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
 
