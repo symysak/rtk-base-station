@@ -553,6 +553,7 @@ func commitUbloxReceiver(new_config models.Config) {
 	for i := 0; i < len(commands); i++ {
 		if !debug {
 			for {
+				fmt.Print(".") // ちゃんと処理してますよ感を出す
 				var cmd *exec.Cmd
 				if new_config.UbloxReceiver.SaveConfig {
 					cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1])
@@ -571,7 +572,6 @@ func commitUbloxReceiver(new_config models.Config) {
 				} else {
 					break
 				}
-				fmt.Print(".") // ちゃんと処理してますよ感を出す
 			}
 		} else {
 			fmt.Println("[DEBUG]: skipped: ubxtool -f /dev/ttyACM0 -w 1 -P " + protVer + " -z " + commands[i][0] + "," + commands[i][1])
