@@ -551,33 +551,34 @@ func commitUbloxReceiver(new_config models.Config) {
 	fmt.Print(".") // ちゃんと処理してますよ感を出す
 
 	for i := 0; i < len(commands); i++ {
-
-		var cmd *exec.Cmd
-		if new_config.UbloxReceiver.SaveConfig {
-			cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1])
-		} else {
-			cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1]+","+"1")
-		}
-		var stdout bytes.Buffer
-		var stderr bytes.Buffer
-		cmd.Stdout = &stdout
-		cmd.Stderr = &stderr
 		if !debug {
-			err := cmd.Run()
-			if err != nil {
-				fmt.Fprintln(os.Stderr, err)
-				fmt.Fprintln(os.Stderr, stderr.String())
-				os.Exit(1)
+			for {
+				fmt.Print(".") // ちゃんと処理してますよ感を出す
+				var cmd *exec.Cmd
+				if new_config.UbloxReceiver.SaveConfig {
+					cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1])
+				} else {
+					cmd = exec.Command("ubxtool", "-f", "/dev/ttyACM0", "-w", "1", "-P", protVer, "-z", commands[i][0]+","+commands[i][1]+","+"1")
+				}
+				var stdout bytes.Buffer
+				var stderr bytes.Buffer
+				cmd.Stdout = &stdout
+				cmd.Stderr = &stderr
+				err := cmd.Run()
+				if err != nil {
+					fmt.Fprintln(os.Stderr, err)
+					fmt.Fprintln(os.Stderr, stderr.String())
+					//os.Exit(1)
+				} else {
+					break
+				}
 			}
-			fmt.Print(".") // ちゃんと処理してますよ感を出す
 		} else {
 			fmt.Println("[DEBUG]: skipped: ubxtool -f /dev/ttyACM0 -w 1 -P " + protVer + " -z " + commands[i][0] + "," + commands[i][1])
 		}
-
 	}
 
 	// str2strを再起動する
-
 	cmd = exec.Command("systemctl", "--user", "start", "str2str.service")
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
