@@ -34,6 +34,7 @@
         - scons
         - gcc
         - python3-pyserial
+        - tar
       become: true
 
     - name: Check the system locale
