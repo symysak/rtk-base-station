@@ -35,27 +35,10 @@ const Status = () => {
                     <Card>
                     <CardBody>
                         <Grid hasGutter>
-                        
-                            <GridItem span={5}>
-                                    <p>UPSバッテリー状況</p>
-                                    <Alert variant="success" title="UPS動作中" ouiaId="SuccessAlert" />
-                                    <ProgressStepper aria-label="Basic progress stepper">
-                                        <ProgressStep variant="success" id="basic-step1" titleId="basic-step1-title" aria-label="completed step, step with success">
-                                        UPS起動中
-                                        </ProgressStep>
-                                        <ProgressStep variant="info" isCurrent id="basic-step2" titleId="basic-step2-title" aria-label="step with info">
-                                        UPS動作中
-                                        </ProgressStep>
-                                        <ProgressStep variant="pending" id="basic-step3" titleId="basic-step3-title" aria-label="pending step">
-                                        シャットダウン開始
-                                        </ProgressStep>
-                                        <ProgressStep variant="pending" id="basic-step4" titleId="basic-step4-title" aria-label="pending step">
-                                        シャットダウン完了
-                                        </ProgressStep>
-                                    </ProgressStepper>
-                                    <Progress value={33} title="バッテリー残量" size={ProgressSize.lg} />
+                            <GridItem span={5} rowSpan={1}>
+                                <Title headingLevel='h2' size='lg'>UPSバッテリー状況</Title>
                             </GridItem>
-                            <GridItem span={4}>
+                            <GridItem span={4} rowSpan={2}>
                                     <Form>
                                         <Title headingLevel='h2' size='lg'>
                                         UPS詳細設定
@@ -63,12 +46,21 @@ const Status = () => {
                                         <FormGroup label='起動バッテリー残量'>
                                             <Slider value={ShutdownValue} isInputVisible inputValue={inputShutdownValue} inputLabel="%" onChange={onChangeShutdownValue} />
                                         </FormGroup>
-                                        <FormGroup label='自動シャットダウンまでの秒数'>
-                                            <TextInput value={value} type="text" onChange={(_event, value) => setValue(value)} aria-label="text input example" />
-                                        </FormGroup>
                                     </Form>
                             </GridItem>
-                            
+                            <GridItem span={5} rowSpan={1}>
+                                    <Alert variant="success" title="UPS動作中" ouiaId="SuccessAlert" />
+                            </GridItem>
+                            <GridItem span={5} rowSpan={2}>
+                                <Progress value={33} title="バッテリー残量" size={ProgressSize.lg} />
+                            </GridItem>
+                            <GridItem span={4} rowSpan={2}>
+                                <Form>
+                                    <FormGroup label='自動シャットダウンまでの秒数'>
+                                        <TextInput value={value} type="text" onChange={(_event, value) => setValue(value)} aria-label="text input example" />
+                                    </FormGroup>
+                                </Form>
+                            </GridItem>
                         </Grid>
                         </CardBody>
                     </Card>
