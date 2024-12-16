@@ -1,9 +1,31 @@
 import React from 'react';
 import Layout from '../layout';
-import { StackItem,FlexItem,PageSection, Alert ,Grid,GridItem,Stack, Card, CardTitle, CardBody, CardFooter,Title,Slider,TextInput,Form, FormGroup,Progress, ProgressSize} from '@patternfly/react-core';
+import { StackItem,FlexItem,PageSection, Alert ,Grid,GridItem,Stack,Button, Card,ActionGroup, CardTitle, CardBody, CardFooter,Title,Slider,TextInput,Form, FormGroup,Progress, ProgressSize} from '@patternfly/react-core';
 import { ProgressStepper, ProgressStep } from '@patternfly/react-core';
-
+import { zodResolver} from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+const schema = z.object({
+    age: z.number().min(20, "20以上である必要があります").max(100, "100以下である必要があります"),
+  });
 const Status = () => {
+
+    const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    // zodResolver関数を使って、バリデーション用のリゾルバを作成し、
+    // そのまま作成したリゾルバを渡します
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+  const errorStyle = {
+    color: "red",
+  };
 
     const [ShutdownValue, setShutdownValue] = React.useState(50);
     const [inputShutdownValue, setInputShutdownValue] = React.useState(50);
@@ -25,9 +47,10 @@ const Status = () => {
         setInputShutdownValue(newValue);
         setShutdownValue(newValue);
     };
-
-    const [value, setValue] = React.useState('');
-
+    const [name, setName] = React.useState('30');
+    const handleNameChange = (_event, name) => {
+    setName(name);
+  };
     return (
         <Layout>
             <PageSection>
@@ -55,10 +78,14 @@ const Status = () => {
                                 <Progress value={33} title="バッテリー残量" size={ProgressSize.lg} />
                             </GridItem>
                             <GridItem span={4} rowSpan={2}>
-                                <Form>
-                                    <FormGroup label='自動シャットダウンまでの秒数'>
-                                        <TextInput value={value} type="text" onChange={(_event, value) => setValue(value)} aria-label="text input example" />
+                                <Form onChange={handleSubmit(onSubmit)}>
+                                    <FormGroup label='自動シャットダウンまでの秒数'onChange={handleNameChange}>
+                                    <TextInput id="age" name="age" type='number' aria-describedby="age" value={name} {...register("age", { valueAsNumber: true })}/>
+                                    {errors.age && <span style={errorStyle}>{errors.age.message}</span>}
                                     </FormGroup>
+                                    <ActionGroup>
+                                        <Button variant="primary">更新</Button>
+                                    </ActionGroup>
                                 </Form>
                             </GridItem>
                         </Grid>

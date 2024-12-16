@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.9.1",
     "@patternfly/react-charts": "^8.0.0",
     "@patternfly/react-core": "^5.2.3",
     "install": "^0.13.0",
